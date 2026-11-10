@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 590" width="1200" height="590" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">Access login flow, allowed account</title>
+  <desc id="dsc">The positive test of the Access application on /private with Google as identity provider: request without session, redirect to login, Google sign-in, identity returned, policy allows one email, page loads. The denial for a second account is not drawn because it has not been run.</desc>
+  <defs>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker>
+    <style>
+      text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #e6edf3; }
+      .t { font-size: 14px; font-weight: 600; }
+      .s { font-size: 11.5px; fill: #8b949e; }
+      .h { font-size: 24px; font-weight: 700; }
+      .c { font-size: 12.5px; fill: #8b949e; }
+      .w { font-size: 12.5px; fill: #d29922; font-weight: 600; }
+      .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; fill: #8b949e; }
+    </style>
+  </defs>
+  <rect width="1200" height="590" rx="18" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <text x="40" y="52" class="h">Access login flow, allowed account</text>
+  <text x="40" y="76" class="c">One request, five steps, observed with the allowed account. Steps light up in order.</text>
+<rect x="30" y="130" width="160" height="80" rx="12" fill="#161b22" stroke="#8b949e" stroke-width="2"/>
+    <text x="110.0" y="168.0" text-anchor="middle" class="t">Browser</text>
+    <text x="110.0" y="186.0" text-anchor="middle" class="s">visitor</text><rect x="330" y="130" width="200" height="80" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="430.0" y="168.0" text-anchor="middle" class="t">Cloudflare edge</text>
+    <text x="430.0" y="186.0" text-anchor="middle" class="s">Access app on /private/</text><rect x="680" y="130" width="180" height="80" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="770.0" y="168.0" text-anchor="middle" class="t">Google</text>
+    <text x="770.0" y="186.0" text-anchor="middle" class="s">identity provider (OIDC)</text><rect x="1000" y="130" width="170" height="80" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+    <text x="1085.0" y="168.0" text-anchor="middle" class="t">Origin</text>
+    <text x="1085.0" y="186.0" text-anchor="middle" class="s">via Tunnel, no inbound port</text>
+  <line x1="190" y1="160" x2="330" y2="160" stroke="#30363d" stroke-width="2"/>
+  <line x1="190" y1="190" x2="330" y2="190" stroke="#30363d" stroke-width="2"/>
+  <line x1="530" y1="160" x2="680" y2="160" stroke="#30363d" stroke-width="2"/>
+  <line x1="530" y1="190" x2="680" y2="190" stroke="#30363d" stroke-width="2"/>
+  <path d="M430,210 V262 H1085 V210" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.2092;1" values="0.4;1;0.4;0.4"/><circle cx="48" cy="314" r="9" fill="#161b22" stroke="#8b949e" stroke-width="2"/><text x="48" y="318" text-anchor="middle" class="s" style="fill:#e6edf3">1</text><text x="70" y="318" class="c" style="fill:#e6edf3">GET /private/ with no session (E-086)</text></g>
+  <circle r="6" fill="#8b949e" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.02;0.1892;1" path="M190,160 H330"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.1892;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.208;0.3972;1" values="0.4;1;0.4;0.4"/><circle cx="48" cy="340" r="9" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="48" y="344" text-anchor="middle" class="s" style="fill:#e6edf3">2</text><text x="70" y="344" class="c" style="fill:#e6edf3">302 redirect to the team login page (E-086)</text></g>
+  <circle r="6" fill="#d29922" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.208;0.3772;1" path="M330,190 H190"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.208;0.3772;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.396;0.5852;1" values="0.4;1;0.4;0.4"/><circle cx="48" cy="366" r="9" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="48" y="370" text-anchor="middle" class="s" style="fill:#e6edf3">3</text><text x="70" y="370" class="c" style="fill:#e6edf3">Login page offers Google; browser goes to Google to sign in (E-087)</text></g>
+  <circle r="6" fill="#58a6ff" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.396;0.5652;1" path="M530,160 H680"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.396;0.5652;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5840000000000001;0.7732000000000001;1" values="0.4;1;0.4;0.4"/><circle cx="48" cy="392" r="9" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="48" y="396" text-anchor="middle" class="s" style="fill:#e6edf3">4</text><text x="70" y="396" class="c" style="fill:#e6edf3">Google identity comes back; the policy allows one email address (E-130)</text></g>
+  <circle r="6" fill="#58a6ff" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.5840000000000001;0.7532000000000001;1" path="M680,190 H530"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5840000000000001;0.7532000000000001;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.772;0.9612;1" values="0.4;1;0.4;0.4"/><circle cx="48" cy="418" r="9" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="48" y="422" text-anchor="middle" class="s" style="fill:#e6edf3">5</text><text x="70" y="422" class="c" style="fill:#e6edf3">Allowed: the private page loads; the login is logged as Allowed (E-087, E-089)</text></g>
+  <circle r="6" fill="#3fb950" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.772;0.9412;1" path="M430,210 V262 H1085 V210"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.772;0.9412;1" values="0;1;0;0"/>
+  </circle>
+  <rect x="30" y="456" width="1140" height="52" rx="10" fill="#161b22" stroke="#d29922" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="46" y="478" text-anchor="start" class="c" style="fill:#d29922">Side case from the lab, not part of the animation: the login test failed with "User email was not returned" until the optional Email claim field of the identity provider was cleared</text>
+  <text x="46" y="497" text-anchor="start" class="c" style="fill:#d29922">(an email had been autofilled there). Redirect URI, client ID and scopes were ruled out (E-071 to E-080).</text>
+  <line x1="40" y1="528" x2="1160" y2="528" stroke="#30363d" stroke-width="1"/>
+  <text x="40" y="550" class="c">Where logins are recorded: Zero Trust access authentication logs (E-089, E-090). Any second factor shown by Google is Google's own.</text>
+  <text x="40" y="568" class="w">Not run: the denial for a second account. Not exercised: Cloudflare-enforced MFA, SAML.</text>
+</svg>
