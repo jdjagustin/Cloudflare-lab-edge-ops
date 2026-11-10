@@ -1,0 +1,21 @@
+flowchart LR
+  U[Browser / curl] -->|HTTPS| E
+
+  subgraph CF[Cloudflare edge]
+    direction TB
+    E[DNS: proxied CNAME<br/>anycast IPs] --> W[WAF custom rule<br/>+ rate limit]
+    W --> A[Access<br/>Google OIDC<br/>path /private]
+    A --> C[Cache Rules<br/>HIT / MISS / DYNAMIC]
+    C --> T[Tunnel endpoint]
+  end
+
+  T -. outbound QUIC .- D
+
+  subgraph LAB[Lab host, no inbound ports]
+    direction TB
+    D[cloudflared<br/>systemd service] --> O1[Static origin<br/>127.0.0.1:8081]
+    D --> O2[Grafana on k3s<br/>behind Access]
+  end
+
+  CF -.-> L[Observability logs<br/>Ray ID / securityAction]
+  API[API + Terraform<br/>scoped short-lived tokens] -.->|manage| CF
