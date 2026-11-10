@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">SSL/TLS modes: what each one encrypts</title>
+  <desc id="dsc">Documentation view of the Cloudflare encryption modes. The lab's zone was read in Full mode through Automatic SSL/TLS and was not changed; nothing here was switched or reproduced.</desc>
+  <defs>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker>
+    <style>
+      text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #e6edf3; }
+      .t { font-size: 14px; font-weight: 600; }
+      .s { font-size: 11.5px; fill: #8b949e; }
+      .h { font-size: 24px; font-weight: 700; }
+      .c { font-size: 12.5px; fill: #8b949e; }
+      .w { font-size: 12.5px; fill: #d29922; font-weight: 600; }
+      .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; fill: #8b949e; }
+    </style>
+  </defs>
+  <rect width="1200" height="640" rx="18" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <text x="40" y="52" class="h">SSL/TLS modes: what each one encrypts</text>
+  <text x="40" y="76" class="c">From the Cloudflare documentation. One mode is highlighted at a time.</text>
+  <text x="250" y="126" text-anchor="start" class="c" >Visitor to Cloudflare</text>
+  <text x="540" y="126" text-anchor="start" class="c" >Cloudflare to origin</text>
+  <text x="900" y="126" text-anchor="start" class="c" >Error the docs link to it</text>
+  <g opacity="0.4"><animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.2092;1" values="0.4;1;0.4;0.4"/><rect x="30" y="140" width="200" height="56" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="130" y="172" text-anchor="middle" class="t" style="font-size:15px">Off</text><rect x="250" y="140" width="250" height="56" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="375" y="172" text-anchor="middle" class="c" style="fill:#e6edf3">cleartext HTTP</text><rect x="520" y="140" width="340" height="56" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="690" y="172" text-anchor="middle" class="c" style="fill:#e6edf3">cleartext HTTP</text><text x="880" y="172" class="c">none named for this mode on the pages read</text></g>
+  <circle r="5" fill="#f85149" filter="url(#glow)" opacity="0">
+    <animateMotion dur="15s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.02;0.1892;1" path="M500,168 H520"/>
+    <animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.1892;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.208;0.3972;1" values="0.4;1;0.4;0.4"/><rect x="30" y="218" width="200" height="56" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="130" y="250" text-anchor="middle" class="t" style="font-size:15px">Flexible</text><rect x="250" y="218" width="250" height="56" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="375" y="250" text-anchor="middle" class="c" style="fill:#e6edf3">HTTPS possible</text><rect x="520" y="218" width="340" height="56" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="690" y="250" text-anchor="middle" class="c" style="fill:#e6edf3">HTTP, port 80 (per the 521 page)</text><text x="880" y="250" class="c">redirect loop if the origin forces HTTPS</text></g>
+  <circle r="5" fill="#d29922" filter="url(#glow)" opacity="0">
+    <animateMotion dur="15s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.208;0.3772;1" path="M500,246 H520"/>
+    <animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.208;0.3772;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.396;0.5852;1" values="0.4;1;0.4;0.4"/><rect x="30" y="296" width="200" height="56" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="130" y="328" text-anchor="middle" class="t" style="font-size:15px">Full</text><rect x="250" y="296" width="250" height="56" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="375" y="328" text-anchor="middle" class="c" style="fill:#e6edf3">HTTPS</text><rect x="520" y="296" width="340" height="56" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="690" y="328" text-anchor="middle" class="c" style="fill:#e6edf3">HTTPS, certificate not validated</text><text x="880" y="328" class="c">525 if the handshake fails</text></g>
+  <circle r="5" fill="#58a6ff" filter="url(#glow)" opacity="0">
+    <animateMotion dur="15s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.396;0.5652;1" path="M500,324 H520"/>
+    <animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.396;0.5652;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5840000000000001;0.7732000000000001;1" values="0.4;1;0.4;0.4"/><rect x="30" y="374" width="200" height="56" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="130" y="406" text-anchor="middle" class="t" style="font-size:15px">Full (strict)</text><rect x="250" y="374" width="250" height="56" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="375" y="406" text-anchor="middle" class="c" style="fill:#e6edf3">HTTPS</text><rect x="520" y="374" width="340" height="56" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="690" y="406" text-anchor="middle" class="c" style="fill:#e6edf3">HTTPS, certificate validated</text><text x="880" y="406" class="c">526 if validation fails; 525 on handshake</text></g>
+  <circle r="5" fill="#3fb950" filter="url(#glow)" opacity="0">
+    <animateMotion dur="15s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.5840000000000001;0.7532000000000001;1" path="M500,402 H520"/>
+    <animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5840000000000001;0.7532000000000001;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.772;0.9612;1" values="0.4;1;0.4;0.4"/><rect x="30" y="452" width="200" height="56" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/><text x="130" y="484" text-anchor="middle" class="t" style="font-size:13px">Strict (SSL-Only Origin Pull)</text><rect x="250" y="452" width="250" height="56" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/><text x="375" y="484" text-anchor="middle" class="c" style="fill:#e6edf3">HTTP or HTTPS</text><rect x="520" y="452" width="340" height="56" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/><text x="690" y="484" text-anchor="middle" class="c" style="fill:#e6edf3">always HTTPS, validated</text><text x="880" y="484" class="c">the docs point Enterprise plans to this mode</text></g>
+  <circle r="5" fill="#a371f7" filter="url(#glow)" opacity="0">
+    <animateMotion dur="15s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.772;0.9412;1" path="M500,480 H520"/>
+    <animate attributeName="opacity" dur="15s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.772;0.9412;1" values="0;1;0;0"/>
+  </circle>
+  <rect x="30" y="514" width="1138" height="34" rx="10" fill="#161b22" stroke="#30363d"/>
+  <text x="48" y="536" text-anchor="start" class="c" >Lab: Full, chosen by Automatic SSL/TLS, read in the dashboard and by API, never changed (E-049, E-112). The tunnel hop is HTTP to localhost; the effect of the mode on it was not verified.</text>
+  <line x1="40" y1="578" x2="1160" y2="578" stroke="#30363d" stroke-width="1"/>
+  <text x="40" y="600" class="c">Source: Cloudflare SSL/TLS encryption modes pages (Off, Flexible, Full, Full strict summarized in one table). Details per mode in the study guide.</text>
+  <text x="40" y="618" class="w">Not reproduced: any mode change, 525, 526, or a redirect loop. Automatic mode picks the most secure mode the origin supports, per the docs.</text>
+</svg>

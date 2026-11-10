@@ -52,7 +52,7 @@ Related codes reproduced on purpose with temporary records (E-125 to E-127; for 
 - `1033` also appears when a proxied CNAME points to a tunnel id that does not exist, so the code alone does not tell "tunnel down" from "tunnel gone"; check Networking > Tunnels (is it listed; the documentation reads the status Inactive = never connected, Down = was connected and stopped, Degraded = some connection failed, Healthy = then check the DNS record points to the right tunnel; E-128).
 - `1016`: the CNAME target is a name that does not resolve (tested with a non-existent name inside the same zone).
 - `1014`: the CNAME target is a hostname in another Cloudflare account (tested with a name under `example.com`, whose name servers are Cloudflare's); fix the target, it is not an origin problem.
-Not tested: a tunnel that was created and then deleted.
+Not tested: a tunnel that was created and then deleted. More on these cases: [`DNS_DEEP_DIVE.md`](DNS_DEEP_DIVE.md) section 7.
 
 ## 4. 403 block page: custom rule
 
@@ -94,7 +94,7 @@ What the lab showed (E-042): both names returned the same two addresses in the `
 - Cloudflare addresses: the proxy is in front; any problem is above DNS (sections 2 to 7).
 - No answer or `NXDOMAIN`: the record does not exist or the zone is not delegated; check the record in the dashboard and the name servers.
 - A different address: the record is DNS-only (grey cloud) or points somewhere else; the origin would be exposed directly.
-Resolving correctly says nothing about whether the page works (E-042). DNS record TTL is separate from cache TTL (section 7).
+Resolving correctly says nothing about whether the page works (E-042). DNS record TTL is separate from cache TTL (section 7). Longer explanation, record types and diagrams: [`DNS_DEEP_DIVE.md`](DNS_DEEP_DIVE.md).
 
 ## 9. Upgrading cloudflared (dpkg install)
 
@@ -139,4 +139,4 @@ Hostname and path, method, HTTP status and Cloudflare error code if any, **Ray I
 
 ## 12. Not covered yet (honest)
 
-Errors `520`-`526` were not reproduced (no public origin is reachable from the lab: home connection behind carrier NAT without IPv6, E-123 and E-124; read in the documentation only, E-122); TLS mode differences (Full vs Full strict) were read but not stress-tested; SAML and enforced MFA were not exercised; managed WAF rules were not exercised.
+Errors `520`-`526` were not reproduced (no public origin is reachable from the lab: home connection behind carrier NAT without IPv6, E-123 and E-124; read in the documentation only, E-122; study guide: [`STUDY_5xx_errors_and_TLS_modes.md`](STUDY_5xx_errors_and_TLS_modes.md)); TLS mode differences (Full vs Full strict) were read but not stress-tested; SAML and enforced MFA were not exercised; managed WAF rules were not exercised.
