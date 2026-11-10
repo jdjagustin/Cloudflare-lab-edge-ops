@@ -4,8 +4,8 @@
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-DNS%20%C2%B7%20WAF%20%C2%B7%20Access%20%C2%B7%20Tunnel-F38020?logo=cloudflare&logoColor=white)
 ![Terraform](https://img.shields.io/badge/Terraform-throwaway%20record-844FBA?logo=terraform&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
-![evidence](https://img.shields.io/badge/evidence-132%20entries-3fb950)
-![diagrams](https://img.shields.io/badge/diagrams-6%20animated%20SVG%20%2B%20Mermaid-f85149)
+![evidence](https://img.shields.io/badge/evidence-133%20entries-3fb950)
+![diagrams](https://img.shields.io/badge/diagrams-11%20animated%20SVG%20%2B%20Mermaid-f85149)
 [![license](https://img.shields.io/badge/license-MIT-97ca00)](LICENSE)
 
 A one-person, hands-on lab that puts a small origin behind Cloudflare and exercises the edge the way an operator would: DNS and proxy, TLS mode, cache, WAF and rate limiting, Access with an identity provider, Tunnel failures and how to diagnose them, the API, Terraform and Observability logs.
@@ -100,6 +100,15 @@ One resource, local state, no modules, no CI.
 
 </details>
 
+## Guides
+
+Written guides. Each statement in them is tagged as lab-observed, from the documentation, or general knowledge, and their animated diagrams are embedded in the guides themselves.
+
+| Guide | What it covers | Basis |
+|---|---|---|
+| [DNS deep dive](docs/DNS_DEEP_DIVE.md) | Record types, `CNAME`, proxied vs DNS-only, the tunnel record, DNS TTL vs cache TTL, the `1014`, `1016` and `1033` cases | Lab evidence plus Cloudflare documentation |
+| [520 to 526 errors and SSL/TLS modes](docs/STUDY_5xx_errors_and_TLS_modes.md) | Meaning, causes and first checks per error; what each encryption mode does | Documentation only; 520 to 526 were not reproduced |
+
 ## Done (ran and observed)
 
 | Area | What ran | Evidence |
@@ -117,7 +126,7 @@ One resource, local state, no modules, no CI.
 | Terraform | `init`, `plan`, `apply`, verify with `dig`, `destroy` on one throwaway TXT record | E-114, E-115 |
 | Connector maintenance | `cloudflared` upgraded from a local `.deb` after a security advisory; version and tunnel health checked | E-009 to E-012 |
 | Runbook | Diagnosis guide written only from the cases above | [`docs/RUNBOOK.md`](docs/RUNBOOK.md) |
-| Evidence log | 132 entries with commands, outputs, corrections and limits; personal values replaced by placeholders | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
+| Evidence log | 133 entries with commands, outputs, corrections and limits; personal values replaced by placeholders | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
 | Masked screenshots | 61 dashboard, browser and terminal captures, each named after the log entry it supports; sensitive values masked or covered | [`evidence/screenshots/`](evidence/screenshots/README.md) |
 
 ## To be completed (not done yet)
@@ -126,13 +135,12 @@ One resource, local state, no modules, no CI.
 |---|---|
 | Access, negative test | Prepared (policy allows one email; a second Google account is registered as a test user). Not run yet: no denial has been captured, so no claim is made |
 | Errors `520`-`526` | **Not reproduced.** Read in the documentation only. The home connection is behind carrier NAT and has no global IPv6, so no public origin was available (E-122 to E-124). Option kept open: a temporary cloud VM |
-| TLS modes Full vs Full (strict) | Read only; not exercised. A study guide is planned |
+| TLS modes Full vs Full (strict) | Read only; not exercised. Study guide written from the documentation: [`docs/STUDY_5xx_errors_and_TLS_modes.md`](docs/STUDY_5xx_errors_and_TLS_modes.md) |
 | SAML vs OIDC identity providers, enforced MFA | Not started |
 | WAF managed rules / OWASP | Not started (only a custom rule was used) |
 | Terraform at scale | Not started (one resource, local state, no modules, no CI) |
 | Network fundamentals notes (BGP, CIDR, NAT) and Network Services | Not started |
 | Onboarding plan, call summary template, escalation templates, 20-minute workshop outline | Not started |
-| DNS deep-dive guide | Not started |
 
 ## Tools in this repo
 
@@ -156,7 +164,7 @@ One client, small traffic windows, free plan, a single zone, local Terraform sta
 ## Repository layout
 
 ```
-docs/            runbook, evidence log, how-to, diagrams (six animated SVGs, architecture.mmd source)
+docs/            runbook, evidence log, how-to, diagrams (eleven animated SVGs, architecture.mmd source), two study guides
 evidence/        masked exports and command outputs referenced by the log
   screenshots/   61 masked captures and an index (evidence/screenshots/README.md)
 scripts/         the two local summary tools
@@ -168,13 +176,13 @@ LICENSE          MIT
 
 Cloudflare documentation, by topic:
 
-- DNS and proxy: [Proxy status](https://developers.cloudflare.com/dns/proxy-status/), [Manage DNS records](https://developers.cloudflare.com/dns/manage-dns-records/)
+- DNS and proxy: [Proxy status](https://developers.cloudflare.com/dns/proxy-status/), [Manage DNS records](https://developers.cloudflare.com/dns/manage-dns-records/), [DNS record types](https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/), [TTL](https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/), [CNAME flattening](https://developers.cloudflare.com/dns/cname-flattening/), [Tunnel DNS records](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/routing-to-tunnel/dns/)
 - Tunnel: [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/), [Tunnel fundamentals](https://developers.cloudflare.com/tunnel/concepts/)
-- SSL/TLS: [Encryption modes](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/), [Full (strict)](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/)
+- SSL/TLS: [Encryption modes](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/), [Flexible](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/flexible/), [Full](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full/), [Full (strict)](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/)
 - Cache: [Cache responses (HIT, MISS, DYNAMIC)](https://developers.cloudflare.com/cache/concepts/cache-responses/), [Cache Rules settings](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/)
 - WAF: [Custom rules](https://developers.cloudflare.com/waf/custom-rules/), [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)
 - Access: [Access policies](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/), [Google as identity provider](https://developers.cloudflare.com/cloudflare-one/identity/idp-integration/google/), [Enforce MFA](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/mfa-requirements/)
-- Errors: [1xxx errors](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/), [Error 1033](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1033/), [5xx errors](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/), [Error diagnostic headers](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-error-headers/)
+- Errors: [1xxx errors](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/), [Error 1033](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1033/), [5xx errors](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/) ([520](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-520/), [521](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-521/), [522](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-522/), [523](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-523/), [524](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-524/), [525](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-525/), [526](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-526/)), [Error 1014](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1014/), [Error 1016](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1016/), [Error diagnostic headers](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-error-headers/)
 - Logs: [Cloudflare Ray ID](https://developers.cloudflare.com/fundamentals/reference/cloudflare-ray-id/), [Log Search](https://developers.cloudflare.com/observability/logs/log-explorer/log-search/)
 - API: [Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/), [API overview](https://developers.cloudflare.com/api/overview/)
 - Terraform: [Cloudflare Terraform provider](https://developers.cloudflare.com/api/terraform/), [provider on the Terraform Registry](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs)

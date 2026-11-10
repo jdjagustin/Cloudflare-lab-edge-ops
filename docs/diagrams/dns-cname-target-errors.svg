@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">The CNAME target decides the error</title>
+  <desc id="dsc">Four proxied CNAME cases reproduced in the lab, with only the target changed. Cloudflare answered 1014, 1016 or 1033 depending on the target. A stopped tunnel and a tunnel that does not exist gave the same pair.</desc>
+  <defs>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker>
+    <style>
+      text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #e6edf3; }
+      .t { font-size: 14px; font-weight: 600; }
+      .s { font-size: 11.5px; fill: #8b949e; }
+      .h { font-size: 24px; font-weight: 700; }
+      .c { font-size: 12.5px; fill: #8b949e; }
+      .w { font-size: 12.5px; fill: #d29922; font-weight: 600; }
+      .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; fill: #8b949e; }
+    </style>
+  </defs>
+  <rect width="1200" height="560" rx="18" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <text x="40" y="52" class="h">The CNAME target decides the error</text>
+  <text x="40" y="76" class="c">One case at a time. Each case was observed with curl and a proxied record.</text>
+<rect x="30" y="260" width="150" height="70" rx="12" fill="#161b22" stroke="#8b949e" stroke-width="2"/>
+    <text x="105.0" y="293.0" text-anchor="middle" class="t">Proxied</text>
+    <text x="105.0" y="311.0" text-anchor="middle" class="s">CNAME</text>
+  <text x="210" y="134" text-anchor="start" class="c" >What the record points to</text>
+  <text x="640" y="134" text-anchor="start" class="c" >Target used in the lab</text>
+  <text x="980" y="134" text-anchor="start" class="c" >curl got</text>
+  <path d="M180,295 H195 V180 H210" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.2515;1" values="0.4;1;0.4;0.4"/><rect x="210" y="150" width="400" height="60" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="410.0" y="185.0" text-anchor="middle" class="t" style="font-size:13px">CNAME to a name under example.com (a Cloudflare zone)</text><rect x="640" y="150" width="310" height="60" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="795" y="186" text-anchor="middle" class="m" style="fill:#e6edf3">no-such-host-lab-test.example.com</text><rect x="980" y="150" width="190" height="60" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="1075.0" y="178.0" text-anchor="middle" class="t">403 + error 1014</text>
+    <text x="1075.0" y="196.0" text-anchor="middle" class="s">E-125</text><line x1="610" y1="180" x2="640" y2="180" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/><line x1="950" y1="180" x2="980" y2="180" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/></g>
+  <circle r="6" fill="#f85149" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.02;0.23149999999999998;1" path="M180,295 H195 V180 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.23149999999999998;1" values="0;1;0;0"/>
+  </circle>
+  <path d="M180,295 H195 V266 H210" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.255;0.48650000000000004;1" values="0.4;1;0.4;0.4"/><rect x="210" y="236" width="400" height="60" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="410.0" y="271.0" text-anchor="middle" class="t" style="font-size:13px">CNAME to a name that does not exist in the same zone</text><rect x="640" y="236" width="310" height="60" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="795" y="272" text-anchor="middle" class="m" style="fill:#e6edf3">no-such-origin.&lt;lab-domain&gt;</text><rect x="980" y="236" width="190" height="60" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="1075.0" y="264.0" text-anchor="middle" class="t">530 + error 1016</text>
+    <text x="1075.0" y="282.0" text-anchor="middle" class="s">E-126</text><line x1="610" y1="266" x2="640" y2="266" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/><line x1="950" y1="266" x2="980" y2="266" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/></g>
+  <circle r="6" fill="#d29922" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.255;0.4665;1" path="M180,295 H195 V266 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.255;0.4665;1" values="0;1;0;0"/>
+  </circle>
+  <path d="M180,295 H195 V352 H210" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.49;0.7215;1" values="0.4;1;0.4;0.4"/><rect x="210" y="322" width="400" height="60" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="410.0" y="357.0" text-anchor="middle" class="t" style="font-size:13px">CNAME to a tunnel id that does not exist</text><rect x="640" y="322" width="310" height="60" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/><text x="795" y="358" text-anchor="middle" class="m" style="fill:#e6edf3">&lt;fake-id&gt;.cfargotunnel.com</text><rect x="980" y="322" width="190" height="60" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="1075.0" y="350.0" text-anchor="middle" class="t">530 + error 1033</text>
+    <text x="1075.0" y="368.0" text-anchor="middle" class="s">E-127</text><line x1="610" y1="352" x2="640" y2="352" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/><line x1="950" y1="352" x2="980" y2="352" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/></g>
+  <circle r="6" fill="#a371f7" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.49;0.7015;1" path="M180,295 H195 V352 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.49;0.7015;1" values="0;1;0;0"/>
+  </circle>
+  <path d="M180,295 H195 V438 H210" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.725;0.9565;1" values="0.4;1;0.4;0.4"/><rect x="210" y="408" width="400" height="60" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="410.0" y="443.0" text-anchor="middle" class="t" style="font-size:13px">CNAME to the real tunnel, cloudflared stopped</text><rect x="640" y="408" width="310" height="60" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/><text x="795" y="444" text-anchor="middle" class="m" style="fill:#e6edf3">&lt;tunnel-id&gt;.cfargotunnel.com</text><rect x="980" y="408" width="190" height="60" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="1075.0" y="436.0" text-anchor="middle" class="t">530 + error 1033</text>
+    <text x="1075.0" y="454.0" text-anchor="middle" class="s">E-097</text><line x1="610" y1="438" x2="640" y2="438" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/><line x1="950" y1="438" x2="980" y2="438" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/></g>
+  <circle r="6" fill="#a371f7" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.725;0.9365;1" path="M180,295 H195 V438 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.725;0.9365;1" values="0;1;0;0"/>
+  </circle>
+  <line x1="40" y1="498" x2="1160" y2="498" stroke="#30363d" stroke-width="1"/>
+  <text x="40" y="520" class="c">For curl the body was one plain-text line, error code: NNNN; browser view not tested (E-125 to E-127). Tunnel id and fake id are placeholders.</text>
+  <text x="40" y="538" class="w">Not tested: a tunnel that was created and then deleted. That 1014 comes from a cross-account target is an inference that fits the docs (E-125, E-126).</text>
+</svg>
