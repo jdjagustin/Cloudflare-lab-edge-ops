@@ -1,10 +1,25 @@
 # Cloudflare-lab-edge-ops
 
+![status](https://img.shields.io/badge/status-work%20in%20progress-d29922)
+![Cloudflare](https://img.shields.io/badge/Cloudflare-DNS%20%C2%B7%20WAF%20%C2%B7%20Access%20%C2%B7%20Tunnel-F38020?logo=cloudflare&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-throwaway%20record-844FBA?logo=terraform&logoColor=white)
+![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
+![evidence](https://img.shields.io/badge/evidence-132%20entries-3fb950)
+![diagram](https://img.shields.io/badge/diagram-animated%20SVG%20%2B%20Mermaid-f85149)
+[![license](https://img.shields.io/badge/license-MIT-97ca00)](LICENSE)
+
 A one-person, hands-on lab that puts a small origin behind Cloudflare and exercises the edge the way an operator would: DNS and proxy, TLS mode, cache, WAF and rate limiting, Access with an identity provider, Tunnel failures and how to diagnose them, the API, Terraform and Observability logs.
 
-> **Status: work in progress (phase 1, skeleton).** Everything under "Done" actually ran and was observed by the author. Everything under "To be completed" has **not** been done yet and is listed so the gaps are visible. Entries like `E-042` point to the evidence log [`docs/EVIDENCE.md`](docs/EVIDENCE.md): what ran, the output, and the limits of each claim. Screenshots follow in the next pull request; the log refers to some private originals that are not published.
+> **Status: work in progress.** Everything under "Done" actually ran and was observed by the author. Everything under "To be completed" has **not** been done yet and is listed so the gaps are visible. Entries like `E-042` point to the evidence log [`docs/EVIDENCE.md`](docs/EVIDENCE.md): what ran, the output, and the limits of each claim. Screenshots follow in the next pull request; the log refers to some private originals that are not published.
 
 ## Architecture
+
+![Animated architecture diagram: a request goes from the client through DNS, WAF and rate limiting, Access, cache and a Tunnel to cloudflared on the lab host; four outcomes alternate](docs/diagrams/architecture.svg)
+
+The animation shows one request at a time. The four outcomes alternate (success, blocked by a WAF custom rule, `429` from the rate limit, `530` with error `1033`); they do not all happen at once. Each was observed in the lab, see the Done table. The Access denial for a second account is not drawn because it has not been run yet.
+
+<details>
+<summary>Static version (Mermaid source, also in <code>docs/diagrams/architecture.mmd</code>)</summary>
 
 ```mermaid
 flowchart LR
@@ -29,6 +44,8 @@ flowchart LR
   CF -.-> L[Observability logs<br/>Ray ID / securityAction]
   API[API + Terraform<br/>scoped short-lived tokens] -.->|manage| CF
 ```
+
+</details>
 
 A browser or `curl` reaches proxied hostnames on Cloudflare's edge. Requests pass DNS, WAF and rate limiting, Access (on `/private` and on the Grafana host) and cache rules, then travel through a Cloudflare Tunnel. `cloudflared` runs on the lab host and opens outbound connections only, so the origin has no inbound ports. Logs and the API sit beside the data path.
 
@@ -88,16 +105,31 @@ One client, small traffic windows, free plan, a single zone, local Terraform sta
 ## Repository layout
 
 ```
-docs/            runbook, evidence log, how-to, diagrams (docs/diagrams/)
+docs/            runbook, evidence log, how-to, diagrams (architecture.svg animated, architecture.mmd source)
 evidence/        masked exports and command outputs referenced by the log
 scripts/         the two local summary tools
 terraform/       the throwaway-record exercise (main.tf only; no state)
+LICENSE          MIT
 ```
 
 Planned in a later pull request: `evidence/screenshots/` (masked screenshots).
 
 ## Credits and references
 
-- Cloudflare documentation: DNS, Tunnel, Cache, WAF and rate limiting, Access, API, Terraform provider, Observability, error pages (`developers.cloudflare.com`).
-- Terraform Cloudflare provider (`registry.terraform.io/providers/cloudflare/cloudflare`).
-- Grafana documentation (`grafana.com/docs`).
+Cloudflare documentation, by topic:
+
+- DNS and proxy: [Proxy status](https://developers.cloudflare.com/dns/proxy-status/), [Manage DNS records](https://developers.cloudflare.com/dns/manage-dns-records/)
+- Tunnel: [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/), [Tunnel fundamentals](https://developers.cloudflare.com/tunnel/concepts/)
+- SSL/TLS: [Encryption modes](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/), [Full (strict)](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/)
+- Cache: [Cache responses (HIT, MISS, DYNAMIC)](https://developers.cloudflare.com/cache/concepts/cache-responses/), [Cache Rules settings](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/)
+- WAF: [Custom rules](https://developers.cloudflare.com/waf/custom-rules/), [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)
+- Access: [Access policies](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/), [Google as identity provider](https://developers.cloudflare.com/cloudflare-one/identity/idp-integration/google/), [Enforce MFA](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/mfa-requirements/)
+- Errors: [1xxx errors](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/), [Error 1033](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1033/), [5xx errors](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/), [Error diagnostic headers](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-error-headers/)
+- Logs: [Cloudflare Ray ID](https://developers.cloudflare.com/fundamentals/reference/cloudflare-ray-id/), [Log Search](https://developers.cloudflare.com/observability/logs/log-explorer/log-search/)
+- API: [Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/), [API overview](https://developers.cloudflare.com/api/overview/)
+- Terraform: [Cloudflare Terraform provider](https://developers.cloudflare.com/api/terraform/), [provider on the Terraform Registry](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs)
+
+Other:
+
+- Grafana: [Deploy Grafana on Kubernetes](https://grafana.com/docs/grafana/latest/setup-grafana/installation/kubernetes/)
+- Badges: [Shields.io](https://shields.io/)
