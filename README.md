@@ -51,7 +51,7 @@ A browser or `curl` reaches proxied hostnames on Cloudflare's edge. Requests pas
 
 ## Flow diagrams
 
-Animated SVGs, each drawn only from cases that ran. They sit next to the text they support in the runbook.
+Animated SVGs, each drawn only from cases that ran, plus the architecture diagram above. Four of them also sit next to the text they support in the runbook; the Terraform one lives only here. Open each one below, or use the links in the table.
 
 | Diagram | What it shows | Where |
 |---|---|---|
@@ -61,7 +61,44 @@ Animated SVGs, each drawn only from cases that ran. They sit next to the text th
 | [Browser view vs edge view](docs/diagrams/har-vs-logs.svg) | A HAR (one page load) and Observability logs (every request) meet at the Ray ID; what `originResponseStatus` 502 and 0 mean | [Runbook, section 10](docs/RUNBOOK.md), [how-to](docs/HOWTO_cf_logs_summary.md) |
 | [Terraform cycle](docs/diagrams/terraform-cycle.svg) | `init`, `plan`, `apply`, `dig`, `destroy` on one throwaway TXT record, with the limits of that run | [`terraform/`](terraform/main.tf) |
 
+<details>
+<summary>Triage map: what the visitor sees, likely layer, first check</summary>
+
+![Animated triage map: what the visitor sees, the most likely layer and the first check, for 502, 530 with 1033 or 1016, 403 with 1014, a security block page, 429 and the Access redirect](docs/diagrams/runbook-triage.svg)
+
+</details>
+
+<details>
+<summary>Access login flow: allowed account only</summary>
+
+![Animated Access login flow for the allowed account: request without session, 302 to the login page, Google sign-in, policy allows one email, page loads](docs/diagrams/access-login-flow.svg)
+
+The denial for a second account has not been run, so it is not drawn.
+
+</details>
+
+<details>
+<summary>Cache lifecycle: DYNAMIC, MISS, HIT, back to DYNAMIC</summary>
+
+![Animated cache status lifecycle: DYNAMIC, MISS, HIT, and back to DYNAMIC after the Cache Rule is deleted and the cache purged](docs/diagrams/cache-lifecycle.svg)
+
+</details>
+
+<details>
+<summary>Browser view (HAR) vs edge view (logs), joined by the Ray ID</summary>
+
+![Animated diagram: a request seen by the browser (HAR) and by the edge (Observability logs), joined by the Ray ID](docs/diagrams/har-vs-logs.svg)
+
+</details>
+
+<details>
+<summary>Terraform cycle on one throwaway record</summary>
+
 ![Animated Terraform cycle: init, plan, apply, verify with dig, destroy, on one throwaway TXT record](docs/diagrams/terraform-cycle.svg)
+
+One resource, local state, no modules, no CI.
+
+</details>
 
 ## Done (ran and observed)
 
