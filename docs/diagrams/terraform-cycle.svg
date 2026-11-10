@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">Terraform cycle on one throwaway record</title>
+  <desc id="dsc">init, plan, apply, verify with dig and destroy, run once against a TXT record in the lab zone with Terraform v1.17.1 and the Cloudflare provider v5.28.1.</desc>
+  <defs>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker>
+    <style>
+      text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #e6edf3; }
+      .t { font-size: 14px; font-weight: 600; }
+      .s { font-size: 11.5px; fill: #8b949e; }
+      .h { font-size: 24px; font-weight: 700; }
+      .c { font-size: 12.5px; fill: #8b949e; }
+      .w { font-size: 12.5px; fill: #d29922; font-weight: 600; }
+      .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; fill: #8b949e; }
+    </style>
+  </defs>
+  <rect width="1200" height="520" rx="18" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <text x="40" y="52" class="h">Terraform cycle on one throwaway record</text>
+  <text x="40" y="76" class="c">One resource, one run. Stages light up in order.</text>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.21;1" values="0.4;1;0.4;0.4"/><rect x="30" y="130" width="200" height="110" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/><text x="130.0" y="162" text-anchor="middle" class="t" style="font-size:17px">init</text><text x="130.0" y="192" text-anchor="middle" class="c" style="fill:#e6edf3">provider downloaded</text><text x="130.0" y="214" text-anchor="middle" class="c">lock file written</text><text x="130.0" y="232" text-anchor="middle" class="m">00:18 CST</text></g>
+  <line x1="230" y1="185" x2="265" y2="185" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+  <circle r="5" fill="#58a6ff" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.02;0.19;1" path="M40,120 H220"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.19;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.21;0.4;1" values="0.4;1;0.4;0.4"/><rect x="265" y="130" width="200" height="110" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/><text x="365.0" y="162" text-anchor="middle" class="t" style="font-size:17px">plan</text><text x="365.0" y="192" text-anchor="middle" class="c" style="fill:#e6edf3">1 to add</text><text x="365.0" y="214" text-anchor="middle" class="c">0 to change, 0 to destroy</text><text x="365.0" y="232" text-anchor="middle" class="m">00:24 CST</text></g>
+  <line x1="465" y1="185" x2="500" y2="185" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+  <circle r="5" fill="#d29922" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.21;0.38;1" path="M275,120 H455"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.21;0.38;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.4;0.5900000000000001;1" values="0.4;1;0.4;0.4"/><rect x="500" y="130" width="200" height="110" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="2"/><text x="600.0" y="162" text-anchor="middle" class="t" style="font-size:17px">apply</text><text x="600.0" y="192" text-anchor="middle" class="c" style="fill:#e6edf3">1 added</text><text x="600.0" y="214" text-anchor="middle" class="c">created in 1 s</text><text x="600.0" y="232" text-anchor="middle" class="m">00:30 CST</text></g>
+  <line x1="700" y1="185" x2="735" y2="185" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+  <circle r="5" fill="#3fb950" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.4;0.5700000000000001;1" path="M510,120 H690"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.4;0.5700000000000001;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5900000000000001;0.7800000000000001;1" values="0.4;1;0.4;0.4"/><rect x="735" y="130" width="200" height="110" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/><text x="835.0" y="162" text-anchor="middle" class="t" style="font-size:17px">verify</text><text x="835.0" y="192" text-anchor="middle" class="c" style="fill:#e6edf3">dig returns the TXT</text><text x="835.0" y="214" text-anchor="middle" class="c">state list: 1 resource</text><text x="835.0" y="232" text-anchor="middle" class="m">00:32 CST</text></g>
+  <line x1="935" y1="185" x2="970" y2="185" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+  <circle r="5" fill="#a371f7" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.5900000000000001;0.7600000000000001;1" path="M745,120 H925"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5900000000000001;0.7600000000000001;1" values="0;1;0;0"/>
+  </circle>
+  <g opacity="0.4"><animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.78;0.9700000000000001;1" values="0.4;1;0.4;0.4"/><rect x="970" y="130" width="200" height="110" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/><text x="1070.0" y="162" text-anchor="middle" class="t" style="font-size:17px">destroy</text><text x="1070.0" y="192" text-anchor="middle" class="c" style="fill:#e6edf3">1 destroyed</text><text x="1070.0" y="214" text-anchor="middle" class="c">clean check 00:37: dig empty</text><text x="1070.0" y="232" text-anchor="middle" class="m">00:34 CST</text></g>
+  <circle r="5" fill="#f85149" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.78;0.9500000000000001;1" path="M980,120 H1160"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.78;0.9500000000000001;1" values="0;1;0;0"/>
+  </circle>
+  <rect x="30" y="274" width="1140" height="150" rx="12" fill="#161b22" stroke="#30363d"/>
+  <text x="48" y="302" text-anchor="start" class="t" style="fill:#e6edf3">What the run was, and was not (E-114, E-115)</text>
+  <text x="48" y="332" text-anchor="start" class="c" >Token: DNS Edit on this zone only, 7 days, passed by environment variable, deleted afterwards. State files deleted after the run.</text>
+  <text x="48" y="358" text-anchor="start" class="c" >The real records (lab, grafana) were not imported: a destroy would have deleted them.</text>
+  <text x="48" y="384" text-anchor="start" class="c" >Limits: one resource, local state, no modules, no CI, no import, no drift test, nothing but a DNS record.</text>
+  <line x1="40" y1="458" x2="1160" y2="458" stroke="#30363d" stroke-width="1"/>
+  <text x="40" y="480" class="c">Times are from the evidence log. Terraform stays installed on the author's Mac; nothing from the run is left in the zone (verified, E-115).</text>
+  <text x="40" y="498" class="w">Not covered: Terraform at scale, remote state, WAF, Access or tunnels as code.</text>
+</svg>

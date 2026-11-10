@@ -116,6 +116,8 @@ Notes: the upgrade restarts `cloudflared` and affects live traffic (the document
 
 ## 10. Proving what happened: Observability logs and HAR
 
+![Animated diagram: a request seen by the browser (HAR) and by the edge (Observability logs), joined by the Ray ID](diagrams/har-vs-logs.svg)
+
 Two different views, do not mix them (E-108):
 - Observability logs: Cloudflare's edge view of every request in a time window.
 - HAR: the browser's view of one page load (Safari Web Inspector export).
