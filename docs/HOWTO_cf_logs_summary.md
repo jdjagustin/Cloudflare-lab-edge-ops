@@ -34,13 +34,15 @@ python3 -I cf_logs_summary.py FILE.csv --redact masked_FILE.csv
 Without a file name it picks the first `*observability-logs*masked*` file next to the script. `python3 -I cf_logs_summary.py --help` lists the options.
 
 ## 4. Match a request to a log row (Ray ID workflow)
+![Animated diagram: a request seen by the browser (HAR) and by the edge (Observability logs), joined by the Ray ID](diagrams/har-vs-logs.svg)
+
 1. Make the request with curl and read the header: `curl -sI https://lab.<lab-domain>/ | grep -i cf-ray` gives for example `cf-ray: a5837cdb9b578b33-DFW`.
 2. Ignore the suffix after the dash (`-DFW` is the data center). The 16 hex characters are the Ray ID.
 3. Wait about a minute for the log to appear, export again with `rayName` selected, run `--rays` and find the same 16 characters. In the Cache Rule test, 6 of 6 curl `cf-ray` values matched the log rows (E-119).
 
 ## 5. Before saving or sharing an export
 1. Run the script on the original and read the sensitive-data check (it counts real client IPs).
-2. Create the masked copy with `--redact`, then save THAT copy in `evidence/` (published in a later pull request) (name pattern `..._masked.csv`). Keep the original only in Downloads or delete it.
+2. Create the masked copy with `--redact`, then save THAT copy in `evidence/` (name pattern `..._masked.csv`, as in the files already there). Keep the original only in Downloads or delete it.
 3. Run the script on the masked copy: the check should report 0 IPs.
 
 ## 6. Reading the main columns
