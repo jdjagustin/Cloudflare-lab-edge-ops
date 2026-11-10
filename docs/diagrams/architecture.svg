@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 530" width="1200" height="530" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">Cloudflare-lab-edge-ops architecture</title>
+  <desc id="dsc">A request goes from a client through Cloudflare DNS, WAF and rate limiting, Access, cache and a Tunnel to cloudflared on the lab host. Outcomes seen in the lab: success, blocked by a WAF custom rule, 429 from the rate limit, and 530 with error 1033 when cloudflared is stopped.</desc>
+  <defs>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style>
+      text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #e6edf3; }
+      .t { font-size: 15px; font-weight: 600; }
+      .s { font-size: 11.5px; fill: #8b949e; }
+      .h { font-size: 24px; font-weight: 700; }
+      .c { font-size: 12.5px; fill: #8b949e; }
+      .w { font-size: 12.5px; fill: #d29922; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1200" height="530" rx="18" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <text x="40" y="52" class="h">Cloudflare-lab-edge-ops</text>
+  <text x="40" y="76" class="c">How a request travels from a client, through the Cloudflare edge and a Tunnel, to the lab host</text>
+
+  <!-- containers -->
+  <rect x="185" y="115" width="745" height="180" rx="16" fill="none" stroke="#58a6ff" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="205" y="140" class="c" style="fill:#58a6ff">Cloudflare edge</text>
+  <rect x="960" y="115" width="215" height="305" rx="16" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="980" y="140" class="c" style="fill:#3fb950">Lab host, no inbound ports</text>
+
+  <!-- main path -->
+  <line x1="150" y1="205" x2="985" y2="205" stroke="#30363d" stroke-width="3" stroke-dasharray="3 6"/>
+  <text x="947" y="195" text-anchor="middle" class="s" style="font-size:10.5px">outbound</text>
+
+  <g>
+    <rect x="30" y="170" width="120" height="70" rx="12" fill="#161b22" stroke="#8b949e" stroke-width="2"/>
+    <text x="90.0" y="201" text-anchor="middle" class="t" style="font-size:14px">Client</text>
+    <text x="90.0" y="221" text-anchor="middle" class="s">browser / curl</text>
+  </g>
+  <g>
+    <rect x="205" y="170" width="125" height="70" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="267.5" y="201" text-anchor="middle" class="t" style="font-size:14px">DNS</text>
+    <text x="267.5" y="221" text-anchor="middle" class="s">proxied CNAME</text>
+  </g>
+  <g>
+    <rect x="350" y="170" width="125" height="70" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="412.5" y="201" text-anchor="middle" class="t" style="font-size:14px">WAF + rate limit</text>
+    <text x="412.5" y="221" text-anchor="middle" class="s">custom rule</text>
+  </g>
+  <g>
+    <rect x="495" y="170" width="125" height="70" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="557.5" y="201" text-anchor="middle" class="t" style="font-size:14px">Access</text>
+    <text x="557.5" y="221" text-anchor="middle" class="s">Google OIDC</text>
+  </g>
+  <g>
+    <rect x="640" y="170" width="125" height="70" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="702.5" y="201" text-anchor="middle" class="t" style="font-size:14px">Cache Rules</text>
+    <text x="702.5" y="221" text-anchor="middle" class="s">HIT / MISS</text>
+  </g>
+  <g>
+    <rect x="785" y="170" width="125" height="70" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="847.5" y="201" text-anchor="middle" class="t" style="font-size:14px">Tunnel</text>
+    <text x="847.5" y="221" text-anchor="middle" class="s">edge endpoint</text>
+  </g>
+  <g>
+    <rect x="985" y="170" width="165" height="70" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="2"/>
+    <text x="1067.5" y="201" text-anchor="middle" class="t" style="font-size:14px">cloudflared</text>
+    <text x="1067.5" y="221" text-anchor="middle" class="s">systemd, QUIC to the edge</text>
+  </g>
+  <line x1="1067" y1="240" x2="1067" y2="290" stroke="#30363d" stroke-width="2"/>
+  <rect x="985" y="290" width="165" height="46" rx="10" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="1067" y="311" text-anchor="middle" class="t" style="font-size:13px">Static origin</text>
+  <text x="1067" y="327" text-anchor="middle" class="s">127.0.0.1:8081</text>
+  <rect x="985" y="350" width="165" height="46" rx="10" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="1067" y="371" text-anchor="middle" class="t" style="font-size:13px">Grafana on k3s</text>
+  <text x="1067" y="387" text-anchor="middle" class="s">behind Access</text>
+  <line x1="1067" y1="336" x2="1067" y2="350" stroke="#30363d" stroke-width="2"/>
+
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5;0.64;1" values="0.4;1;0.4;0.4"/>
+    <rect x="330" y="330" width="165" height="58" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="412.5" y="355" text-anchor="middle" class="t" style="font-size:14px" fill="#f85149">Blocked at the edge</text>
+    <text x="412.5" y="374" text-anchor="middle" class="s">WAF rule on /blocked</text>
+  </g>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.7;0.84;1" values="0.4;1;0.4;0.4"/>
+    <rect x="515" y="330" width="185" height="58" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="607.5" y="355" text-anchor="middle" class="t" style="font-size:14px" fill="#d29922">429 Too Many Requests</text>
+    <text x="607.5" y="374" text-anchor="middle" class="s">5 requests / 10 s</text>
+  </g>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.92;0.999;1" values="0.4;1;0.4;0.4"/>
+    <rect x="745" y="330" width="200" height="58" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="845.0" y="355" text-anchor="middle" class="t" style="font-size:14px" fill="#f85149">530 + error 1033</text>
+    <text x="845.0" y="374" text-anchor="middle" class="s">cloudflared stopped</text>
+  </g>
+
+  <!-- beside the data path -->
+  <rect x="205" y="418" width="330" height="40" rx="10" fill="none" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="370" y="443" text-anchor="middle" class="s" style="font-size:12.5px">Observability logs: Ray ID, securityAction</text>
+  <rect x="560" y="418" width="385" height="40" rx="10" fill="none" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="752" y="443" text-anchor="middle" class="s" style="font-size:12.5px">API + Terraform: scoped, short-lived tokens</text>
+
+  <!-- moving packets -->
+  <circle r="6" fill="#3fb950" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.02;0.3;1" path="M150,205 H1067"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.3;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#f85149" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.34;0.5;1" path="M150,205 H412 V330"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.34;0.5;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#d29922" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.54;0.7;1" path="M150,205 H412 V300 H597 V330"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.54;0.7;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#f85149" filter="url(#glow)" opacity="0">
+    <animateMotion dur="12s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.74;0.92;1" path="M150,205 H847 V330"/>
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.74;0.92;1" values="0;1;0;0"/>
+  </circle>
+
+  <line x1="40" y1="478" x2="1160" y2="478" stroke="#30363d" stroke-width="1"/>
+  <text x="40" y="500" class="c">Illustrative flow: the four outcomes alternate in the animation, they do not all happen at once. Each one was observed in the lab (see the Done table).</text>
+  <text x="40" y="518" class="w">Not drawn because it has not been run yet: the Access denial for a second account.</text>
+</svg>
