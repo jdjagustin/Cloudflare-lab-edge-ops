@@ -5,7 +5,7 @@
 ![Terraform](https://img.shields.io/badge/Terraform-throwaway%20record-844FBA?logo=terraform&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![evidence](https://img.shields.io/badge/evidence-132%20entries-3fb950)
-![diagram](https://img.shields.io/badge/diagram-animated%20SVG%20%2B%20Mermaid-f85149)
+![diagrams](https://img.shields.io/badge/diagrams-4%20animated%20SVG%20%2B%20Mermaid-f85149)
 [![license](https://img.shields.io/badge/license-MIT-97ca00)](LICENSE)
 
 A one-person, hands-on lab that puts a small origin behind Cloudflare and exercises the edge the way an operator would: DNS and proxy, TLS mode, cache, WAF and rate limiting, Access with an identity provider, Tunnel failures and how to diagnose them, the API, Terraform and Observability logs.
@@ -48,6 +48,16 @@ flowchart LR
 </details>
 
 A browser or `curl` reaches proxied hostnames on Cloudflare's edge. Requests pass DNS, WAF and rate limiting, Access (on `/private` and on the Grafana host) and cache rules, then travel through a Cloudflare Tunnel. `cloudflared` runs on the lab host and opens outbound connections only, so the origin has no inbound ports. Logs and the API sit beside the data path.
+
+## Flow diagrams
+
+Animated SVGs, each drawn only from cases that ran. They sit next to the text they support in the runbook.
+
+| Diagram | What it shows | Where |
+|---|---|---|
+| [Triage map](docs/diagrams/runbook-triage.svg) | From what the visitor sees to the likely layer and the first check (502, 530 with 1033 or 1016, 403 with 1014, block page, 429, Access redirect) | [Runbook, section 1](docs/RUNBOOK.md) |
+| [Access login flow](docs/diagrams/access-login-flow.svg) | Allowed account: 302, Google sign-in, policy, page loads. The denial for a second account is not drawn | [Runbook, section 6](docs/RUNBOOK.md) |
+| [Cache lifecycle](docs/diagrams/cache-lifecycle.svg) | `DYNAMIC`, `MISS`, `HIT`, and back to `DYNAMIC` after the rule is deleted and the cache purged | [Runbook, section 7](docs/RUNBOOK.md) |
 
 ## Done (ran and observed)
 
@@ -105,7 +115,7 @@ One client, small traffic windows, free plan, a single zone, local Terraform sta
 ## Repository layout
 
 ```
-docs/            runbook, evidence log, how-to, diagrams (architecture.svg animated, architecture.mmd source)
+docs/            runbook, evidence log, how-to, diagrams (four animated SVGs, architecture.mmd source)
 evidence/        masked exports and command outputs referenced by the log
   screenshots/   61 masked captures and an index (evidence/screenshots/README.md)
 scripts/         the two local summary tools

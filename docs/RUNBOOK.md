@@ -10,6 +10,10 @@ Scope: a small origin published through a Cloudflare Tunnel on a proxied hostnam
 
 ## 1. Triage table
 
+![Animated triage map: what the visitor sees, the most likely layer and the first check, for 502, 530 with 1033 or 1016, 403 with 1014, a security block page, 429 and the Access redirect](diagrams/runbook-triage.svg)
+
+The map shows the cases that were reproduced; the table below also lists cases that were not drawn (cache, DNS, maintenance, evidence).
+
 | What the visitor sees | Most likely layer | First check | Evidence |
 |---|---|---|---|
 | `502` Bad Gateway page, error code 502 | Origin down while the tunnel is up | Section 2 | E-091, E-092 |
@@ -63,11 +67,17 @@ The lab rule allows 5 requests per 10 seconds on one path; the sixth and later r
 
 ## 6. Access (Google as identity provider)
 
+![Animated Access login flow for the allowed account: request without session, 302 to the login page, Google sign-in, policy allows one email, page loads](diagrams/access-login-flow.svg)
+
+Only the allowed account was tested; the denial for a second account has not been run.
+
 - Path protection: without a session, `/private/` and files under it get `302` to the login page; `/` stays public (E-086).
 - "User email was not returned" (E-071 to E-080). Order of checks that worked: (a) what the IdP actually sent, (b) the mapping fields on the Cloudflare side, (c) only then the IdP configuration. Root cause here: the optional **Email claim** field held an email address (browser autofill) instead of a claim name; clearing it fixed the Test. Redirect URI, client ID and scopes were ruled out.
 - Where logins are recorded: Zero Trust access authentication logs and the Application Access Report (E-089, E-090).
 
 ## 7. Cache
+
+![Animated cache status lifecycle: DYNAMIC, MISS, HIT, and back to DYNAMIC after the Cache Rule is deleted and the cache purged](diagrams/cache-lifecycle.svg)
 
 - `DYNAMIC`: not cacheable by default (the HTML page). `MISS`: cacheable, fetched from the origin. `HIT`: served from the edge copy. `STALE`/revalidated: expired copy handled by the edge. `none`: answered without the cache path (E-046, E-047, HOWTO).
 - The HTML page became `MISS` then `HIT` only after a Cache Rule matching the **hostname**; a rule using *URI Full* with a bare hostname would not match (E-117). Deleting the rule and purging returned it to `DYNAMIC` (E-116, E-117).

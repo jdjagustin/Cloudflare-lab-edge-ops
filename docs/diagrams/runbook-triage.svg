@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 690" width="1200" height="690" role="img" aria-labelledby="ttl dsc">
+  <title id="ttl">Where did the request die?</title>
+  <desc id="dsc">A decision map from what the visitor sees to the layer and the first check, written from cases reproduced in the lab: 502, 530 with 1033 or 1016, 403 with 1014, a security block page, 429 and the Access redirect.</desc>
+  <defs>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/></marker>
+    <style>
+      text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #e6edf3; }
+      .t { font-size: 14px; font-weight: 600; }
+      .s { font-size: 11.5px; fill: #8b949e; }
+      .h { font-size: 24px; font-weight: 700; }
+      .c { font-size: 12.5px; fill: #8b949e; }
+      .w { font-size: 12.5px; fill: #d29922; font-weight: 600; }
+      .m { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; fill: #8b949e; }
+    </style>
+  </defs>
+  <rect width="1200" height="690" rx="18" fill="#0d1117" stroke="#30363d" stroke-width="2"/>
+  <text x="40" y="52" class="h">Where did the request die?</text>
+  <text x="40" y="76" class="c">Start from what the visitor sees, then go one layer inward. One case is highlighted at a time.</text>
+<rect x="30" y="356" width="140" height="68" rx="12" fill="#161b22" stroke="#8b949e" stroke-width="2"/>
+    <text x="100.0" y="388.0" text-anchor="middle" class="t">Visitor</text>
+    <text x="100.0" y="406.0" text-anchor="middle" class="s">curl / browser</text>
+  <text x="235" y="128" text-anchor="start" class="c" >What the visitor sees</text>
+  <text x="545" y="128" text-anchor="start" class="c" >Most likely layer</text>
+  <text x="885" y="128" text-anchor="start" class="c" >First check</text>
+  <path d="M170,390 H205 V186 H235" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.15414285714285714;1" values="0.4;1;0.4;0.4"/>
+    <rect x="235" y="160" width="270" height="52" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="370.0" y="184.0" text-anchor="middle" class="t">502 Bad Gateway</text>
+    <text x="370.0" y="202.0" text-anchor="middle" class="s">Cloudflare error page</text>
+    <line x1="505" y1="186" x2="545" y2="186" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="545" y="160" width="300" height="52" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="695.0" y="184.0" text-anchor="middle" class="t">Origin down, tunnel up</text>
+    <text x="695.0" y="202.0" text-anchor="middle" class="s">cloudflared cannot reach the local service</text>
+    <line x1="845" y1="186" x2="885" y2="186" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="885" y="160" width="285" height="52" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="1027.5" y="184.0" text-anchor="middle" class="t">journalctl + curl to 127.0.0.1</text>
+    <text x="1027.5" y="202.0" text-anchor="middle" class="s">E-091, E-092</text>
+  </g>
+  <path d="M170,390 H205 V254 H235" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.15428571428571428;0.2884285714285714;1" values="0.4;1;0.4;0.4"/>
+    <rect x="235" y="228" width="270" height="52" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="370.0" y="252.0" text-anchor="middle" class="t">530 + error 1033</text>
+    <text x="370.0" y="270.0" text-anchor="middle" class="s">one plain-text line for curl</text>
+    <line x1="505" y1="254" x2="545" y2="254" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="545" y="228" width="300" height="52" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="695.0" y="252.0" text-anchor="middle" class="t">Tunnel not connected</text>
+    <text x="695.0" y="270.0" text-anchor="middle" class="s">or the tunnel id does not exist</text>
+    <line x1="845" y1="254" x2="885" y2="254" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="885" y="228" width="285" height="52" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="1027.5" y="252.0" text-anchor="middle" class="t">systemctl + Networking &gt; Tunnels</text>
+    <text x="1027.5" y="270.0" text-anchor="middle" class="s">E-097, E-099, E-127</text>
+  </g>
+  <path d="M170,390 H205 V322 H235" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.2885714285714286;0.42271428571428576;1" values="0.4;1;0.4;0.4"/>
+    <rect x="235" y="296" width="270" height="52" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="370.0" y="320.0" text-anchor="middle" class="t">530 + error 1016</text>
+    <text x="370.0" y="338.0" text-anchor="middle" class="s">one plain-text line for curl</text>
+    <line x1="505" y1="322" x2="545" y2="322" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="545" y="296" width="300" height="52" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="695.0" y="320.0" text-anchor="middle" class="t">Origin name does not resolve</text>
+    <text x="695.0" y="338.0" text-anchor="middle" class="s">the DNS target of the CNAME</text>
+    <line x1="845" y1="322" x2="885" y2="322" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="885" y="296" width="285" height="52" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="1027.5" y="320.0" text-anchor="middle" class="t">Check the record target</text>
+    <text x="1027.5" y="338.0" text-anchor="middle" class="s">E-126</text>
+  </g>
+  <path d="M170,390 H205 V390 H235" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.4228571428571429;0.557;1" values="0.4;1;0.4;0.4"/>
+    <rect x="235" y="364" width="270" height="52" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="370.0" y="388.0" text-anchor="middle" class="t">403 + error 1014</text>
+    <text x="370.0" y="406.0" text-anchor="middle" class="s">one plain-text line for curl</text>
+    <line x1="505" y1="390" x2="545" y2="390" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="545" y="364" width="300" height="52" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="695.0" y="388.0" text-anchor="middle" class="t">CNAME to another account</text>
+    <text x="695.0" y="406.0" text-anchor="middle" class="s">target name belongs to another account</text>
+    <line x1="845" y1="390" x2="885" y2="390" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="885" y="364" width="285" height="52" rx="12" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+    <text x="1027.5" y="388.0" text-anchor="middle" class="t">Fix the target, not the origin</text>
+    <text x="1027.5" y="406.0" text-anchor="middle" class="s">E-125</text>
+  </g>
+  <path d="M170,390 H205 V458 H235" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5571428571428572;0.6912857142857143;1" values="0.4;1;0.4;0.4"/>
+    <rect x="235" y="432" width="270" height="52" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="370.0" y="456.0" text-anchor="middle" class="t">403 block page + Ray ID</text>
+    <text x="370.0" y="474.0" text-anchor="middle" class="s">Cloudflare block page</text>
+    <line x1="505" y1="458" x2="545" y2="458" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="545" y="432" width="300" height="52" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="695.0" y="456.0" text-anchor="middle" class="t">A security rule fired</text>
+    <text x="695.0" y="474.0" text-anchor="middle" class="s">custom WAF rule</text>
+    <line x1="845" y1="458" x2="885" y2="458" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="885" y="432" width="285" height="52" rx="12" fill="#161b22" stroke="#f85149" stroke-width="2"/>
+    <text x="1027.5" y="456.0" text-anchor="middle" class="t">Ray ID in Security Events</text>
+    <text x="1027.5" y="474.0" text-anchor="middle" class="s">E-053, E-057 to E-059</text>
+  </g>
+  <path d="M170,390 H205 V526 H235" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.6914285714285715;0.8255714285714286;1" values="0.4;1;0.4;0.4"/>
+    <rect x="235" y="500" width="270" height="52" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="370.0" y="524.0" text-anchor="middle" class="t">429 after quick requests</text>
+    <text x="370.0" y="542.0" text-anchor="middle" class="s">after 5 requests in 10 s</text>
+    <line x1="505" y1="526" x2="545" y2="526" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="545" y="500" width="300" height="52" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="695.0" y="524.0" text-anchor="middle" class="t">Rate limiting rule</text>
+    <text x="695.0" y="542.0" text-anchor="middle" class="s">5 requests per 10 s on one path</text>
+    <line x1="845" y1="526" x2="885" y2="526" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="885" y="500" width="285" height="52" rx="12" fill="#161b22" stroke="#d29922" stroke-width="2"/>
+    <text x="1027.5" y="524.0" text-anchor="middle" class="t">Origin log: only 5 arrived</text>
+    <text x="1027.5" y="542.0" text-anchor="middle" class="s">E-063, E-064</text>
+  </g>
+  <path d="M170,390 H205 V594 H235" fill="none" stroke="#30363d" stroke-width="2"/>
+  <g opacity="0.4">
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.8257142857142857;0.9598571428571429;1" values="0.4;1;0.4;0.4"/>
+    <rect x="235" y="568" width="270" height="52" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="370.0" y="592.0" text-anchor="middle" class="t">302 to the team login</text>
+    <text x="370.0" y="610.0" text-anchor="middle" class="s">no session on /private/</text>
+    <line x1="505" y1="594" x2="545" y2="594" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="545" y="568" width="300" height="52" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="695.0" y="592.0" text-anchor="middle" class="t">Access policy on that path</text>
+    <text x="695.0" y="610.0" text-anchor="middle" class="s">/ stays public</text>
+    <line x1="845" y1="594" x2="885" y2="594" stroke="#8b949e" stroke-width="2" marker-end="url(#ah)"/>
+    <rect x="885" y="568" width="285" height="52" rx="12" fill="#161b22" stroke="#a371f7" stroke-width="2"/>
+    <text x="1027.5" y="592.0" text-anchor="middle" class="t">Log in; policy decides</text>
+    <text x="1027.5" y="610.0" text-anchor="middle" class="s">E-086, E-087</text>
+  </g>
+  <circle r="6" fill="#d29922" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.02;0.13414285714285715;1" path="M170,390 H205 V186 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.02;0.13414285714285715;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#f85149" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.15428571428571428;0.2684285714285714;1" path="M170,390 H205 V254 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.15428571428571428;0.2684285714285714;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#58a6ff" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.2885714285714286;0.40271428571428575;1" path="M170,390 H205 V322 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.2885714285714286;0.40271428571428575;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#58a6ff" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.4228571428571429;0.537;1" path="M170,390 H205 V390 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.4228571428571429;0.537;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#f85149" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.5571428571428572;0.6712857142857143;1" path="M170,390 H205 V458 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.5571428571428572;0.6712857142857143;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#d29922" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.6914285714285715;0.8055714285714286;1" path="M170,390 H205 V526 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.6914285714285715;0.8055714285714286;1" values="0;1;0;0"/>
+  </circle>
+  <circle r="6" fill="#a371f7" filter="url(#glow)" opacity="0">
+    <animateMotion dur="14s" repeatCount="indefinite" calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;0.8257142857142857;0.9398571428571428;1" path="M170,390 H205 V594 H1170"/>
+    <animate attributeName="opacity" dur="14s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;0.8257142857142857;0.9398571428571428;1" values="0;1;0;0"/>
+  </circle>
+  <line x1="40" y1="628" x2="1160" y2="628" stroke="#30363d" stroke-width="1"/>
+  <text x="40" y="650" class="c">Illustrative: one case at a time. Reproduced with curl; for the 530 and 1xxx cases curl got a one-line plain-text body (E-126).</text>
+  <text x="40" y="668" class="w">Not reproduced: errors 520 to 526 (no public origin was available). 1033 alone does not tell a stopped tunnel from a missing one.</text>
+</svg>
