@@ -30,7 +30,7 @@ All of these appear when Cloudflare reached the point of talking to a public ori
 | 525 | SSL handshake failed | The TLS handshake between Cloudflare and the origin failed; happens only in Full or Full (strict) | No valid certificate on the origin; port 443 closed; no SNI support; cipher suites do not match | Verify the certificate (`curl`); check port 443; confirm SNI; compare ciphers; check the server's SSL error log |
 | 526 | invalid SSL certificate | Cloudflare cannot validate the origin certificate; with Full (strict) | Certificate expired, revoked, self-signed, wrong name, or incomplete chain | Quick workaround: switch to Full; proper fix: a valid certificate or a Cloudflare Origin CA certificate; serve the full chain |
 
-Two reading notes from the 520 page **[Docs]**: `originResponseStatus` `0` in the logs can mean two things, so check `cacheStatus` first. With `hit` or `revalidated` Cloudflare never contacted the origin; with `miss` or `expired` it contacted the origin and got no usable response. Do not conclude "the origin returned a 5xx" from `0` alone. **[Lab]** The same caution applies to our own logs: a `HIT` row showed `originResponseStatus` 0 because the request never reached the origin (E-118), and a stopped tunnel also showed 0 (E-108).
+Two reading notes from the 520 page **[Docs]**: `originResponseStatus` `0` in the logs can mean two things, so check `cacheStatus` first. With `hit` or `revalidated` Cloudflare never contacted the origin; with `miss` or `expired` it contacted the origin and got no usable response. Do not conclude "the origin returned a 5xx" from `0` alone. **[Lab]** The same caution applies to our own logs: a `HIT` row showed `originResponseStatus` 0 because the request never reached the origin ([E-118](EVIDENCE.md#e-118)), and a stopped tunnel also showed 0 ([E-108](EVIDENCE.md#e-108)).
 
 For `525`, the page suggests looking at `originResponseStatus` `0` and matching its timestamps with the origin's SSL error log **[Docs]**.
 
@@ -59,13 +59,13 @@ Details per mode **[Docs]**:
 
 ## 4. What was reproduced in the lab, and what was read
 
-**[Lab]** Reproduced with temporary proxied DNS records, all removed and verified afterwards (E-125 to E-129): `1014`, `1016` and `1033`. With a Tunnel, an origin that was stopped gave `502` (E-091) and a tunnel that was stopped gave `530` with `1033` (E-097, E-099). For `curl` the body of the `1xxx` cases was one plain-text line; the browser view was not tested. A tunnel id that does not exist gave the same `530` and `1033` as a stopped tunnel, so the code alone does not tell them apart (E-127). See [`DNS_DEEP_DIVE.md`](DNS_DEEP_DIVE.md) section 7.
+**[Lab]** Reproduced with temporary proxied DNS records, all removed and verified afterwards ([E-125](EVIDENCE.md#e-125) to [E-129](EVIDENCE.md#e-129)): `1014`, `1016` and `1033`. With a Tunnel, an origin that was stopped gave `502` ([E-091](EVIDENCE.md#e-091)) and a tunnel that was stopped gave `530` with `1033` ([E-097](EVIDENCE.md#e-097), [E-099](EVIDENCE.md#e-099)). For `curl` the body of the `1xxx` cases was one plain-text line; the browser view was not tested. A tunnel id that does not exist gave the same `530` and `1033` as a stopped tunnel, so the code alone does not tell them apart ([E-127](EVIDENCE.md#e-127)). See [`DNS_DEEP_DIVE.md`](DNS_DEEP_DIVE.md) section 7.
 
-**[Lab]** SSL/TLS mode: the dashboard shows "Full" under Automatic SSL/TLS, and the API returned `full` with `modified_on` null, so nobody changed it by hand (E-049, E-112). The mode was never changed in the lab. The origin hop here is not a classic HTTPS origin: Cloudflare reaches the host through the tunnel and `cloudflared` speaks plain HTTP to localhost (E-049). Whether the SSL/TLS mode changes how tunnel traffic is carried was not verified and is not claimed.
+**[Lab]** SSL/TLS mode: the dashboard shows "Full" under Automatic SSL/TLS, and the API returned `full` with `modified_on` null, so nobody changed it by hand ([E-049](EVIDENCE.md#e-049), [E-112](EVIDENCE.md#e-112)). The mode was never changed in the lab. The origin hop here is not a classic HTTPS origin: Cloudflare reaches the host through the tunnel and `cloudflared` speaks plain HTTP to localhost ([E-049](EVIDENCE.md#e-049)). Whether the SSL/TLS mode changes how tunnel traffic is carried was not verified and is not claimed.
 
 ## 5. Why 520 to 526 were not reproduced
 
-They need a proxied `A` or `AAAA` record that points to a public origin address. The lab's origins sit behind a Tunnel, and the home connection has a private WAN address behind the provider's NAT (E-123) and no global IPv6 (E-124), so no public origin was available. Kept as a study guide on purpose, rather than claiming a result.
+They need a proxied `A` or `AAAA` record that points to a public origin address. The lab's origins sit behind a Tunnel, and the home connection has a private WAN address behind the provider's NAT ([E-123](EVIDENCE.md#e-123)) and no global IPv6 ([E-124](EVIDENCE.md#e-124)), so no public origin was available. Kept as a study guide on purpose, rather than claiming a result.
 
 ## 6. How the errors could be reproduced later
 

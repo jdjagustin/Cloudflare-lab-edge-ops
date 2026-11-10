@@ -4,7 +4,7 @@ Chronological evidence for a hands-on Cloudflare lab (DNS, proxy, TLS, cache, WA
 
 ---
 
-## E-001 — Cloudflare advisory email about cloudflared (11:43)
+## <a id="e-001"></a>E-001 — Cloudflare advisory email about cloudflared (11:43)
 Source: PDF print of the email + screenshot of the header (images are NOT stored on disk; content transcribed below).
 - Subject: "[Action Required] Upgrade your Cloudflare Tunnel to version 2026.10.2 or later"
 - Date of email: Mon 2026-10-26 11:20 CST. Read by the user on 2026-11-09 (about 2 weeks later).
@@ -16,16 +16,16 @@ Source: PDF print of the email + screenshot of the header (images are NOT stored
   - Warning: if cloudflared connects to an HTTPS origin whose cert chains to an affected eMudhra cert, the upgraded cloudflared rejects it. Do not use noTLSVerify as a fix.
   - Verify version: dashboard Networking > Tunnels (connectors list) or `cloudflared --version` on each host.
 
-## E-002 — Public confirmation of the incident (web search, 11:44)
+## <a id="e-002"></a>E-002 — Public confirmation of the incident (web search, 11:44)
 - Cloudflare blog: "8 eMudhra certificates are compromised. Here's what you need to know" — https://blog.cloudflare.com/emudhra-certificate-compromise/ . States: Cloudflare learned on 2026-10-19 ~17:00 UTC; cloudflared fix is 2026.10.2; cloudflared security update published Oct 20 09:15 UTC.
 - Cloudflare follow-up: https://blog.cloudflare.com/emudhra-patching
 - Independent coverage: iTnews (https://www.itnews.com.au/news/cloudflare-warns-fixing-botched-emudhra-certs-goes-beyond-browsers-629804), YourStory (https://yourstory.com/2026/10/emudhra-faces-scrutiny-after-weak-certificate-keys-raise-web-security-concerns).
 - Limit: confirms the incident and the fix version are real; does not by itself authenticate the specific email.
 
-## E-003 — Screenshot of email header (11:45)
+## <a id="e-003"></a>E-003 — Screenshot of email header (11:45)
 - Transcription: From "Cloudflare <em@em1.cloudflare.com>", To: user's Gmail, date lunes 26 de octubre de 2026 11:20 a.m.
 
-## E-004 — Terminal on CloudSpartan: looking for cloudflared as a host service (11:47)
+## <a id="e-004"></a>E-004 — Terminal on CloudSpartan: looking for cloudflared as a host service (11:47)
 Prompt: <user>@CloudSpartan:~$
 Commands run by the user:
 ```
@@ -41,7 +41,7 @@ cloudflared: command not found
 ```
 Interpretation (limited to what the output proves): no systemd unit named cloudflared and no cloudflared binary in PATH on CloudSpartan. It does NOT prove the tunnel is gone; it may run as a container/pod or on another host. Plan assumption "cloudflared is a systemd service on CloudSpartan" was wrong (see the initial plan, Deviation 2).
 
-## E-005 — Terminal on CloudSpartan: looking for cloudflared as K8s pod, container or process (11:50)
+## <a id="e-005"></a>E-005 — Terminal on CloudSpartan: looking for cloudflared as K8s pod, container or process (11:50)
 Commands run by the user:
 ```
 kubectl get pods -A | grep -i cloudflared
@@ -61,7 +61,7 @@ Interpretation (limited to what the output proves):
 - pgrep: no cloudflared process running on this host.
 - Net: no cloudflared as host service, host process or (very likely) Docker container on CloudSpartan. Kubernetes unverified.
 
-## E-006 — Cloudflare dashboard: Networking > Tunnels (screenshot, 12:00)
+## <a id="e-006"></a>E-006 — Cloudflare dashboard: Networking > Tunnels (screenshot, 12:00)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page: Tunnels. Usage card: Tunnels 1 / 1,000. "Showing 1-1 of 1". Filter: All statuses.
 Table (one row):
@@ -75,7 +75,7 @@ Interpretation (limited to what is visible):
 - The screenshot does NOT show where the connector runs (host name, OS, origin IP) nor the route's hostname/service. Those need the tunnel detail page.
 - Combined with E-004/E-005: the live connector is not a host service, host process or (very likely) Docker container on CloudSpartan. K8s and other hosts are still possible.
 
-## E-007 — Cloudflare dashboard: tunnel detail, Overview tab (screenshot, 12:03)
+## <a id="e-007"></a>E-007 — Cloudflare dashboard: tunnel detail, Overview tab (screenshot, 12:03)
 Source: screenshot pasted in chat (not on disk yet; transcribed here, sensitive values masked).
 Breadcrumb: Tunnels > lab-tunnel. Tabs: Overview, Routes, Live logs (New).
 Metrics: Active replicas 1 | Routes 1 | Status Healthy | Uptime 2 days.
@@ -96,7 +96,7 @@ Interpretation (limited to what is visible):
 - Edge locations are Dallas-area (dfw) data centers; shown as listed, no conclusion drawn.
 - Still unknown: how cloudflared is installed on Cloudlab-1 (systemd service vs other) and the route's service URL (http vs https).
 
-## E-008 — Terminal: SSH from CloudSpartan to Cloudlab-1, then cloudflared checks (12:06)
+## <a id="e-008"></a>E-008 — Terminal: SSH from CloudSpartan to Cloudlab-1, then cloudflared checks (12:06)
 Source: two screenshots pasted in chat (not on disk yet; transcribed here).
 
 ### E-008a — SSH session
@@ -156,7 +156,7 @@ Interpretation (limited to what is visible):
 - Not yet known: whether the binary was installed via apt (a .deb) or manually, and the origin service URL in config.yml (http vs https).
 - Resolves N-001: the connector is confirmed on Cloudlab-1 (SSH prompt <user>@Cloudlab-1).
 
-## E-009 — Terminal on Cloudlab-1: config.yml and apt-cache policy (12:09)
+## <a id="e-009"></a>E-009 — Terminal on Cloudlab-1: config.yml and apt-cache policy (12:09)
 Commands run by the user:
 ```
 cat /etc/cloudflared/config.yml
@@ -184,7 +184,7 @@ Interpretation (limited to what the output shows):
 - apt-cache policy: Installed = Candidate = 2026.8.3, and the only source listed is /var/lib/dpkg/status (no apt repository line). Inference: cloudflared was installed from a local .deb (dpkg), and no Cloudflare apt repository is configured on this host. Consequence: `apt-get install --only-upgrade cloudflared` (the command written in the initial plan) would find nothing newer. Not yet confirmed by looking at /etc/apt/sources.list.d.
 - The public hostname is on jdjagustin-lab.dev (older lab domain), NOT on <other-zone> as the plan assumed for the lab pieces.
 
-## E-010 — Official docs check: how to upgrade cloudflared installed via dpkg (web search, 12:15)
+## <a id="e-010"></a>E-010 — Official docs check: how to upgrade cloudflared installed via dpkg (web search, 12:15)
 Source: Cloudflare docs "Update cloudflared" — https://developers.cloudflare.com/tunnel/downloads/update-cloudflared/ (several indexed versions of the page; read through search snippets, not the full page).
 - The docs have separate procedures per install method: apt repository, `dpkg -i`, yum, Homebrew, Docker, GitHub binary (`cloudflared update`). For package-manager installs the docs say to update with the same package manager.
 - For "installed via dpkg -i" the procedure is: download the latest .deb from the cloudflared GitHub releases (`cloudflared-linux-<arch>.deb`, arch from `dpkg --print-architecture`) and install it with `sudo dpkg -i`, then `sudo systemctl restart cloudflared.service`.
@@ -193,7 +193,7 @@ Source: Cloudflare docs "Update cloudflared" — https://developers.cloudflare.c
 - Limit: snippets only; I did not see the full page. The new version number must be verified after the upgrade with `cloudflared --version` (must be >= 2026.10.2 per the advisory in E-001). No checksum/signature step was found in the snippets I saw.
 Decision pending from the author: direct upgrade (brief Grafana drop, up to 30 s grace + reconnect) vs temporary replica first. Lab has no real users; recommendation given was direct upgrade.
 
-## E-011 — Cloudlab-1: cloudflared upgrade executed (terminal, 12:13)
+## <a id="e-011"></a>E-011 — Cloudlab-1: cloudflared upgrade executed (terminal, 12:13)
 Source: terminal output pasted as text by the author. Commands run (as one block, from /tmp):
 ```
 cd /tmp
@@ -235,7 +235,7 @@ Facts (what the output shows):
 - The final `rm /tmp/cloudflared.deb` printed nothing; deletion is not yet verified.
 Not shown / not measured: the exact downtime (when the old process stopped and when Grafana became unreachable); the dashboard view of the new version; whether Grafana answers through the public hostname.
 
-## E-012 — Post-upgrade verification on Cloudlab-1 (terminal, 12:15) — PARTIAL
+## <a id="e-012"></a>E-012 — Post-upgrade verification on Cloudlab-1 (terminal, 12:15) — PARTIAL
 Commands run by the author:
 ```
 journalctl -u cloudflared --since "12:13" --no-pager | grep -o "Registered tunnel connection connIndex=[0-9]"
@@ -257,7 +257,7 @@ Facts (what the output shows):
 - The temporary installer /tmp/cloudflared.deb no longer exists (cleanup verified).
 Still pending for E-012: (a) dashboard shows version 2026.10.7 and Healthy for the replica; (b) public hostname https://grafana.jdjagustin-lab.dev responds (expected: Cloudflare Access login first, per earlier project notes; not verified yet). Downtime was not measured.
 
-## E-013 — Browser: https://grafana.jdjagustin-lab.dev after the upgrade (screenshot, 12:17)
+## <a id="e-013"></a>E-013 — Browser: https://grafana.jdjagustin-lab.dev after the upgrade (screenshot, 12:17)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page shown (dark theme): "Cloudflare Access" logo; Access team domain shown as <team-name>.cloudflareaccess.com (team name is part of the Access login page, mask before publishing if desired); heading "Log in to grafana"; "Sign in with:" with a single button "Cloudflare".
 Facts (what it shows):
@@ -266,7 +266,7 @@ Facts (what it shows):
 - To prove end-to-end: log in (the author, own account) and confirm Grafana loads through the tunnel. Not done yet.
 - Known limit from the earlier notes: the login method tested in the lab is the Cloudflare account, not an external IdP (that is lab piece 3).
 
-## E-014 — Why four connections: official docs (web search, 12:30)
+## <a id="e-014"></a>E-014 — Why four connections: official docs (web search, 12:30)
 Sources: Cloudflare docs, Tunnel overview (https://developers.cloudflare.com/tunnel), Tunnel configuration > Replicas and high availability (https://developers.cloudflare.com/tunnel/configuration/), Tunnel availability and failover (https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-availability). Read through search snippets.
 - A running cloudflared opens four outbound-only connections to at least two distinct Cloudflare data centers. If one connection, server or data center goes offline, the tunnel stays available.
 - The four connections go to four different servers. A replica (extra cloudflared instance on the same tunnel) opens four more; up to 25 replicas (100 connections) per tunnel.
@@ -275,7 +275,7 @@ Link to our own evidence:
 - Our logs show connIndex 0, 1, 2, 3 registered after the upgrade (E-012) with `protocol=quic`. Edge IPs seen in E-008/E-011: 198.41.192.x and 198.41.200.x. The dashboard before the upgrade listed edge locations dfw15, dfw08, dfw08, dfw01 (E-007): four entries, consistent with four connections in the Dallas area. The exact mapping connIndex -> data center was NOT established.
 - Inference (not proven): at 10:04 CST on 2026-11-09, connIndex=3 dropped and re-registered in ~8 s (E-008b) while the tunnel kept reporting Healthy; this is consistent with the redundancy described in the docs, but no request-level test was made.
 
-## E-015 — Cloudflare dashboard after the upgrade (two screenshots, 12:19)
+## <a id="e-015"></a>E-015 — Cloudflare dashboard after the upgrade (two screenshots, 12:19)
 Source: screenshots pasted in chat (not on disk yet; transcribed here, sensitive values masked).
 Tunnels list (one row): lab-tunnel | Status Healthy | Replicas 1 | Version 2026.10.7 (green badge; it was orange at 2026.8.3 in E-006) | Routes 1 app. Usage: 1 / 1,000 tunnels.
 Replica table (tunnel detail):
@@ -293,13 +293,13 @@ Facts (what it shows):
 - The orange badge on 2026.8.3 (E-006) is now green on 2026.10.7, consistent with the orange badge meaning "outdated" (still an inference; the UI text does not say so).
 Not yet verified: that Grafana actually loads through the tunnel after logging in through Access (E-013 only shows the Access login screen). Downtime during the restart was not measured.
 
-## E-016 — Cloudflare account sign-in page reached from the Access login (screenshot, 12:24)
+## <a id="e-016"></a>E-016 — Cloudflare account sign-in page reached from the Access login (screenshot, 12:24)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page: "Sign in to Cloudflare" with buttons Google, Apple, GitHub, "Continue with SSO", then Email/Password fields, checkbox "Save email and login method on this device" (checked), "Sign in", "Sign up", "Forgot your email or password?".
 Facts: after clicking "Cloudflare" on the Access screen (E-013) the flow lands on the normal Cloudflare account login. This browser had no saved login method. earlier project notes only records that the tested login method was the Cloudflare account ("Sign in with: Cloudflare"), not which of these sign-in options the author used; the account email shown in the dashboard header starts with "<email>" (E-006).
 Pending: the author signs in on his own (credentials are never shared in chat) and reports whether Grafana loads (closes Piece 0).
 
-## E-017 — End-to-end check through Access, as reported by the author (12:29) — NO SCREENSHOT
+## <a id="e-017"></a>E-017 — End-to-end check through Access, as reported by the author (12:29) — NO SCREENSHOT
 Source: the author's verbal report in chat. No screenshot or log of this step; I did not see the page myself.
 What the author reported, in order:
 1. On the Cloudflare account sign-in page he tried email + password twice; both attempts showed an error message to the effect of "retry" (exact text not captured; cause not investigated).
@@ -309,19 +309,19 @@ Interpretation (limited to the report):
 - The request went browser -> Cloudflare edge -> Access (accepted the existing Cloudflare session) -> tunnel (cloudflared 2026.10.7) -> Grafana. A Grafana page can only be served by the origin, so the tunnel is carrying traffic to Grafana after the upgrade.
 - Limits: the email/password form was NOT what authenticated him (it errored twice, unexplained); the Access step passed thanks to the existing dashboard session. This is not a test of a fresh login, and it is not the three-test validation of earlier project notes. Downtime during the restart was not measured. A screenshot of the Grafana page would strengthen this entry; not required.
 
-## E-018 — Screenshot: Grafana login page served at the public hostname (12:31)
+## <a id="e-018"></a>E-018 — Screenshot: Grafana login page served at the public hostname (12:31)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the browser bookmarks bar visible in the image is personal and not transcribed).
 Browser address bar: grafana.jdjagustin-lab.dev. Page: "Welcome to Grafana", fields "Email or username" and "Password", "Log in" button, "Forgot your password?". Footer: Documentation | Support | Community | Open Source | Grafana (version shown) | "New version available!".
 Facts (what it shows):
 - This is Grafana's own login page, which only the origin can serve. Together with E-017 it supports that traffic reaches Grafana through Access and the upgraded tunnel (cloudflared 2026.10.7). It replaces the "no screenshot" limit of E-017 in part: it is the Grafana LOGIN screen, not a logged-in dashboard.
 - Observation: the instance runs Grafana (version) and shows "New version available!". It sits behind Cloudflare Access (E-013), which limits exposure, but it is not the latest release. Not acted on; added to the pending list as a later hardening item, outside the lab plan.
 
-## E-019 — Screenshot: Cloudflare account home (12:31)
+## <a id="e-019"></a>E-019 — Screenshot: Cloudflare account home (12:31)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Account home ("What are we building today?"). Domains panel lists two zones: <other-zone> and jdjagustin-lab.dev. Workers panel: empty ("Ship something new"). Recents: Networking / Tunnels, AI / Models, Domains / Overview, Analytics / Web analytics, Analytics / Dashboards.
 Facts: both domains live in the SAME Cloudflare account, so the existing tunnel could route hostnames from either zone. No Workers deployed.
 
-## E-020 — Cloudlab-1: Kubernetes Secrets in namespace `observability` (names only, 12:50)
+## <a id="e-020"></a>E-020 — Cloudlab-1: Kubernetes Secrets in namespace `observability` (names only, 12:50)
 Command run by the author: `sudo k3s kubectl get secrets -n observability` (lists names/types/key counts/ages; no secret values were printed or shared).
 Verbatim output:
 ```
@@ -338,7 +338,7 @@ prometheus-kube-prometheus-stack-prometheus-web-config     Opaque   1      339d
 Facts: k3s is running on Cloudlab-1 and `sudo k3s kubectl` reaches the cluster (the plain `kubectl` failure on CloudSpartan, E-005, was a missing kubeconfig). The namespace holds a kube-prometheus-stack + loki-stack deployment (names suggest Helm installs about 339 days old; naming-based inference). Two secrets could hold Grafana's admin login: `kube-prometheus-stack-grafana` (3 keys, 339d, looks like the chart's own secret) and `grafana-admin-credentials` (2 keys, 94d, created later, custom name). Which one Grafana actually reads is NOT established yet.
 Pending: identify, without printing values, which secret the Grafana deployment references and its key names.
 
-## E-021 — Cloudlab-1: which secret the Grafana deployment reads (12:53)
+## <a id="e-021"></a>E-021 — Cloudlab-1: which secret the Grafana deployment reads (12:53)
 Commands run by the author:
 ```
 sudo k3s kubectl get deploy -n observability -o yaml | grep -B2 -A6 -i "GF_SECURITY_ADMIN"
@@ -359,28 +359,28 @@ Facts: the Grafana deployment takes its admin user and password from secret `kub
 Caveat (general Grafana behavior, from my knowledge, not verified in this session): Grafana applies the admin password from the environment only when it first creates its database; if the password was changed later in the Grafana UI, the Kubernetes secret may no longer match the current password. Grafana data lives under /var/lib/grafana/.
 Pending: the author reads the user/password locally in his own terminal (never pasted in chat) and tries the login.
 
-## E-022 — Grafana login succeeded, as reported by the author (12:55) — NO SCREENSHOT
+## <a id="e-022"></a>E-022 — Grafana login succeeded, as reported by the author (12:55) — NO SCREENSHOT
 Source: the author's verbal report ("ya entre a Grafana"). He did not say which credentials he used (presumably those read from secret kube-prometheus-stack-grafana, E-021) and no screenshot was shared; I did not see the logged-in page.
 Interpretation (limited to the report): a full login to Grafana through the public hostname (Access + upgraded tunnel + Grafana's own login) worked. Strengthens E-017/E-018: this is now a logged-in session, per the author's report. The optional extra Grafana user (his Gmail, admin rights) was only discussed; NOT created. No Grafana setting was changed in this lab.
 
-## E-023 — Screenshot: Grafana "New user" form, before submitting (12:55)
+## <a id="e-023"></a>E-023 — Screenshot: Grafana "New user" form, before submitting (12:55)
 Source: screenshot pasted in chat (not on disk yet; transcribed here). Grafana path: Home > Administration > Users and access > Users > New user.
 Form: Name "<name>"; Email and Username both set to the author's Gmail address (masked here: <email>); Password field filled and masked (password-manager key icon shown; value not visible, not recorded); button "Create user" not yet pressed in the screenshot.
 Facts: this is an optional side task outside the lab plan (own Grafana user instead of sharing `admin`). At the time of the screenshot the user was NOT created yet. Admin rights are set after creation (Grafana Admin switch and organization role). Nothing about this changes who passes Cloudflare Access.
 
-## E-024 — Screenshot: Grafana user page of the new user (12:58)
+## <a id="e-024"></a>E-024 — Screenshot: Grafana user page of the new user (12:58)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; email masked).
 Path: Home > Administration > Users and access > Users > <the author's Gmail>. Section "User information": Name "<name>"; Email and Username = the author's Gmail (masked: <email>); Password shown as "********" (fixed mask, not the real value or length). Buttons: Delete user, Disable user. Section "Permissions": Grafana Admin = Yes (with a "Change" link). Section "Organizations": Main Org. = Admin (links "Change role", "Remove from organization"); button "Add user to organization".
 Facts (what it shows): the user exists in Grafana with the Grafana Admin switch on and the Admin role in Main Org. The screenshot does not show which account is currently logged in, and it does not prove that the new user can sign in.
 Not verified yet: a test login with the new user in a private window. The original `admin` account is untouched (kept as recovery). Side task, outside the lab plan.
 
-## E-025 — Screenshot: logged in to Grafana as the new user (13:00)
+## <a id="e-025"></a>E-025 — Screenshot: logged in to Grafana as the new user (13:00)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the browser bookmarks bar in the image is personal and not transcribed).
 Address bar: grafana.jdjagustin-lab.dev. Page: Grafana "Home" with the "Welcome to Grafana" panel and the "Basic" setup cards (Grafana fundamentals tutorial; "Add your first data source" marked COMPLETE; "Create your first dashboard" marked COMPLETE). The user menu (top right) is open and shows the name "<name>" and the author's Gmail (masked: <email>), with Profile, Notification history, Change password, Sign out.
 Facts (what it shows): a Grafana session logged in as the newly created user, reached through the public hostname (Access + upgraded tunnel). This upgrades E-022 (login "as reported") to a logged-in screenshot. The screenshot does not show whether the window was private; it does not matter for the result, since Access passes with an existing Cloudflare session. The original `admin` account was not changed.
 Side task (own Grafana admin user) is closed. Not part of the lab plan.
 
-## E-026 — Cloudlab-1: Python, port 8081, load and memory (terminal, 13:02)
+## <a id="e-026"></a>E-026 — Cloudlab-1: Python, port 8081, load and memory (terminal, 13:02)
 Commands run by the author: `python3 --version`, `ss -ltn | grep -E ':8081\b' || echo "puerto 8081 libre"`, `uptime`, `free -h`.
 Verbatim output:
 ```
@@ -397,7 +397,7 @@ Facts (what the output shows):
 - Load average 7.42 / 6.72 / 6.16 (1/5/15 min) with the machine up 6 days 21 h and 2 users logged in. The load has been high and roughly steady for at least 15 minutes. Number of CPU cores NOT known yet, so the load cannot be judged: the earlier notes says Cloudlab-1 has a Celeron G530 (a 2011 dual-core), which would make a load of ~7 heavy; to be confirmed with `nproc`.
 - Not established: which processes use the CPU. No link is claimed between this load and the 10:04 connection drop (E-008b).
 
-## E-027 — Cloudlab-1: CPU cores and top CPU processes (terminal, 13:05)
+## <a id="e-027"></a>E-027 — Cloudlab-1: CPU cores and top CPU processes (terminal, 13:05)
 Commands run by the author: `nproc` and `ps -eo pid,pcpu,pmem,comm --sort=-pcpu | head -n 8`.
 Verbatim output:
 ```
@@ -418,10 +418,10 @@ Facts and limits:
 - Design consequences for the Cloudflare lab (reasoning, not measured): cache hits and requests blocked by WAF/rate limiting are answered at Cloudflare's edge and never reach Cloudlab-1; only cache misses and allowed requests cost origin CPU. Plan: keep test volumes modest and run the static server with the lowest priority (`nice -n 19`).
 - Not read: the LAB_DRILLDOWN*_CLOUDLAB1_* files of 2026-11-02 in ~/projects, which suggest this host's load was already investigated.
 
-## E-028 — Static site files created locally in this folder (13:14)
+## <a id="e-028"></a>E-028 — Static site files created locally in this folder (13:14)
 Files written in `site/` (this folder, on the author's Mac): `index.html` (title "Lab site", links /style.css, one paragraph) and `style.css` (one rule). Content has no company or role names (portfolio rule). They are NOT yet on Cloudlab-1 and nothing serves them yet.
 
-## E-029 — Static site files created on Cloudlab-1 (terminal, 13:07)
+## <a id="e-029"></a>E-029 — Static site files created on Cloudlab-1 (terminal, 13:07)
 Commands run by the author: `mkdir -p ~/lab-site`, two `cat > ... <<'EOF'` blocks (same content as ./site, see E-028), `ls -la ~/lab-site`.
 Verbatim `ls` output:
 ```
@@ -434,7 +434,7 @@ drwxr-x--- 31 <user> <user> 4096 Nov  9 13:07 ..
 Facts: ~/lab-site on Cloudlab-1 holds index.html (276 bytes) and style.css (48 bytes); both sizes match the copies in ./site on the Mac (276 and 48 bytes), a consistency hint, not a byte-for-byte comparison. Nothing is running yet.
 Cleanup (planned): stop the server, `rm -r ~/lab-site`, remove /tmp/lab-site.log, remove the tunnel ingress rule and the DNS record.
 
-## E-030 — Cloudlab-1: static server started and tested locally (terminal, 13:09)
+## <a id="e-030"></a>E-030 — Cloudlab-1: static server started and tested locally (terminal, 13:09)
 Commands run by the author (one block): `nohup nice -n 19 python3 -m http.server 8081 --bind 127.0.0.1 --directory ~/lab-site > /tmp/lab-site.log 2>&1 &`, `sleep 1`, `ss -ltn | grep 8081`, `curl -sI http://127.0.0.1:8081/ | head -n 5`, `curl -s http://127.0.0.1:8081/style.css`, `pgrep -af "http.server 8081"`.
 Verbatim output:
 ```
@@ -451,7 +451,7 @@ body { font-family: sans-serif; margin: 2rem; }
 Facts: the temporary static server runs as PID 3738629, listening ONLY on 127.0.0.1:8081 (not reachable from the LAN), answers `200 OK` for / with Content-Length 276 (matches index.html) and serves the 1-line stylesheet. Started with `nice -n 19` (the priority is not visible in this output; not verified with `ps -o ni`). Log file: /tmp/lab-site.log. Only the first 5 header lines were shown (head -n 5), so headers such as Last-Modified were not seen.
 Stop it at cleanup: `kill 3738629` (PID valid only until the process or machine restarts).
 
-## E-031 — Cloudlab-1: config.yml backed up, edited and validated (terminal, 13:13)
+## <a id="e-031"></a>E-031 — Cloudlab-1: config.yml backed up, edited and validated (terminal, 13:13)
 Commands run by the author (one block): `sudo cp -a /etc/cloudflared/config.yml /etc/cloudflared/config.yml.bak-2026-11-09`, a `sudo python3 - <<'PY'` script that inserts the new ingress rule before the catch-all, `sudo cat /etc/cloudflared/config.yml`, `cloudflared tunnel --config /etc/cloudflared/config.yml ingress validate`, `cloudflared tunnel --config /etc/cloudflared/config.yml ingress rule https://lab.jdjagustin-lab.dev`.
 Verbatim output (tunnel ID and credentials file name masked to the last 4 characters):
 ```
@@ -475,7 +475,7 @@ Facts: a backup of the previous config exists at /etc/cloudflared/config.yml.bak
 Not done yet: the running cloudflared has NOT reloaded this config (it needs a restart), and no DNS record exists for lab.jdjagustin-lab.dev, so the hostname does not resolve to the tunnel yet.
 Rollback: `sudo cp -a /etc/cloudflared/config.yml.bak-2026-11-09 /etc/cloudflared/config.yml` (then restart). Cleanup at the end: restore or delete the backup, remove the rule.
 
-## E-032 — Cloudlab-1: cloudflared restarted with the new ingress rule (terminal, 13:15)
+## <a id="e-032"></a>E-032 — Cloudlab-1: cloudflared restarted with the new ingress rule (terminal, 13:15)
 Commands run by the author (one block): `sudo systemctl restart cloudflared.service`, `sleep 5`, `systemctl is-active cloudflared`, `journalctl -u cloudflared --since "2 minutes ago" --no-pager | grep -o -E "Registered tunnel connection connIndex=[0-9]"`.
 Verbatim output:
 ```
@@ -489,19 +489,19 @@ Registered tunnel connection connIndex=3
 Facts: the service restarted and is `active`; all four tunnel connections (0-3) registered again within the 5 s wait plus the log window. The "Failed to allocate directory watch: Too many open files" warning appeared again (same inotify-limit warning as in E-011 and earlier project notes; not investigated).
 Not verified: that cloudflared actually loaded the new rule (the log lines for the configuration were not shown; the real proof comes when lab.jdjagustin-lab.dev is reached through the tunnel); that Grafana kept answering through the public hostname after this restart (the author had not reported it yet); the duration of the drop (not measured).
 
-## E-033 — Grafana session dropped by the cloudflared restart, as reported by the author (13:17) — NO SCREENSHOT
+## <a id="e-033"></a>E-033 — Grafana session dropped by the cloudflared restart, as reported by the author (13:17) — NO SCREENSHOT
 Source: the author's verbal report: the Grafana connection he had open (logged in) "se cayo" after the restart in E-032; he will log in again with his own user.
 Interpretation (limited to the report): consistent with what the Cloudflare advisory says (E-001): restarting cloudflared drops long-lived connections (for example WebSockets) and clients must reconnect. The exact failure he saw (error page, blank, login screen) was not described, and how long the drop lasted was not measured. Whether Grafana is reachable again is pending his report.
 
-## E-034 — Screenshot: Grafana login page served again after the restart (13:18)
+## <a id="e-034"></a>E-034 — Screenshot: Grafana login page served again after the restart (13:18)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the browser bookmarks bar is personal and not transcribed).
 Address bar: grafana.jdjagustin-lab.dev. Page: "Welcome to Grafana" login form (Grafana (version), "New version available!"), "Email or username" filled with the author's Gmail (masked: <email>), the password field filled and masked by the password manager (value not visible, not recorded), "Log in" not yet pressed.
 Facts: after the cloudflared restart (E-032) the public hostname answers again and Grafana's own login page is served, which only the origin can do. This closes the "Grafana reachable after the restart" gap listed in E-032. It matches E-033: his previous session was dropped and he is asked to log in again. The screenshot does not show Access intervening this time (an existing Cloudflare session was probably still valid; not verified), and it does not show the login result or how long the drop lasted.
 
-## E-035 — Grafana login after the restart succeeded, as reported by the author (13:19) — NO SCREENSHOT
+## <a id="e-035"></a>E-035 — Grafana login after the restart succeeded, as reported by the author (13:19) — NO SCREENSHOT
 Source: the author's verbal report ("entre"). He logged into Grafana again with his own user through the public hostname after the cloudflared restart. No screenshot of the logged-in page; drop duration not measured. Together with E-034 this supports that the tunnel, the Access layer and Grafana work end to end after the second restart.
 
-## E-036 — Screenshot: DNS records of jdjagustin-lab.dev BEFORE adding the lab record (13:21)
+## <a id="e-036"></a>E-036 — Screenshot: DNS records of jdjagustin-lab.dev BEFORE adding the lab record (13:21)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page: "DNS records for jdjagustin-lab.dev" (zone plan badge: free; "DNS Setup: Full"). Left menu under DNS: Records, Analytics, Settings; other zone sections visible include SSL/TLS, Security, Access, Speed, Email. Buttons: Import, Export, Add record, Filters, Display options. "You have used 1 of 200 available DNS records in this domain."
 Recommendations panel (3): "Visitors cannot reach www.jdjagustin-lab.dev" (suggests an A/AAAA/CNAME for www) and "Visitors cannot reach jdjagustin-lab.dev"; the third is not visible. Not acted on: the zone has no apex or www records and the lab does not need them.
@@ -511,7 +511,7 @@ Facts and limits:
 - The dashboard labels the Grafana record as type "Tunnel" with content "lab-tunnel", proxied. My reading (from how Cloudflare displays tunnel CNAME records, not verified here): it is a proxied CNAME to <tunnel-id>.cfargotunnel.com shown with the tunnel's name. The new `lab` record should end up looking the same.
 - The zone has an Export button: a DNS backup in one click exists in this UI (earlier I had only recalled it).
 
-## E-037 — Where the DNS target comes from: official docs check (web search, 13:25)
+## <a id="e-037"></a>E-037 — Where the DNS target comes from: official docs check (web search, 13:25)
 Source: Cloudflare docs, Tunnel routing and "DNS records" pages — https://developers.cloudflare.com/tunnel/routing/ and https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/routing-to-tunnel/dns/ . Read through search snippets, not the full pages.
 - Every tunnel gets a subdomain `<UUID>.cfargotunnel.com`. To route a hostname to the tunnel, create a CNAME in DNS: Type CNAME, Name = the subdomain, Target = `<UUID>.cfargotunnel.com`. For locally-managed tunnels the same record can be created with `cloudflared tunnel route dns <UUID or NAME> <hostname>`.
 - The tunnel UUID is not secret, and `cfargotunnel.com` only proxies traffic for DNS records in the same Cloudflare account.
@@ -520,7 +520,7 @@ Source: Cloudflare docs, Tunnel routing and "DNS records" pages — https://deve
 Where the author's value comes from: the UUID is the `tunnel:` line of /etc/cloudflared/config.yml on Cloudlab-1 (E-009, E-031); the suffix `.cfargotunnel.com` is the documented format. Cross-check available: the dashboard shows the Tunnel ID under Networking > Tunnels (per the docs).
 Note for lab piece 4: the plan expected "530/1033" when the origin is down behind a tunnel; this page mentions 1016 for a record pointing to a stopped tunnel. These may be different situations (tunnel stopped vs. origin service down). Neither code is claimed until it is reproduced and captured in this lab.
 
-## E-038 — DNS zone export of jdjagustin-lab.dev BEFORE adding the lab record (13:24)
+## <a id="e-038"></a>E-038 — DNS zone export of jdjagustin-lab.dev BEFORE adding the lab record (13:24)
 Source: file `jdjagustin-lab.dev.txt` attached by the author (Cloudflare DNS > Export). Exported 2026-11-09 19:22:54 UTC (13:22 CST). Saved as a transcription in `evidence/jdjagustin-lab.dev_zone_export_BEFORE-lab-record_2026-11-09_1922UTC.txt` (header comments trimmed; contains the tunnel UUID and the zone's name servers: private working evidence, check before publishing).
 Contents (what the export shows):
 - SOA: donald.ns.cloudflare.com., serial 2054591877. NS: donald.ns.cloudflare.com. and georgia.ns.cloudflare.com. (the zone's authoritative name servers are Cloudflare's).
@@ -530,21 +530,21 @@ Facts:
 - The UUID in that CNAME equals the `tunnel:` value of /etc/cloudflared/config.yml on Cloudlab-1 (E-009, E-031): same string, so the target I proposed for `lab` is the right one (compared by reading both values).
 - It is the "before" backup of the zone: if the new record causes trouble, the zone can be restored to this state by deleting the `lab` record (import is possible but not needed for one record).
 
-## E-039 — Screenshot: "Add record" dialog with the Type list open (13:27)
+## <a id="e-039"></a>E-039 — Screenshot: "Add record" dialog with the Type list open (13:27)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Dialog "Add record". Helper text for the selected type: "[name] is an alias of [target] and has its traffic proxied through Cloudflare." Fields: Type = CNAME (selected, checkmark in the list), Name (placeholder "Use @ for root"), Target (placeholder ends in "...le.com"), Proxy status = Proxied (toggle on, orange cloud), TTL = Auto. Buttons: Cancel (and a Save button partly hidden behind the open list).
 Type list as visible: A, AAAA, CAA, CERT, CNAME, DNSKEY, DS, HTTPS, LOC, MX, NAPTR, NS, OPENPGPKEY, PTR, SMIMEA (the list continues below the visible part; remaining types not seen). Behind the dialog the existing row `...jdjagustin-lab.dev | Tunnel | lab-tunnel | Proxied | Auto` is visible.
 Facts: the form is at the right place with CNAME and Proxied already preselected. The record had NOT been saved at this point.
 the author's request: a DNS deep-dive document is wanted at the END of the lab (see the initial plan pending deliverables); use this list of record types as a starting point.
 
-## E-040 — Screenshot: "Add record" form filled in for `lab`, before saving (13:29)
+## <a id="e-040"></a>E-040 — Screenshot: "Add record" form filled in for `lab`, before saving (13:29)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Preview sentence shown by the dashboard: "lab.jdjagustin-lab.dev is an alias of <tunnel-uuid>.cfargotunnel.com and has its traffic proxied through Cloudflare."
 Fields: Type CNAME | Name `lab` | Target `<tunnel-uuid>.cfargotunnel.com` | Proxy status Proxied (toggle on) | TTL Auto. Section "Record Attributes" (UI text: the information there does not impact DNS resolution and is only for reference) with an optional Comment field (up to 100 characters), empty at this point. Buttons: Save, Cancel.
 Facts: the target string equals the `tunnel:` value of config.yml (E-009, E-031) and the CNAME target in the zone export (E-038), compared by reading. The record was NOT saved yet when the screenshot was taken.
 Suggested comment (the author's decision): marks the record as temporary to ease cleanup; it is only a label.
 
-## E-041 — Screenshot: DNS records of jdjagustin-lab.dev AFTER saving the lab record (13:30)
+## <a id="e-041"></a>E-041 — Screenshot: DNS records of jdjagustin-lab.dev AFTER saving the lab record (13:30)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page "DNS records for jdjagustin-lab.dev" (plan badge free, DNS Setup: Full). "You have used 2 of 200 available DNS records in this domain." "Showing 1-2 of 2".
 Records table:
@@ -556,7 +556,7 @@ The Comment/Tags columns are cut off at the right edge of the screenshot; whethe
 Facts: the `lab` record exists (created about 13:30 CST) and looks identical to the Grafana one: a proxied CNAME to the tunnel, shown by the dashboard as type "Tunnel" with content "lab-tunnel". The zone went from 1 record (E-036/E-038) to 2.
 Not verified yet: that the name resolves publicly (dig), the zone's SSL/TLS mode, and that https://lab.jdjagustin-lab.dev reaches the static site through the tunnel (which also proves cloudflared loaded the new ingress rule).
 
-## E-042 — dig from the author's Mac: lab and grafana resolve to Cloudflare IPs (terminal, 13:31)
+## <a id="e-042"></a>E-042 — dig from the author's Mac: lab and grafana resolve to Cloudflare IPs (terminal, 13:31)
 Commands run by the author (Mac terminal, cwd ~/Downloads): `dig +short lab.jdjagustin-lab.dev` and `dig +short grafana.jdjagustin-lab.dev`.
 Verbatim output (in order, first command then second):
 ```
@@ -570,7 +570,7 @@ Facts:
 - The addresses are in the 104.21.x.x and 172.67.x.x ranges that Cloudflare uses for proxied sites (from my knowledge; can be checked against Cloudflare's published IP list, not done here).
 - The new `lab` record is therefore live in public DNS about a minute after creation. Whether the page behind it works is NOT verified yet.
 
-## E-043 — Screenshot: https://lab.jdjagustin-lab.dev serves the static "Lab site" page (13:34)
+## <a id="e-043"></a>E-043 — Screenshot: https://lab.jdjagustin-lab.dev serves the static "Lab site" page (13:34)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the browser bookmarks bar is personal and not transcribed).
 Address bar: lab.jdjagustin-lab.dev; tab title "Lab site". Page content: heading "Lab site" and the paragraph "Temporary static page used for Cloudflare lab tests (cache, WAF, rate limiting)." The text is in a sans-serif font with a margin around it.
 Facts (what it shows):
@@ -579,15 +579,15 @@ Facts (what it shows):
 - No Cloudflare Access login screen appeared. This is NOT proof that Access does not cover this hostname: the author has an open Cloudflare session in this browser. To check without cookies: `curl -sI` from the terminal (a redirect to cloudflareaccess.com would mean Access applies).
 - Lab Piece 1 status: DNS record created and live (E-041, E-042), proxied (E-042), page reachable (this entry). Still to read: the zone's SSL/TLS mode.
 
-## E-044 — Access check without a Cloudflare session, as reported by the author (13:36) — NO SCREENSHOT
+## <a id="e-044"></a>E-044 — Access check without a Cloudflare session, as reported by the author (13:36) — NO SCREENSHOT
 Source: the author's verbal report. After being asked to open https://lab.jdjagustin-lab.dev from a context without a Cloudflare session (private window, another browser or his phone), he says he also sees the "Lab site" page directly. Which of those options he used was not stated, and there is no screenshot.
 Interpretation (limited to the report): if the test really had no Cloudflare session, the Access application does NOT cover `lab.jdjagustin-lab.dev`, so the hostname is public by design (it only serves a static page). The `curl -sI` check (no cookies at all) would confirm it with headers and is still planned as the first Piece 2 step.
 
-## E-045 — Detail for E-044: the test was done in Google Chrome (13:38) — NO SCREENSHOT
+## <a id="e-045"></a>E-045 — Detail for E-044: the test was done in Google Chrome (13:38) — NO SCREENSHOT
 Source: the author's verbal report: he opened https://lab.jdjagustin-lab.dev in Google Chrome, which does not have the Cloudflare dashboard open, and saw "Lab site" directly.
 Interpretation: this is a different browser from the one used before, so it is a stronger test than the first one. Limit: "the dashboard is not open" is not the same as "no Cloudflare/Access session cookies": if Chrome had logged in to Cloudflare Access earlier, a stale session could still let it through. It is not a private window and there is no screenshot. The cookie-free `curl -sI` check remains the definitive one.
 
-## E-046 — curl -sI from the author's Mac: headers of / and /style.css (terminal, 13:37 CST = 19:37 GMT)
+## <a id="e-046"></a>E-046 — curl -sI from the author's Mac: headers of / and /style.css (terminal, 13:37 CST = 19:37 GMT)
 Commands run by the author (Mac terminal, no cookies): `curl -sI https://lab.jdjagustin-lab.dev/` and `curl -sI https://lab.jdjagustin-lab.dev/style.css` (twice).
 Output (verbatim; the long `report-to` and `nel` lines, which are Cloudflare's network-error-logging headers with a per-response signature, are trimmed here):
 ```
@@ -623,7 +623,7 @@ Facts (what the headers show):
 5. `cf-ray` ends in `-DFW`: the three requests were served by a Cloudflare data center identified as DFW (Dallas area). `alt-svc: h3` shows HTTP/3 is offered. `last-modified` (19:07:18 GMT = 13:07 CST) matches when the files were created on Cloudlab-1 (E-029).
 Not shown yet: the origin side (how many requests actually reached the Python server; /tmp/lab-site.log on Cloudlab-1), and a clean MISS->HIT sequence.
 
-## E-047 — Clean cache MISS -> HIT demonstration (terminal, 13:43 CST)
+## <a id="e-047"></a>E-047 — Clean cache MISS -> HIT demonstration (terminal, 13:43 CST)
 Commands run by the author (Mac terminal): the same command twice, `curl -sI "https://lab.jdjagustin-lab.dev/style.css?test=1" | grep -i -E "^(HTTP|cf-cache-status|age)"`.
 Verbatim output:
 ```
@@ -636,7 +636,7 @@ cf-cache-status: HIT
 Facts: the first request for a URL nobody had asked for (`?test=1`, the query string makes it a different cache key) was a `MISS`: Cloudflare had to fetch it from the origin and stored it. The second, immediately after, was a `HIT` with `age: 0` (the object had been in cache for less than a second). The MISS response carries no `age` header, the HIT does. This is the clean MISS->HIT sequence that E-046 could not show.
 Not shown yet: the origin side. Prediction to test (not measured): the Python server on Cloudlab-1 received ONE request for `style.css?test=1` (the MISS), not two. Check: /tmp/lab-site.log on Cloudlab-1.
 
-## E-048 — Origin log on Cloudlab-1: which requests actually reached the Python server (terminal, 13:50 CST)
+## <a id="e-048"></a>E-048 — Origin log on Cloudlab-1: which requests actually reached the Python server (terminal, 13:50 CST)
 Commands run by the author on Cloudlab-1: `cat /tmp/lab-site.log` and `wc -l /tmp/lab-site.log`.
 Verbatim output (times are local CST; the client address is always 127.0.0.1 because cloudflared connects to the server locally):
 ```
@@ -665,7 +665,7 @@ Counts: 12 lines = 10 requests + 2 "code 404" detail lines. Of the 5 requests fo
 Limits: browser visits at 13:33:31 and 13:36:27 may also have requested the stylesheet from Cloudflare (HIT, invisible here) or from the browser's own cache; not known. The log shows only 127.0.0.1, so the origin cannot see real visitor IPs (Cloudflare passes them in a header, not logged by this server).
 Conclusion supported by evidence: cache HITs do not consume origin CPU on Cloudlab-1; HTML pages (DYNAMIC) do reach it.
 
-## E-049 — Screenshot: SSL/TLS Overview of jdjagustin-lab.dev (13:58)
+## <a id="e-049"></a>E-049 — Screenshot: SSL/TLS Overview of jdjagustin-lab.dev (13:58)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page "SSL/TLS" (zone jdjagustin-lab.dev, plan badge free). Intro text: "Choose how Cloudflare encrypts traffic between your visitors and Cloudflare, and between Cloudflare and your origin server, to prevent data theft and other tampering." Button "Configure".
 Panel "SSL/TLS encryption": "Current encryption mode: Full". Diagram: Browser -> (lock) -> Cloudflare -> (lock) -> Origin Server. Under it: "Automatic mode enabled · 66 days ago" and "Next automatic scan: Nov 17".
@@ -677,7 +677,7 @@ Facts and interpretation:
 - 136 requests served over TLS 1.3 in the last 24 hours: all visible traffic used TLS 1.3. The count includes today's tests (Grafana, lab site, curl). Visitors always use HTTPS on this domain; `.dev` domains are on the browsers' HTTPS-only (HSTS preload) list (my knowledge).
 Lab Piece 1 is now complete: DNS record created (E-041), proxied and resolving to Cloudflare IPs (E-042), page reachable (E-043), zone SSL/TLS mode read: Full, Automatic mode (this entry).
 
-## E-050 — Free plan limits for WAF custom rules and rate limiting (web search, 14:10)
+## <a id="e-050"></a>E-050 — Free plan limits for WAF custom rules and rate limiting (web search, 14:10)
 Sources: Cloudflare docs, WAF overview (https://developers.cloudflare.com/waf/) and the legacy rate-limiting upgrade page (https://developers.cloudflare.com/waf/reference/legacy/old-rate-limiting/upgrade); Cloudflare blog "unmetered rate limiting" (https://blog.cloudflare.com/unmetered-ratelimiting/); third-party pricing comparisons (eastondev.com, cloud-pricing-tracker.pages.dev). Read through search snippets only.
 - Rate limiting rules: Free = 1 rule (Cloudflare docs and blog; Pro 2, Business 5). Action Block returns HTTP 429 (Cloudflare legacy docs). Third-party comparison: on Free the period is limited to 10 seconds (not confirmed by Cloudflare's own pages I saw).
 - WAF custom rules: available on all plans per the Cloudflare docs table; the NUMBER for Free is 5 according to two third-party comparisons (the snippet of Cloudflare's own page did not show the number). To verify in the dashboard: Security > WAF > Custom rules shows how many are used.
@@ -686,7 +686,7 @@ Sources: Cloudflare docs, WAF overview (https://developers.cloudflare.com/waf/) 
 Plan consequence for the lab: one custom rule scoped to the `lab` hostname, and the single rate limiting rule scoped to the `lab` hostname. No rule may apply to grafana.jdjagustin-lab.dev.
 Caveat: pricing/limits pages change; the dashboard is the source of truth for this account.
 
-## E-051 — "New custom rule" form filled in, before deploying (screenshot PDF, 14:10)
+## <a id="e-051"></a>E-051 — "New custom rule" form filled in, before deploying (screenshot PDF, 14:10)
 Source: PDF with two screenshots attached by the author (not on disk yet; transcribed here).
 Page "New custom rule" in zone jdjagustin-lab.dev (plan badge free). Left menu now shows under Security: Overview, Analytics, Account Abuse Protection (Beta), Web assets, Security rules, Settings (the WAF rules live under "Security rules"; the menu differs from the "Security > WAF" path I gave from memory).
 Fields:
@@ -699,7 +699,7 @@ Fields:
 - A "Deploy with API call" section shows the equivalent request: `curl -X PUT "https://api.cloudflare.com/client/v4/zones/<zone id, cut off>/..." -H "Authorization: Bearer $CF_AUTH_TOKEN" -d '{"rules":[{"description":"lab-block-blocked-path","expression":"(http.host eq \"lab.jdjag...","action":"block","enabled":true}]}'`; the page says an API Token with `Zone > Zone WAF` or broader permissions is required. Useful for lab Piece 5 (API/Terraform); NOT run.
 Facts: the rule was NOT deployed at the time of the screenshot. Expected after deploying (to be tested): `/blocked` on the lab hostname answers 403 from Cloudflare's edge without reaching the origin; `/` still answers 200; grafana.* untouched.
 
-## E-052 — Screenshot: Security rules page after deploying the custom rule (14:13)
+## <a id="e-052"></a>E-052 — Screenshot: Security rules page after deploying the custom rule (14:13)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page "Security rules" (tabs: Security rules, DDoS protection) of zone jdjagustin-lab.dev (plan badge free). A blue info banner reads: "Cloudflare is helping protect jdjagustin-lab.dev against php2shell ... Cloudflare has deployed rules that help block known php2shell attacks. This reduces your risk but doesn't fix the vulnerabilities in PHP. We recommend updating PHP to a patched version." (generic notice; not something done in this lab; the lab serves no PHP).
 Custom rules "1/5 rules": row Order 1 | Name `lab-block-blocked-path` | Description "Hostname equals lab.jdjagustin-lab.dev and URI Path equals /blocked" | Action Block | CSR "-" | Events (empty at the time).
@@ -710,7 +710,7 @@ Facts:
 - The Events column is empty because no request has matched yet (or none has been counted yet).
 Not yet verified: that the rule blocks `/blocked` on the lab hostname (expected 403 from the edge), that `/` still returns 200, and that the origin log has no `/blocked` line.
 
-## E-053 — curl test of the custom rule: /blocked answers 403 from Cloudflare, / still 200 (terminal, 14:14 CST = 20:14 GMT)
+## <a id="e-053"></a>E-053 — curl test of the custom rule: /blocked answers 403 from Cloudflare, / still 200 (terminal, 14:14 CST = 20:14 GMT)
 Commands run by the author (Mac terminal): `curl -sI https://lab.jdjagustin-lab.dev/blocked` and `curl -sI https://lab.jdjagustin-lab.dev/`.
 Output (verbatim, long `report-to`/`nel` lines trimmed as in E-046):
 ```
@@ -741,7 +741,7 @@ Facts:
 - Both requests were handled by a data center whose `cf-ray` ends in DFW. Times: `date` 20:14:15 GMT = 14:14:15 CST.
 Not verified yet: that the origin never saw the /blocked request (check /tmp/lab-site.log on Cloudlab-1; prediction: no /blocked line, only a HEAD / at 14:14:15), and the event in the dashboard's security events view.
 
-## E-054 — Origin log after the WAF test: the blocked request never reached Cloudlab-1 (terminal, 14:17 CST)
+## <a id="e-054"></a>E-054 — Origin log after the WAF test: the blocked request never reached Cloudlab-1 (terminal, 14:17 CST)
 Commands run by the author on Cloudlab-1: `grep -c "blocked" /tmp/lab-site.log` and `tail -n 3 /tmp/lab-site.log`.
 Verbatim output:
 ```
@@ -754,7 +754,7 @@ Facts: zero lines in the origin log contain "blocked", and the last request in t
 Limit: the log proves the request did not reach the origin; the 403 page body was not read.
 Pending: see the same request as an event in the dashboard's security analytics (rule name, action, host, path).
 
-## E-055 — Security Events: the blocked request seen in the dashboard (PDF with screenshots, 14:23)
+## <a id="e-055"></a>E-055 — Security Events: the blocked request seen in the dashboard (PDF with screenshots, 14:23)
 Source: PDF attached by the author (not on disk yet; transcribed here; his public IP is masked).
 Page: zone jdjagustin-lab.dev > Security > Analytics > tab "Events" (tabs: Traffic, Events). Section "Security Events" with Filter, a time window set to "Last 2 hours" and a "Create security rule" button; below, "Sampled logs" with one event expanded.
 Event details (as shown):
@@ -767,7 +767,7 @@ Facts:
 - "Sampled logs": this view shows a sample of events, not necessarily every request.
 Piece 2 status: custom rule proven at the client (E-053), at the origin (E-054) and in the dashboard (this entry). Still to do: the single rate limiting rule on the `lab` hostname.
 
-## E-056 — Firewall events exported as JSON: the raw record of the blocked request (file attached by the author, 14:25 CST)
+## <a id="e-056"></a>E-056 — Firewall events exported as JSON: the raw record of the blocked request (file attached by the author, 14:25 CST)
 Source: file `firewall-events-2026-11-08T20_21_05Z-2026-11-09T20_21_05Z.json` (Security > Analytics > Events export, window 2026-11-08 20:21 to 2026-11-09 20:21 UTC). A copy with the public IP masked is saved in `evidence/firewall-events_2026-11-08T2021Z_to_2026-11-09T2021Z_masked.json`.
 Content: ONE event in the 24-hour window. Key fields: action `block`; source `firewallCustom` (a custom rule); description `lab-block-blocked-path` (the rule name); clientRequestHTTPHost `lab.jdjagustin-lab.dev`; clientRequestPath `/blocked`; method `HEAD` (curl -I); protocol HTTP/2; datetime `2026-11-09T20:14:15Z`; rayName `a57f7b92af30552a`; userAgent `curl/8.7.1`; clientCountryName MX; clientASNDescription "<ISP>n `<n>`; ruleId and rulesetId (identifiers of the rule and its ruleset); matchIndex 0; sampleInterval 1.
 Facts:
@@ -776,12 +776,12 @@ Facts:
 - `sampleInterval: 1` means this record stands for exactly one request (nothing was sampled out). It is the only blocked request in the last 24 hours.
 - Useful as a deliverable: the JSON can go (masked) into the future repo as an example of a security event export.
 
-## E-057 — Screenshot: the block page a visitor sees in the browser (14:25)
+## <a id="e-057"></a>E-057 — Screenshot: the block page a visitor sees in the browser (14:25)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the browser bookmarks bar is personal and not transcribed).
 Browser address bar shows `lab.jdjagustin-lab.dev` (the path is not displayed by the browser; it is presumably /blocked, since the author opened the blocked URL; inference). Tab title: "Attention Required! | ..." (cut off). Page: heading "Sorry, you have been blocked", subtitle "You are unable to access jdjagustin-lab.dev", an illustration with a red X over a browser window, and two headings at the bottom, "Why have I been blocked?" and "What can I do to resolve this?". The rest of the page (where Cloudflare normally prints the Ray ID and client IP) is below the visible part of the screenshot.
 Facts: the body of the 403 is Cloudflare's standard block page, which settles the limit noted in E-053/E-054 ("page body not read"). It is served by Cloudflare, not by the lab server. In support practice a visitor reports the Ray ID printed on this page, which can then be looked up in Security Events (E-055/E-056 showed that link for the curl request). Not verified: the Ray ID/IP at the bottom of the page and the exact path (not visible); this browser request would also appear as a second event in Security Events.
 
-## E-058 — Screenshot: bottom of the block page with Ray ID (14:28) and the author's confirmation that the URL was /blocked
+## <a id="e-058"></a>E-058 — Screenshot: bottom of the block page with Ray ID (14:28) and the author's confirmation that the URL was /blocked
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the visitor IP printed on the page is masked) plus the author's reply "si, asi fue" confirming he opened the blocked path. This confirms the inference in E-057.
 Page text (paraphrased): "Why have I been blocked?" explains in generic terms that the site uses a security service, that the action performed triggered it, and that many things can trigger the block, including submitting a certain word or phrase, a SQL command or malformed data. "What can I do to resolve this?" tells the visitor to email the site owner, saying what they were doing and including the Cloudflare Ray ID shown at the bottom of the page.
 Footer (verbatim except the IP): "Cloudflare Ray ID: a57f8f0e8d9ff2f0 • Your IP: <public-ip> (masked) • Performance & security by Cloudflare".
@@ -791,7 +791,7 @@ Facts and limits:
 - The printed IP is the same address as in E-056 (compared by reading both).
 Optional check offered: search this Ray ID in Security Events (Filter) to reproduce the full support workflow.
 
-## E-059 — Support workflow reproduced: the Ray ID from the block page found in Security Events (screenshot + JSON, 14:49 CST)
+## <a id="e-059"></a>E-059 — Support workflow reproduced: the Ray ID from the block page found in Security Events (screenshot + JSON, 14:49 CST)
 Source: screenshot of Security > Analytics > Events and the file `firewall-events-2026-11-08T20_32_27Z-2026-11-09T20_32_27Z.json` attached by the author; masked copy of the event in `evidence/firewall-event_ray-a57f8f0e8d9ff2f0_browser-GET-blocked_masked.json` (public IP masked).
 What the author did: in Security Events he filtered by "Ray ID = a57f8f0e8d9ff2f0" (the Ray ID printed on the block page, E-058), window "Last 24 hours".
 Event found (screenshot): Date 2026-11-09 14:27:33 GMT-6 | Action taken Block | Country Mexico | IP <masked> | Service Custom rules. Expanded: Matched service: Service "Custom rules", Action taken Block, Ruleset "default" (id <id>), Rule "lab-block-blocked-path" (link, id <id>). Request details: Ray ID a57f8f0e8d9ff2f0; ASN AS<n> <ISP>; User agent Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 ... Version/26.6.2 Safari/605.1.15; HTTP Version HTTP/2; Referer None (direct); Method GET; Host lab.jdjagustin-lab.dev; Path /blocked; Query string empty. There is an "Export event JSON" link and an "Export" button.
@@ -801,7 +801,7 @@ Facts:
 - Comparison with the first event (E-056): same rule, same path; different method (HEAD vs GET), different client (curl/8.7.1 vs Safari) and different Ray ID. Two blocked requests in total so far.
 - The dashboard displays the time converted to the author's time zone (GMT-6) while the JSON uses UTC (Z).
 
-## E-060 — "New rate limiting rule" form filled in, before deploying (screenshot, 14:56)
+## <a id="e-060"></a>E-060 — "New rate limiting rule" form filled in, before deploying (screenshot, 14:56)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; zone id masked).
 Page: Security rules > New rate limiting rule (zone jdjagustin-lab.dev, plan free).
 - Rule name: `lab-ratelimit-test`.
@@ -819,21 +819,21 @@ Facts and nuances:
 - Period 10 s and duration 10 s are the values selected; whether other values are selectable on Free was not shown (the earlier third-party claim of a 10-second cap is consistent with this form but not proven by it).
 - Not deployed at the time of the screenshot. Expected after deploying: the first requests to /ratelimit-test return 404 from the origin (the file does not exist); once the rate exceeds 5 per 10 s from the same IP, Cloudflare answers 429 at the edge for 10 seconds; the origin log shows only the requests that were let through.
 
-## E-061 — Screenshot: the rate-limit test loop stuck at the `for>` prompt (15:00)
+## <a id="e-061"></a>E-061 — Screenshot: the rate-limit test loop stuck at the `for>` prompt (15:00)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Terminal (Mac, a zsh-style prompt) shows: `for i in 1 2 3 4 5 6 7 8 9 10; do curl -s -o /dev/null -w "%{http_code} " https://lab.jdjagustin-lab.dev/ratelimit-test\; done; echo` followed by a continuation prompt `for>`.
 Facts: the shell inserted a backslash before the `;` that follows the unquoted URL (`...ratelimit-test\;`), so the `;` no longer ended the curl command and `done` was never reached; the shell is waiting for the rest of the loop. No request was sent.
 Likely cause (my reading, not verified): a zsh feature that escapes special characters in unquoted URLs when text is pasted (url-quote-magic style). Fix: wrap the URL in double quotes (as in the earlier `?test=1` commands, which worked) and press Ctrl+C to cancel the pending input. Lesson for the runbook: always quote URLs in shell commands.
 Not known yet: whether the rate limiting rule was already deployed (the author has not said).
 
-## E-062 — Second attempt: the shell still inserts the backslash, even with the URL in quotes (screenshot, 15:03)
+## <a id="e-062"></a>E-062 — Second attempt: the shell still inserts the backslash, even with the URL in quotes (screenshot, 15:03)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Terminal shows the command with the URL in double quotes: `... "https://lab.jdjagustin-lab.dev/ratelimit-test"\; done; echo` and again the continuation prompt `for>`. The `;` after the closing quote received a backslash. The earlier prompts in the screenshot are red (the previous input was cancelled or failed).
 Facts: quoting the URL did NOT prevent the escaping (this corrects the fix suggested in E-061, which was wrong). The terminal adds a `\` before a `;` that comes right after a URL in the pasted line. No request was sent.
 Next fix: keep the URL out of the line that contains the `;`: put it in a shell variable on its own line (`url="..."`) and use `"$url"` in the loop; cancel the pending input with Ctrl+C first.
 Runbook lesson (revised): in this terminal, avoid `;` right after a URL; use a variable or separate lines.
 
-## E-063 — Rate limit test: 404 x5 then 429 x5 (terminal screenshot) + Security rules page (screenshot, 15:05 CST)
+## <a id="e-063"></a>E-063 — Rate limit test: 404 x5 then 429 x5 (terminal screenshot) + Security rules page (screenshot, 15:05 CST)
 Source: two screenshots pasted in chat (not on disk yet; transcribed here).
 Terminal (Mac): commands `url="https://lab.jdjagustin-lab.dev/ratelimit-test"` and `for i in 1 2 3 4 5 6 7 8 9 10; do curl -s -o /dev/null -w "%{http_code} " "$url"; done; echo`. Output:
 ```
@@ -846,7 +846,7 @@ Facts (what the output shows):
 - Free plan capacity is used up for rate limiting (1/1) and one custom rule of five is used (1/5). The amber triangle next to 1/1 most likely just flags that the quota is full; the screenshot does not say so.
 Not verified yet: that the five 429 never reached the origin (prediction: the origin log has only the 5 requests that returned 404); the events of the 429 in Security Events.
 
-## E-064 — Origin log after the rate limit test: only 5 of the 10 requests reached Cloudlab-1 (terminal, 15:11 CST)
+## <a id="e-064"></a>E-064 — Origin log after the rate limit test: only 5 of the 10 requests reached Cloudlab-1 (terminal, 15:11 CST)
 Commands run by the author on Cloudlab-1: `grep "ratelimit-test" /tmp/lab-site.log` and `grep -c "ratelimit-test" /tmp/lab-site.log`.
 Verbatim output:
 ```
@@ -863,7 +863,7 @@ Limit: Cloudflare's counting is approximate, so the exact threshold crossing can
 ## PIECE 2 SUMMARY (written 15:12 CST)
 Cache: HTML DYNAMIC, CSS MISS -> HIT, HITs absent from the origin log (E-046, E-047, E-048). Custom WAF rule: 403 at the edge, absent from the origin log, visible in Security Events by Ray ID and in a JSON export (E-053..E-059). Rate limiting: 404 x5 then 429 x5, only 5 requests at the origin (E-063, E-064). All of it scoped to the `lab` hostname; Grafana untouched. Free plan quotas now used: custom rules 1/5, rate limiting 1/1.
 
-## E-065 — Docs check for Piece 3: Google as identity provider and path-scoped Access applications (web search, 15:20 CST)
+## <a id="e-065"></a>E-065 — Docs check for Piece 3: Google as identity provider and path-scoped Access applications (web search, 15:20 CST)
 Sources: Cloudflare docs "Google" identity provider (https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/google/ and the older path /cloudflare-one/identity/idp-integration/google), "Application paths" (https://developers.cloudflare.com/cloudflare-one/policies/access/app-paths/), "Publish a self-hosted application to the Internet" (https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/). Read through search snippets only.
 Google IdP (per the docs):
 - No Google Workspace account is needed; a Google Cloud project is used only to create an OAuth client.
@@ -875,25 +875,25 @@ Path-scoped applications (per the docs): an Access self-hosted application can b
 Standard: Google login is OpenID Connect (OIDC) based (my knowledge; the docs snippets above say "OIDC identity provider" for Google Workspace).
 DEVIATION 6 (decided to keep the change small): instead of a second hostname (which would need another ingress rule, another cloudflared restart and another DNS record), protect the path `/private` of the existing `lab.jdjagustin-lab.dev` hostname with an Access application. Static file `private/index.html` created locally in ./site/private (E-065 file, not yet on Cloudlab-1). Cloudflared and DNS stay untouched; only a new page is added to ~/lab-site.
 
-## E-066 — Piece 3 step A: the private page exists on Cloudlab-1 and is served locally (terminal, 15:19 CST)
+## <a id="e-066"></a>E-066 — Piece 3 step A: the private page exists on Cloudlab-1 and is served locally (terminal, 15:19 CST)
 Commands run by the author on Cloudlab-1: `mkdir -p ~/lab-site/private`, `cat > ~/lab-site/private/index.html <<'EOF' ... EOF` (same content as ./site/private/index.html, E-065) and `curl -s http://127.0.0.1:8081/private/`.
 Output: the curl printed the HTML just written (doctype, head with title "Private area" and link to /style.css, body with the heading "Private area" and the paragraph "Temporary page behind Cloudflare Access, used for the lab identity provider test."). No error.
 Facts: the static server serves /private/ from the new folder without restart. The page is still public at this point: no Access application exists yet, so https://lab.jdjagustin-lab.dev/private/ currently answers like any other path (not tested from outside; expected).
 Cleanup: ~/lab-site (including private/) is already in the private cleanup checklist item 2.
 
-## E-067 — Screenshot: Google Auth Platform after the OAuth configuration was created (15:31 CST)
+## <a id="e-067"></a>E-067 — Screenshot: Google Auth Platform after the OAuth configuration was created (15:31 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the profile picture and account details are not transcribed).
 Google Cloud console, project `lab-cloudflare-access` (the project name chosen for this lab), breadcrumb "Google Auth Platform / Overview", page "OAuth Overview". A toast says "OAuth configuration created!". Left menu: Overview, Branding, Audience, Clients, Data Access, Verification Center, Settings. Metrics panel: "You haven't configured any OAuth clients for this project yet." with a "Create OAuth client" button. Project Checkup: "No project health recommendations found for your project." A banner at the top offers a free trial with $300 in credit (Dismiss / Start free).
 Facts: the project and the OAuth consent configuration (branding/audience) exist; no OAuth client exists yet. In this newer console there is no "Credentials" menu item in this view: the OAuth client is created from "Create OAuth client" (also reachable through "Clients"), which matches the Cloudflare docs snippet ("On the OAuth overview screen, select Create OAuth client", E-065). The free-trial banner is not needed for this lab (no billing should be enabled).
 Still to check by the author: Audience shows the app as an External app in Testing with his Gmail listed as a test user (needed for the login to work while the app is in testing).
 
-## E-068 — Screenshot: Zero Trust Settings > Team domain, confirming the team name (15:39 CST)
+## <a id="e-068"></a>E-068 — Screenshot: Zero Trust Settings > Team domain, confirming the team name (15:39 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here). the author reached it with the dashboard quick search ("settings"), because he could not find the menu.
 Page "Settings" ("Manage your Cloudflare One account, plan, and preferences."), section "Team domain": text explaining that the team domain is where users enroll devices with the Cloudflare One Client and access protected applications, and that changing the subdomain requires updating the identity providers and the client on all devices. Team name `<team-name>` (with an Edit link); Full domain `<team-name>.cloudflareaccess.com` (with a copy button). Right-hand "On this page": Team domain, Downloads, Admin controls, Plan, Permissions. Left menu under Zero Trust: Overview, Insights & Logs, Team & Resources, Access controls (more items below, not visible).
 Facts: the team domain is confirmed by the dashboard itself: `<team-name>.cloudflareaccess.com`, identical to the one read from the Access login page in E-013. The redirect URI to register in Google is therefore `https://<team-name>.cloudflareaccess.com/cdn-cgi/access/callback` (format from the Cloudflare docs, E-065) and the JavaScript origin is `https://<team-name>.cloudflareaccess.com`.
 Navigation note: the Settings page lives inside the Zero Trust section (not the zone menu); the dashboard quick search finds it. The Zero Trust menu has more entries below "Access controls" (Integrations is expected there; not seen yet).
 
-## E-069 — Screenshot: "Create OAuth client ID" form in Google, filled in, before pressing Create (15:45 CST)
+## <a id="e-069"></a>E-069 — Screenshot: "Create OAuth client ID" form in Google, filled in, before pressing Create (15:45 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Google Cloud, project `lab-cloudflare-access`, breadcrumb "Google Auth Platform / Clients / Create client", page "Create OAuth client ID". Visible fields:
 - Authorized JavaScript origins, URIs 1: `https://<team-name>.cloudflareaccess.com`.
@@ -904,10 +904,10 @@ The Application type field is above the visible part of the screenshot (not seen
 Facts: both URIs equal the values required by the Cloudflare docs (E-065) and the team domain confirmed in E-068, compared character by character. The "AI-powered agent" option is not part of the Cloudflare Access setup in the docs I read; its effect was not verified, and nothing in this lab needs it.
 Practical consequence: after creating the client, the first Test in Cloudflare may fail with a redirect or "client not found" error for a few minutes because of the delay noted by Google.
 
-## E-070 — Detail for E-069: Application type confirmed as Web application (15:46 CST) — NO SCREENSHOT
+## <a id="e-070"></a>E-070 — Detail for E-069: Application type confirmed as Web application (15:46 CST) — NO SCREENSHOT
 Source: the author's report ("si dice web application"). The part of the form that was cut off in E-069 shows Application type = Web application. Whether he left the "AI-powered agent" box unticked was not stated.
 
-## E-071 — Google IdP created; first Test failed: "User email was not returned" (screenshot, 15:57 CST)
+## <a id="e-071"></a>E-071 — Google IdP created; first Test failed: "User email was not returned" (screenshot, 15:57 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the numeric Google user id is masked).
 the author created the OAuth client in Google and the Google identity provider in Cloudflare, then ran Test. Result page (dark theme): "Cloudflare Access" logo; red exclamation icon; heading "Failed to get your identity"; subtitle "Looks like something went wrong. Here are the details."; a code box with the text: `User email was not returned. API permissions are likely incorrect.` followed by a JSON object with two fields: `"id": "<21-digit Google user id, masked ...4376>"` and `"name": "<name>"`.
 Facts (what it shows):
@@ -915,30 +915,30 @@ Facts (what it shows):
 - Cloudflare's own message points to permissions: in the Google OAuth flow this usually means the scopes that return the email address were not granted or not configured (my reasoning; checked against docs in the next step).
 - The first part of the chain (redirect URI, client id and secret) is therefore correct: otherwise the error would have been a redirect or client error before any identity came back.
 
-## E-072 — Docs search for the "User email was not returned" error (web search, 16:03 CST)
+## <a id="e-072"></a>E-072 — Docs search for the "User email was not returned" error (web search, 16:03 CST)
 Sources searched: Cloudflare docs "Troubleshooting Access" (https://developers.cloudflare.com/cloudflare-one/troubleshooting/access and /access-controls/troubleshooting) and a general web search.
 Result: the Cloudflare troubleshooting pages list a similar but different message ("Failed to fetch user/group information from the identity provider", caused by missing API permissions with the IdP) and others (SAML, OTP, Google Workspace redirect loop, Google Super Admin). I did NOT find this exact message ("User email was not returned. API permissions are likely incorrect.") documented.
 Consequence: the fix proposed next is a hypothesis based on how Google OAuth/OIDC works, not on a Cloudflare document: Google returns the email address only when the `email` scope was requested and granted; Cloudflare's own text says "API permissions". Hypotheses, in order: (1) the consent configuration lacks the standard sign-in scopes (openid, email, profile) in the Data Access page; (2) the author's earlier consent (given before scopes were set) is cached by Google, so a new consent is needed; (3) the email permission was left unticked on Google's consent screen. Verification: change one thing, run Test again, record the result.
 
-## E-073 — Screenshot: Google "Update selected scopes" panel with no scope selected (16:01 CST)
+## <a id="e-073"></a>E-073 — Screenshot: Google "Update selected scopes" panel with no scope selected (16:01 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Panel with an info banner: "Only scopes for enabled APIs are listed below. To add a missing scope to this screen, find and enable the API in the Google API Library or use the Pasted Scopes text box below. Refresh the page to see any new APIs you enable from the Library." A filterable table (31 scopes, 10 per page) with columns API, Scope, User-facing description, and a checkbox per row. The first three rows, all UNCHECKED: `.../auth/userinfo.email` ("See your primary Google Account email address"), `.../auth/userinfo.profile` ("See your personal info, including any personal info you've made publicly available"), `openid` ("Associate you with your personal info on Google"). Further rows (all unchecked) are Google Cloud / BigQuery / App Topology scopes such as `.../auth/bigquery` and `.../auth/cloud-platform`.
 Facts: the project had no scopes declared (consistent with hypothesis 1 of E-072). The three basic sign-in scopes are the first rows and the only ones this lab needs; the other scopes in the list are unrelated cloud-data permissions and must NOT be selected (they are broader, and some Google scopes of that kind trigger app verification requirements).
 Next: tick those three rows, press the update button of the panel (not visible in the capture) and save on the Data Access page, then revoke the earlier grant (E-072 step 2) and run the Test again.
 
-## E-074 — Screenshot: Google Account "Sign in with Google" connections list (16:04 CST)
+## <a id="e-074"></a>E-074 — Screenshot: Google Account "Sign in with Google" connections list (16:04 CST)
 Source: screenshot pasted in chat (not on disk yet). Only the entries relevant to this lab are transcribed; the other entries are unrelated personal accounts and are intentionally not recorded.
 Google Account > third-party connections, filter chip "Sign in with Google (23)" (other tabs: "Access to (10)", "Linked account (0)"). Relevant entries visible: "Cloudflare Dashboard" (Cloudflare logo) and "cloudflareaccess.com" (generic icon).
 Interpretation (limited): the entry `cloudflareaccess.com` is the connection created by the Cloudflare Access test login with the new Google OAuth client (E-071), which Google granted without the email scope. Removing it forces a new consent screen on the next Test. The entry "Cloudflare Dashboard" is a separate connection, most likely how the author signs in to the Cloudflare dashboard with Google (inference from the name; not verified): it must NOT be removed.
 Pending: confirm that the three scopes (openid, userinfo.email, userinfo.profile) were saved in Google Auth Platform > Data Access BEFORE removing the connection, otherwise the new consent would again lack the email.
 
-## E-075 — Screenshot: the existing Google grant for cloudflareaccess.com shares only "profile info" (16:06 CST)
+## <a id="e-075"></a>E-075 — Screenshot: the existing Google grant for cloudflareaccess.com shares only "profile info" (16:06 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Google Account page "cloudflareaccess.com" with an illustration, then a card "How Google helps you sign in to cloudflareaccess.com": "Sign in with Google — When you use Sign in with Google to sign in to your cloudflareaccess.com account, you're sharing some sensitive info with cloudflareaccess.com", listing ONE item: "See your profile info" (button "See details"). Below, a second card "Delete all — Remove all links and stop sharing your Google Account data with cloudflareaccess.com".
 Facts: the grant that Google recorded for this connection lists only "See your profile info"; the email address is not listed. This agrees with the Cloudflare error in E-071 (name and id returned, email missing) and supports the scopes hypothesis of E-072/E-073: the first consent was given without the email scope. "Delete all" removes only the connection with cloudflareaccess.com (the Access login); it does not delete any data of the Google account and does not affect the "Cloudflare Dashboard" connection.
 Next: delete this connection, make sure the three scopes are saved in Data Access, run the Test again and check that the consent screen now mentions the email address.
 
-## E-076 — Screenshot: "How Google helps you sign in to cloudflareaccess.com" detail page, and a CORRECTION to E-075 (16:07 CST)
+## <a id="e-076"></a>E-076 — Screenshot: "How Google helps you sign in to cloudflareaccess.com" detail page, and a CORRECTION to E-075 (16:07 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page text: "Sign in with Google — You use Sign in with Google to sign in to your cloudflareaccess.com account. Google uses your name, email address, and profile picture to securely sign you in. Learn more". "Access given on: 11 minutes ago". "Access given to: cloudflareaccess.com". "If you stop using Sign in with Google — If cloudflareaccess.com uses automatic sign-in, Google will no longer automatically sign you in to cloudflareaccess.com" with a button "Stop using Sign in with Google". A second card says cloudflareaccess.com uses Google Account sign-in prompts (settings link) and a footer "See something suspicious? Report this app".
 Facts and correction:
@@ -947,7 +947,7 @@ Facts and correction:
 - The button on this page, "Stop using Sign in with Google", is described only in terms of automatic sign-in; it is not the same action as "Delete all" on the previous page ("Remove all links and stop sharing your Google Account data"). To force a brand-new consent, "Delete all" is the right action.
 Plan unchanged but time-boxed: (1) make sure the 3 scopes are saved in Data Access, (2) Delete all for cloudflareaccess.com, (3) re-run Test. If the email is still missing, stop looking in Google's screens and decide between checking the Cloudflare side of the Google IdP and falling back to GitHub (OAuth 2.0).
 
-## E-077 — Second Test after scopes + connection removal: same error, but Google's own email says the email WAS shared (screenshot + PDF, 16:15 CST)
+## <a id="e-077"></a>E-077 — Second Test after scopes + connection removal: same error, but Google's own email says the email WAS shared (screenshot + PDF, 16:15 CST)
 Source: screenshot and a 2-page PDF of an email from Google attached by the author (not on disk yet; transcribed here; the author's Google user id and Gmail are masked).
 the author reports that steps 1, 2 and 3 of the plan were done (scopes saved in Data Access, connection removed with "Delete all", Test repeated) and the Test still fails.
 Cloudflare result (screenshot): the same page as E-071, "Failed to get your identity" with `User email was not returned. API permissions are likely incorrect.` and the JSON with only `"id"` (masked ...4376, the same id as before) and `"name": "<name>"`.
@@ -958,7 +958,7 @@ Facts (this is the key finding):
 - What is not known: why Cloudflare does not get or parse the email. Possibilities that remain (none verified): how Cloudflare's Google integration retrieves the email (for example a different Google API call that the project may need enabled), a problem with how this particular IdP entry was created, or a Cloudflare-side issue. A docs search follows.
 - Timeline note: the email is time-stamped 4:11 PM and the sign-in 4:10 PM, one minute before the author's message (4:15 PM).
 
-## E-078 — Web search for the exact error: a Cloudflare Community thread with the same message and a lead (16:25 CST)
+## <a id="e-078"></a>E-078 — Web search for the exact error: a Cloudflare Community thread with the same message and a lead (16:25 CST)
 Sources: Cloudflare Community, "Unable to Authenticate with Google" (https://community.cloudflare.com/t/unable-to-authenticate-with-google/643784, about 936 days old per the search result, so roughly 2024); Cloudflare docs "Troubleshooting Access" (https://developers.cloudflare.com/cloudflare-one/troubleshooting/access); a GitHub discussion for another IdP (Authelia) with the same Cloudflare message. Read through search snippets only.
 Findings:
 - The Community thread reports exactly our message ("Failed to get your identity ... User email was not returned. API permissions are likely incorrect." with only id and name) for Google. One reply says a similar issue "seemed to be caused by something in the email claim field" and went away when that field was cleared; it gives the path: Zero Trust > Settings > Authentication > edit the login method that gives the error (in today's dashboard this is Integrations > Identity providers > edit; field under "Optional configurations" > "Email claim").
@@ -967,7 +967,7 @@ Findings:
 Status of the evidence: the Community reply is an unofficial, user-written, old message; it is a lead, not a documented fix. Our case fits it (Google delivered the email, E-077; Cloudflare says it is missing).
 Hypothesis to test next (my reasoning, not verified): the "Email claim" field of the `google-lab` IdP contains a value (for example text inserted automatically by the browser or password manager when the Client ID/secret were pasted, since a password manager also filled the Grafana form earlier). Test: open the IdP, look at Optional configurations > Email claim, clear it if it has anything, save, run Test.
 
-## E-079 — Screenshot: the "Email claim" field of the google-lab identity provider contains the author's email address (16:30 CST)
+## <a id="e-079"></a>E-079 — Screenshot: the "Email claim" field of the google-lab identity provider contains the author's email address (16:30 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the address is masked).
 Section "Optional configurations" of the Google identity provider edit page. Field "Email claim (optional)" with the value `<the author's Gmail address, masked>` and the helper text "The claim name for email in the id_token response."
 Facts:
@@ -976,7 +976,7 @@ Facts:
 - Status: strongly consistent explanation, but it is only CONFIRMED when the Test succeeds after the field is cleared.
 Next: clear the field (empty means Cloudflare uses its default), save, run Test, record the result.
 
-## E-080 — Test passes after clearing the Email claim field: "Your connection works!" (screenshot, 16:19 CST)
+## <a id="e-080"></a>E-080 — Test passes after clearing the Email claim field: "Your connection works!" (screenshot, 16:19 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the address is masked). the author's message: "listo" (he cleared the field and saved; the screenshot is the new Test).
 Result page: "Cloudflare Access" logo, green check, heading "Your connection works!", subtitle "Below is the user identity we will use to check against your rules.", and the identity JSON with two fields: `"name": "<name>"` and `"email": "<the author's Gmail, masked>"`.
 Facts:
@@ -987,7 +987,7 @@ Facts:
 Lesson: when an IdP says an attribute is missing, check (a) what the IdP actually sent (here Google's notification), then (b) the mapping fields on the Cloudflare side (claim names), before changing the IdP; and beware autofill in "optional" fields.
 Piece 3 status: step B DONE. Next: step C = Access application for lab.jdjagustin-lab.dev/private with an Allow policy for the author's email and only the google-lab login method; step D tests.
 
-## E-081 — Screenshot: the empty "Create new self-hosted application" form (16:29 CST)
+## <a id="e-081"></a>E-081 — Screenshot: the empty "Create new self-hosted application" form (16:29 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Zero Trust > Access controls > Applications > "Create new self-hosted application". Left menu under Access controls: Overview, Applications, Policies, MCP Portals, Targets, Service credentials, Access settings; other Zero Trust sections: Traffic controls, Data loss prevention, Cloud Workload (Beta), Cloud & SaaS findings, Email security, Browser isolation. Tabs: Application details, Additional settings.
 Sections of the empty form:
@@ -1000,7 +1000,7 @@ Sections of the empty form:
 - Details: Name (empty, "Use an auto-generated name or add your own."), Session Duration 24 hours. Buttons Cancel / Create.
 Facts: nothing has been created yet. Plan for this form (path-based Access, Deviation 6): public hostname `lab.jdjagustin-lab.dev` with path `private`; one Allow policy with the author's email; accept-all-IdPs OFF with only `google-lab` selected; name `lab-private`. The default-deny note means that any request not matching an Allow rule is refused.
 
-## E-082 — Screenshot: the Access application form filled in, before pressing Create (16:38 CST)
+## <a id="e-082"></a>E-082 — Screenshot: the Access application form filled in, before pressing Create (16:38 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the policy id is shortened).
 - Destinations > Public hostnames: Subdomain `lab`, Domain `jdjagustin-lab.dev`, Path `private` (the "Switch to custom input" link is shown). An empty "Private IPs" template row is still present below it (empty fields; not used).
 - Access policies: one policy attached: order 1, name `allow-owner-email`, action Allow, 1 rule, policy id `264e30f1-...` (shortened). The "Policy tester" "Test policies" button is now enabled.
@@ -1010,19 +1010,19 @@ Source: screenshot pasted in chat (not on disk yet; transcribed here; the policy
 Facts: the form matches the plan: path-scoped destination, a single Allow policy (the email rule itself is inside the policy; its content was not visible in this screenshot, only that it has 1 rule), and Google as the only login method. "All authenticated users" under Sources only describes who can reach the login via the chosen provider; the Allow policy is what restricts access to one email (to be proven by the tests: the author's account passes; another account would be refused, not tested unless a second Google account is available).
 Not created yet at the time of the screenshot.
 
-## E-083 — Screenshot: error when pressing Create on the Access application (16:40 CST)
+## <a id="e-083"></a>E-083 — Screenshot: error when pressing Create on the Access application (16:40 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here).
 Page "Create new self-hosted application" (tabs Application details / Additional settings) with a red banner: "Error configuring your application: access.api.error.invalid_request: use_clientless_isolation_app_launcher_url can only be enabled for apps with private destinations". The form is still shown below the banner.
 Facts: the application was NOT created. The API rejected the request because an option named `use_clientless_isolation_app_launcher_url` (by its name, related to Browser Isolation / clientless web isolation and the App Launcher) is enabled in the request, and the API only allows it for applications that have private destinations. This application has a public hostname destination only (plus an empty "Private IPs" template row in the form). Cause of the option being on is not known: it may be a default of the form, or something triggered by the empty private row (both unverified). Lead: look in the "Additional settings" tab for a Browser isolation / clientless isolation option and turn it off; delete the empty Private IPs row.
 
-## E-084 — Docs check for the Create error: what use_clientless_isolation_app_launcher_url is (web search, 16:58 CST)
+## <a id="e-084"></a>E-084 — Docs check for the Create error: what use_clientless_isolation_app_launcher_url is (web search, 16:58 CST)
 Sources: Cloudflare API reference for Access applications (https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/), Cloudflare changelog "Streamlined clientless browser isolation for private applications" (https://developers.cloudflare.com/changelog/2026-02-17-clientless-access-for-private-apps), and third-party API wrappers listing the same field. Read through snippets only.
 Findings:
 - `use_clientless_isolation_app_launcher_url` is an optional boolean of an Access application: "Determines if users can access this application via a clientless browser isolation URL. This allows users to access private domains without connecting to Gateway. The option requires Clientless Browser Isolation to be set up with policies that allow users of this application."
 - The February 2026 changelog says a new dashboard setting, "Allow clientless access", lets private self-hosted applications be reached without a device client; when it is on, users who pass the policies get a tile in the App Launcher pointing to a Clientless Web Isolation URL (remote browser permissions required).
 Interpretation (mine, unverified): the dashboard is sending that flag as true for this application. The flag only makes sense for PRIVATE destinations, and our application is public (a hostname and path). The empty "Private IPs" template row that stayed in the form (E-081/E-082) may be what made the dashboard include a private-destination option such as "Allow clientless access". Two things to try, one at a time: (1) delete the empty Private IPs row; (2) if the error persists, find the "Allow clientless access" or browser-isolation toggle (Additional settings tab or near the destinations) and turn it OFF. Neither feature is needed for this lab.
 
-## E-085 — Screenshot: the Access application `lab-private` now exists (16:45 CST)
+## <a id="e-085"></a>E-085 — Screenshot: the Access application `lab-private` now exists (16:45 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the policy id is shortened).
 Page: Applications > `lab-private` (a saved application: buttons Delete, Cancel, Save; "View audit logs"; tabs All, Destinations, Browser rendering, Policies, Policy tester, Login methods, Preview, Details).
 Contents as saved:
@@ -1035,7 +1035,7 @@ Contents as saved:
 Facts: the application was created (E-083's error is gone). The screenshot shows the empty Private IPs row removed, which is consistent with hypothesis (1) of E-084 (the empty private row made the dashboard send the private-only option); the "Allow clientless access" toggle was not needed. That explanation is plausible but not proven: I did not see which of the author's actions made the difference beyond his report of the new state.
 Not verified yet: that the path is actually protected from outside (curl without cookies), that the login via Google works for this app, and that `/` is still public.
 
-## E-086 — curl without cookies: /private/ and /private/index.html are redirected to Access login, / stays public (terminal, 16:46:44 CST)
+## <a id="e-086"></a>E-086 — curl without cookies: /private/ and /private/index.html are redirected to Access login, / stays public (terminal, 16:46:44 CST)
 Commands run by the author (Mac terminal): three `curl -sI "<URL>" | grep -i -E "^(HTTP|location)"` for `https://lab.jdjagustin-lab.dev/private/`, `/private/index.html` and `/`.
 Result (the long `location` URLs are shortened here; each carries a `kid` and a signed `meta` token):
 ```
@@ -1080,7 +1080,7 @@ Facts:
 - The timestamp `iat` (22:46:44 UTC) equals the prompt time in the terminal (04:46:44 PM CST).
 Not verified yet: the browser login flow with Google and the "Private area" page, the Access authentication log entry, and that a different Google account is refused.
 
-## E-087 — Full browser login through Access with Google: positive test PASSED (4 screenshots + the author's account, 16:55 CST)
+## <a id="e-087"></a>E-087 — Full browser login through Access with Google: positive test PASSED (4 screenshots + the author's account, 16:55 CST)
 Source: four screenshots and the author's description (not on disk yet; transcribed here; the Gmail address is masked). The test was done in a Private Browsing window ("Navegación privada") so no earlier session or cookie was involved.
 Sequence (the author's account plus screenshots):
 1. Opening https://lab.jdjagustin-lab.dev/private/ showed the Cloudflare Access login page on the team domain: "Log in to lab-private", "Sign in with:" with one button "Google · Google-lab" (screenshot 1).
@@ -1094,7 +1094,7 @@ Facts:
 - About MFA: the second factor in this test (fingerprint/passkey) was requested by GOOGLE for the author's Google account. Cloudflare Access itself was not configured to require MFA (the application's "MFA" tab was not used). So what can be said is "Access trusted a Google login that used a passkey", not "MFA enforced by Cloudflare".
 Not verified yet: the Access authentication log entry for this login, and the negative test (an account whose email is not in the policy must be refused; needs a second Google account).
 
-## E-088 — Which log shows the Access login: "Access authentication logs" (docs check, 17:03 CST)
+## <a id="e-088"></a>E-088 — Which log shows the Access login: "Access authentication logs" (docs check, 17:03 CST)
 Sources: Cloudflare docs "Access authentication logs" (https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/ and the older "Access audit logs" page). Read through search snippets.
 - Where: Zero Trust (Cloudflare One) > Insights > Logs > "Access authentication logs" (older wording: Logs > Access). The new viewer is marked beta and has a "Return to old logs" option. The application page `lab-private` also has a "View audit logs" button (seen in E-085).
 - What it records: an authentication event every time a user or service tries to log in to an application, whether it succeeds or not (identity-based events only; non-identity events such as IP or service-token policies need the GraphQL API).
@@ -1103,7 +1103,7 @@ Sources: Cloudflare docs "Access authentication logs" (https://developers.cloudf
 - Not captured: user actions during the session (the log covers authentication, not what the user did afterwards); per-request audit logs are a different thing.
 Expected entry for the author's test (E-087, about 4:52 p.m. CST): action login, connection google, allowed true, app lab.jdjagustin-lab.dev/private, his email, country Mexico. Screenshot pending (mask email and IP in the file).
 
-## E-089 — Access authentication logs exported as CSV: the author's Google login to lab-private is recorded (file attached, 17:06 CST)
+## <a id="e-089"></a>E-089 — Access authentication logs exported as CSV: the author's Google login to lab-private is recorded (file attached, 17:06 CST)
 Source: file `Access_Request_Logs_2026-11-09T23_02_57Z.csv` attached by the author (Access authentication logs export, generated 2026-11-09 23:02:57 UTC = 17:02:57 CST). 2 data rows, 17 columns. A masked copy (email, IP, user id, app ids masked; the last four optional columns are empty and omitted) is in `evidence/Access_Request_Logs_2026-11-09T23_02_57Z_masked.csv`.
 Rows (times in UTC; CST = UTC minus 6 hours):
 1. App `lab-private`, domain `lab.jdjagustin-lab.dev`, type self_hosted, action `login`, connection `google`, Allowed `true`, created `2026-11-09T22:52:03` (= 16:52:03 CST), RayID `a58062bd3de9f8b8`, country mx.
@@ -1116,7 +1116,7 @@ Facts:
 - Fields confirmed by the real export: App Name, User Email, User ID, IP Address, App UID, App Domain, App Type, Action, Connection, Allowed, Created At, RayID, Country, plus Purpose Justification and Temporary Access columns (empty here).
 Pending: negative test (needs a second Google account) to produce an `allowed false` row.
 
-## E-090 — Screenshot: Application Access Report dashboard (17:08 CST)
+## <a id="e-090"></a>E-090 — Screenshot: Application Access Report dashboard (17:08 CST)
 Source: screenshot pasted in chat (not on disk yet; transcribed here; the Gmail and the IP are masked).
 Zero Trust > Insights & Logs > Dashboards > "Application Access Report" ("Summary of application Access usage across your organization"), time window "Last 24 hours".
 - Summary: Total access events 2; "All login attempts were successful. The highest number of Access events occurred on Nov 9, 2026 at 12:00 PM at 1 events."
@@ -1127,7 +1127,7 @@ Zero Trust > Insights & Logs > Dashboards > "Application Access Report" ("Summar
 Facts: it is a second view of the same data as the CSV (E-089): two events, both granted, one per application and per identity provider; zero denied events. The admin metrics show the lab's whole Access configuration at a glance: two applications (grafana and lab-private) and two Allow policies (no Block or other policy types).
 Piece 3 status: positive path proven in the browser (E-087), in the authentication log (E-089) and in the dashboard (this entry). The negative test (a denied account) is NOT done: the author did not mention a second Google account. Left as "not tested".
 
-## E-091 — Piece 4.1: origin stopped on purpose -> Cloudflare answers 502 (terminal on Cloudlab-1 + Mac screenshot, 17:15 CST)
+## <a id="e-091"></a>E-091 — Piece 4.1: origin stopped on purpose -> Cloudflare answers 502 (terminal on Cloudlab-1 + Mac screenshot, 17:15 CST)
 Source: the author's terminal output pasted as text (Cloudlab-1) and a screenshot (Mac terminal).
 Cloudlab-1 (commands: `pgrep -af "http.server 8081"`, `pkill -f "http.server 8081"`, `pgrep -af "http.server 8081" || echo "servidor apagado"`):
 ```
@@ -1149,7 +1149,7 @@ Facts:
 - The title/"Bad gateway" text of the page body did not match the grep patterns (only "error code: 502" was printed); the page was not read in full.
 Next in 4.1: read cloudflared's own error in the journal and test the origin directly (layered diagnosis), then capture a HAR in Chrome while the origin is still down, then restart the origin.
 
-## E-092 — Layered diagnosis of the 502: cloudflared's journal and a direct test of the origin (terminal on Cloudlab-1, 17:17 CST)
+## <a id="e-092"></a>E-092 — Layered diagnosis of the 502: cloudflared's journal and a direct test of the origin (terminal on Cloudlab-1, 17:17 CST)
 Source: terminal output pasted as text by the author.
 Shell notice at the start of the output: `[1]+  Terminated  nohup nice -n 19 python3 -m http.server 8081 --bind 127.0.0.1 --directory ~/lab-site > /tmp/lab-site.log 2>&1` (bash reporting that the background job started in E-030 ended after `pkill`, see E-091).
 Command 1: `journalctl -u cloudflared --since "10 minutes ago" --no-pager | grep -i -E "ERR|origin" | tail -n 6`. Output (4 lines, two pairs, all at 17:14:37 CST = 23:14:37Z; shown shortened with `...`):
@@ -1171,7 +1171,7 @@ Root cause (supported by all three): the origin service stopped; cloudflared is 
 Method for the runbook: start from what the user sees (status and Ray ID), go one hop inward (tunnel log with the ingress rule and target), then test the last hop directly (origin on localhost); `connection refused` means nothing is listening, while a timeout would point to a firewall or a hung process.
 Note for restarting: the original start command used `>` to write the log, which would erase /tmp/lab-site.log (evidence of E-048, E-054, E-064). Use `>>` to append.
 
-## E-093 — Piece 4.1: HAR of the 502 page captured with Safari Web Inspector (file + screenshot, 19:42 CST)
+## <a id="e-093"></a>E-093 — Piece 4.1: HAR of the 502 page captured with Safari Web Inspector (file + screenshot, 19:42 CST)
 Source: the author's screenshot of Safari's Network tab and the exported file `lab.jdjagustin-lab.dev.har` (Safari proposed that name; 51,386 bytes; creator "WebKit Web Inspector", HAR version 1.2; 8 entries; page loaded 2026-11-10T01:40:21.734Z = 19:40:21 CST). the author reported the six steps done. The origin was still stopped (since 17:14 CST, about 2.5 hours; planned only for the capture, restart pending).
 Screenshot: the page "Bad gateway - Error code 502 - Visit cloudflare.com for more information. 2026-11-10 01:40:22 UTC"; Network list with 8 requests (document 578 ms, main.css 339 ms, five cf-icon-*.png 130-416 ms, favicon.ico 155 ms); footer: 8 requests, 20.1 KB, 16.4 KB transferred, 1.37 s.
 HAR entries (method, path -> status; server is `cloudflare` in all):
@@ -1187,7 +1187,7 @@ Facts:
 - Files: masked copy `evidence/lab-502_origin-down_2026-11-09_masked.har` (51,392 bytes, valid JSON). The unmasked original was archived, following the author's rule for replaced versions, to an archive folder (the author empties that folder). The file name differs from the one suggested to the author because Safari proposed its own.
 Not verified yet: whether a cached stylesheet (style.css, cached at 13:33 CST with max-age 14400, now expired) is also served STALE while the origin is down (test planned before restarting the origin); test 4.2 (tunnel stopped).
 
-## E-094 — Piece 4.1 experiment: cached files are served STALE while the origin is down (terminal, 19:48 CST)
+## <a id="e-094"></a>E-094 — Piece 4.1 experiment: cached files are served STALE while the origin is down (terminal, 19:48 CST)
 Source: the author's Mac terminal output (screenshot as text), run with the origin still stopped.
 Commands: `curl -sI "https://lab.jdjagustin-lab.dev/style.css" | grep -i -E "^(HTTP|cf-cache-status|age)"` and the same for `/style.css?test=1`.
 Output:
@@ -1203,7 +1203,7 @@ Facts:
 Lesson for the runbook: during an origin outage some URLs keep working (STALE copies) and others fail (502); a customer reporting "some pages work and others do not" fits an origin problem, and `cf-cache-status: STALE` plus a large `Age` is the signature.
 Reminder: the origin is still down at the time of this entry (since 17:14 CST).
 
-## E-095 — Origin restarted (append mode) and the origin log confirms the STALE/revalidation story (terminal on Cloudlab-1, about 19:53 CST)
+## <a id="e-095"></a>E-095 — Origin restarted (append mode) and the origin log confirms the STALE/revalidation story (terminal on Cloudlab-1, about 19:53 CST)
 Source: terminal output pasted as text by the author. Commands (one block): `nohup nice -n 19 python3 -m http.server 8081 --bind 127.0.0.1 --directory ~/lab-site >> /tmp/lab-site.log 2>&1 &`, `sleep 1`, `curl -s -o /dev/null -w "%{http_code}\n" "http://127.0.0.1:8081/"`, `grep "style.css" /tmp/lab-site.log`.
 Output:
 ```
@@ -1222,7 +1222,7 @@ Facts:
 - None of the lines show the two `curl` requests of E-094 (STALE) because they never reached the origin, as expected.
 Cache lifecycle now observed end to end for one file: MISS (13:33, fetched 200) -> HIT (served by the edge, invisible at the origin) -> expired after the 2-hour default edge TTL -> conditional refresh (304 at 16:52) -> expired again -> STALE while the origin was down (19:48).
 
-## E-096 — Baseline "everything up" before stopping the tunnel (three screenshots, 19:58 CST)
+## <a id="e-096"></a>E-096 — Baseline "everything up" before stopping the tunnel (three screenshots, 19:58 CST)
 Source: three screenshots pasted in chat (not on disk yet; transcribed here; Gmail masked). the author's words: everything is up before bringing the tunnel down; "matando tunel" (he is about to stop / is stopping cloudflared for test 4.2).
 1. Cloudflare Domains overview: `<other-zone>` Active, "4 insights", unique visitors 4; `jdjagustin-lab.dev` Active, "3 insights", unique visitors 9 (sparklines).
 2. Grafana Home at grafana.jdjagustin-lab.dev, logged in as the author's user (profile menu open: name, <Gmail>, Profile, Notification history, Change password, Sign out): the Grafana path (Access -> tunnel -> Grafana) works before the test.
@@ -1233,7 +1233,7 @@ Facts:
 - Not verified: the document body that the browser actually received (would need to open the response in the Network tab or run `curl` and look for "cloudflareinsights").
 Next: stop cloudflared (Cloudlab-1), run the three curls from the Mac, restart cloudflared and check 4/4 connections.
 
-## E-097 — Piece 4.2: tunnel stopped on purpose -> HTTP 530 with Cloudflare error 1033; a fresh cached file still answers HIT (terminals, about 20:00 CST)
+## <a id="e-097"></a>E-097 — Piece 4.2: tunnel stopped on purpose -> HTTP 530 with Cloudflare error 1033; a fresh cached file still answers HIT (terminals, about 20:00 CST)
 Source: terminal output pasted by the author (Cloudlab-1) and a Mac terminal screenshot (prompt time 08:00:11 PM).
 Cloudlab-1: `sudo systemctl stop cloudflared.service` then `systemctl is-active cloudflared` -> `inactive` (the usual "Failed to allocate directory watch: Too many open files" warning appeared again, see E-011).
 Mac (commands: `curl -sI "https://lab.jdjagustin-lab.dev/" | grep -i -E "^(HTTP|server|cf-ray)"`, `curl -s "https://lab.jdjagustin-lab.dev/" | grep -i -E "<title>|error code"`, `curl -sI ".../style.css" | grep -i -E "^(HTTP|cf-cache-status|age)"`):
@@ -1250,7 +1250,7 @@ Facts:
 Three-state picture for the runbook (same site, three situations): file fresh in cache -> HIT (works even with the tunnel down); file expired in cache -> STALE (works while the origin or tunnel is down, E-094); file not cached -> error: 502 if the tunnel is up but the origin is down (E-091), 530/1033 if the tunnel is down (this entry).
 Status of cloudflared at the time of this entry: restarted, connections still registering. Grafana depends on it.
 
-## E-098 — Origin log for 19:5x confirms the 304 prediction; the cloudflared connection check came back EMPTY (terminal on Cloudlab-1, about 20:05 CST)
+## <a id="e-098"></a>E-098 — Origin log for 19:5x confirms the 304 prediction; the cloudflared connection check came back EMPTY (terminal on Cloudlab-1, about 20:05 CST)
 Source: terminal output pasted as text by the author. Commands: `journalctl -u cloudflared --since "3 minutes ago" --no-pager | grep -o -E "Registered tunnel connection connIndex=[0-9]"` and `grep "19:5" /tmp/lab-site.log`.
 Output: the first command printed NOTHING. The second printed:
 ```
@@ -1263,7 +1263,7 @@ Facts:
 - CORRECTION to E-095: the log shows the origin was restarted at about 19:52:07-08 CST (the local check `GET /` at 19:52:08 is the 200 test of that command), not 19:53 as estimated from the time of the author's message. Origin outage: from about 17:14:37 (E-092) to about 19:52:08, roughly 2 h 37 min.
 - UNRESOLVED, urgent: the journal check printed no "Registered tunnel connection" line for the last 3 minutes. Two possible readings, not distinguished yet: (a) cloudflared restarted at about 20:01 and all four connections registered within the first seconds, before the 3-minute window began (the window was about 20:02-20:05); (b) cloudflared is not running or not connected. Only a wider look can tell (service state, a wider journal window, a request from outside).
 
-## E-099 — Recovery verified: cloudflared active, 4/4 connections re-registered, public site 200 (terminals, 20:08 CST)
+## <a id="e-099"></a>E-099 — Recovery verified: cloudflared active, 4/4 connections re-registered, public site 200 (terminals, 20:08 CST)
 Source: terminal output pasted by the author (Cloudlab-1 and Mac).
 Cloudlab-1: `systemctl is-active cloudflared` -> `active`. Journal (last 15 minutes, filtered, lines cut at 120 characters), times CST with the UTC time inside each line:
 ```
@@ -1282,24 +1282,24 @@ Facts:
 - Not verified in this entry: Grafana in the browser after the restart (the author has not reported it); the dashboard tunnel health (expected Healthy).
 Piece 4 status: 4.1 (origin down: 502, layered diagnosis, HAR, STALE) and 4.2 (tunnel down: 530/1033) done and the service restored.
 
-## E-100 — Screenshot: Grafana Home on screen after the tunnel restart (20:09 CST) — NOT conclusive by itself
+## <a id="e-100"></a>E-100 — Screenshot: Grafana Home on screen after the tunnel restart (20:09 CST) — NOT conclusive by itself
 Source: screenshot pasted in chat (not on disk yet; transcribed here; Gmail masked).
 Safari at grafana.jdjagustin-lab.dev showing Grafana Home ("Welcome to Grafana", the "Basic" setup cards) with the user menu open (name, <Gmail>, Profile, Notification history, Change password, Sign out). The layout and the open menu are the same as in the baseline screenshot taken before the tunnel was stopped (E-096, screenshot 2).
 Facts and limit: a Grafana page that was already open in a tab stays on screen even if the tunnel is down, so this image cannot prove that Grafana is reachable AFTER the restart; it only shows an open session. The proof would be a fresh load: reload the tab (Command+R); if the tunnel were still down the browser would show a Cloudflare error page instead. Request made to the author; result pending.
 What is already proven about the restart: cloudflared active with 4/4 connections (E-099) and the lab hostname answering 200 from outside (E-099). Grafana shares the same tunnel and connections, so it is very likely reachable, but that is inference until the reload is seen.
 
-## E-101 — Reload of the Grafana tab after the tunnel restart: the author's report is AMBIGUOUS (20:13 CST) — PROVISIONAL
+## <a id="e-101"></a>E-101 — Reload of the Grafana tab after the tunnel restart: the author's report is AMBIGUOUS (20:13 CST) — PROVISIONAL
 Source: the author's message "recargue la pagina y eso salio", with no new attachment. "Eso" most likely refers to the Grafana Home screenshot he had sent a few minutes earlier (E-100), which would then be the page that appeared after the reload; but it could also mean something else (for example an error page). I did not assume: the entry stays provisional until the author confirms in one word what appeared (Grafana Home, an Access login, or a Cloudflare error page).
 If confirmed as Grafana Home: the recovery after test 4.2 is fully proven by the reload (a fresh load needs the tunnel), still as the author's report plus E-100 rather than a dedicated screenshot of the reload.
 
-## E-102 — Grafana reload after the tunnel restart: confirmed by the author (20:14 CST) — his report, no new screenshot
+## <a id="e-102"></a>E-102 — Grafana reload after the tunnel restart: confirmed by the author (20:14 CST) — his report, no new screenshot
 Source: the author's message: after reloading the tab, the same Grafana page appeared ("volvio a aparecer la misma pagina"); he adds that it looked as if the tunnel had never gone down, but the tunnel was already up (the reload happened after the restart).
 Facts:
 - A fresh load of grafana.jdjagustin-lab.dev succeeded after cloudflared was restarted: Access -> tunnel -> Grafana is reachable again. This closes the open item of E-100/E-101. It rests on the author's report plus the 4/4 connections and the 200 from outside (E-099); there is no dedicated screenshot of the reload (E-100 shows the same page).
 - Grafana was NOT tested during the outage (only the lab page was: 530/1033, E-097). That Grafana would have failed during the 2 minutes is an inference (it uses the same tunnel and connections), not a measurement.
 Status: Piece 4 and the recovery are fully closed.
 
-## E-103 — Reference: Google Admin Toolbox "HAR Analyzer" (page read, 20:20 CST)
+## <a id="e-103"></a>E-103 — Reference: Google Admin Toolbox "HAR Analyzer" (page read, 20:20 CST)
 Source: https://toolbox.googleapps.com/apps/har_analyzer/ (URL given by the author; page text read through a fetch).
 What the page says:
 - Use: choose a HAR file; the analysis screen opens. All times are shown in UTC.
@@ -1310,7 +1310,7 @@ What the page says:
 Practical rules for this lab: upload only masked copies (evidence/lab-502_origin-down_2026-11-09_masked.har has no cookies, no Authorization header and no personal IP, checked in E-093); never upload a HAR of an Access login session (it would carry the CF_Authorization cookie, which is a session credential). Same rule for the runbook.
 What to look for in the 502 HAR to cross-check the reading in E-093: filter 5xx (one entry: GET /, 502, headers Server-Timing cfEdge;dur=32,cfOrigin;dur=62, retry-after 60, cache-control no-store); the /cdn-cgi/ assets with status 200 (served by Cloudflare); the favicon.ico 404 with cf-cache-status STALE and Age 15247.
 
-## E-104 — Reference: har-analyzer.dev and local options for reading a HAR (page read, 20:30 CST)
+## <a id="e-104"></a>E-104 — Reference: har-analyzer.dev and local options for reading a HAR (page read, 20:30 CST)
 Source: https://har-analyzer.dev (URL given by the author; page text read through a fetch).
 What the site says about itself (its own claims, NOT verified by me): "local-first": the analysis runs entirely in the browser, the HAR file is not sent anywhere, no account, uploads are "saved in this browser". Features listed: request timing, payloads, redirects, server timing and TTFB breakdowns, slow endpoints, large payloads, caching issues, blocking JavaScript, waterfall stalls; exports to k6 scripts, JMeter JMX files, CSV and report snapshots; a "HAR Guard" CI automation page for developers. Differences with Google's tool (E-103): this one claims local processing (Google's page does not say) and shows Server-Timing explicitly; it also stores uploads in the browser, so a HAR stays in the browser's storage after use.
 How to verify the "no upload" claim without trusting it: open Safari's Web Inspector (Network tab) before uploading the file and check that no request carries the file while the analysis runs (the page itself still has to be downloaded from the internet; only the processing is claimed to be local).
@@ -1318,19 +1318,19 @@ Local options that need no analyzer site: (1) Safari's Web Inspector re-imports 
 Honest note about asking Claude to read the file: that is not offline. The content that Claude prints back into the conversation is processed by the model and leaves the machine; what stays local is only what the author reads himself.
 Rule unchanged: only masked HARs; never an Access-login HAR.
 
-## E-105 — Tool: scripts/har_summary.py (local HAR reader), written and tested (20:35 CST)
+## <a id="e-105"></a>E-105 — Tool: scripts/har_summary.py (local HAR reader), written and tested (20:35 CST)
 What it is: a small Python script placed next to the HAR files in `evidence/`, requested by the author to read HARs offline. It uses only the Python standard library, opens no network connection and never modifies the HAR. Run: `cd <project-folder>/evidence` then `python3 har_summary.py` (it picks the `*_masked.har` file in its folder; an explicit file can be passed as an argument).
 What it prints: file name, creator and HAR version, number of requests, start time in UTC and CST; one line per request (index, status, method, URL, total ms, cf-cache-status, Age, Server-Timing); flags for any status 400 or higher and for STALE responses; and a sensitive-data check (counts of requests with Cookie or Authorization headers, responses that set cookies, mentions of CF_Authorization) with a warning not to upload or share a file that has credentials-like data.
 Test: run in Claude's local workspace (the Linux VM tied to the author's connected folder) on the masked HAR of E-093. Output matched the reading of E-093: 8 requests; #1 GET / 502 (578 ms, Server-Timing cfEdge;dur=32,cfOrigin;dur=62); #2-#7 the /cdn-cgi/ assets, 200; #8 favicon.ico 404 with cache STALE and Age 15247; flags #1 502, #8 404 and #8 STALE; sensitive-data check all zeros.
 Limits: it was not run on the author's Mac yet (needs python3 there; if macOS asks to install developer tools, decline); the `cf-cache-status` column shows "-" for responses that do not carry the header (the 502 page and the Cloudflare error-page assets have none, consistent with E-093). The check detects headers and the CF_Authorization string; it does not search for personal data such as an IP or an email, so a manual look is still needed before sharing.
 
-## E-106 — har_summary.py run on the author's Mac, and a Safari Web Inspector detail of the injected analytics script (terminal + screenshot, 20:30 CST)
+## <a id="e-106"></a>E-106 — har_summary.py run on the author's Mac, and a Safari Web Inspector detail of the injected analytics script (terminal + screenshot, 20:30 CST)
 Source: the author's Mac terminal output (pasted as text) and a screenshot of Safari's Web Inspector, Network tab.
 1) Script on the Mac: `cd <project-folder>/evidence` and `python3 har_summary.py` (prompt time 08:26:04 PM). The output is identical, line by line, to the output obtained in Claude's workspace (E-105): 8 requests; #1 GET / 502 (578 ms, Server-Timing cfEdge;dur=32,cfOrigin;dur=62); #2-#7 /cdn-cgi/ assets 200; #8 favicon.ico 404 STALE age 15247; same three flags; sensitive-data check all zeros. Facts: python3 exists on the author's Mac, the script runs there without installing anything, and the result is reproducible on two different machines. the author notes it was the first time he sees a HAR file, finds it useful, thinks the script gives the important details and suggests extending it with more of the information a HAR holds.
 2) Safari screenshot (page "Lab site" above; Network list: lab.jdjagustin-lab.dev, style.css, a hash-named script, and two `rum` entries; detail panel with tabs Previsualizar, Encabezados, Cookies, Tamaños, Tiempo, Seguridad). Details of the selected script: URL `https://static.cloudflareinsights.com/beacon.min.js/<site token, masked>`; Estado 200; Fuente: "Caché de memoria"; Iniciador `lab.jdjagustin-lab.dev:11`; Solicitud: "Ninguna solicitud, se sirvió desde la caché de la memoria." Response headers shown: Access-Control-Allow-Origin `*`, Cache-Control `public, max-age=86400`, Content-Encoding `gzip`, Content-Type `text/javascript;charset=UTF-8`, Cross-Origin-Resource-Policy `cross-origin`, Date `Tue, 10 Nov 2026 01:58:01 GMT` (= 19:58:01 CST, the moment of the page load recorded in E-098), ETag `W/"2026.10.1"`, Last-Modified `Thu, 15 Oct 2026 18:26:54 GMT` (more headers below the visible part).
 Facts: this confirms the inference of E-096: the extra script is Cloudflare's Web Analytics beacon (beacon.min.js from static.cloudflareinsights.com), injected at line 11 of the page. "Source: memory cache" is the BROWSER's cache: Safari sent no request at all for it this time. This is a second, different cache layer from the Cloudflare edge cache that the HIT/MISS/STALE statuses describe. The two `rum` entries are the analytics beacon's reports (types differ in the list; not inspected).
 
-## E-107 — har_summary.py v2: five extensions added and tested (about 20:45 CST, time approximate)
+## <a id="e-107"></a>E-107 — har_summary.py v2: five extensions added and tested (about 20:45 CST, time approximate)
 Requested by the author ("dale a las 5 sugerencias"). File: `scripts/har_summary.py` (standard library only, offline, never modifies the input; the two output-writing options refuse to overwrite an existing file).
 Options added to the default table/flags/hygiene view:
 1. `--detail N`: everything about request N (method, URL, start time in UTC and CST, status, sizes, ALL request and response headers, timings, and for HTML the title and the first characters of the body). Values of Cookie, Authorization, Proxy-Authorization and Set-Cookie headers are printed as "<hidden by har_summary>".
@@ -1343,7 +1343,7 @@ Tests run in Claude's local workspace on the masked HAR of E-093 (default view, 
 A bug found while testing: the first version of the hygiene check flagged the Cloudflare edge address (104.21.51.133, present in the `serverIPAddress` field of all 8 entries) as "personal data". Fixed by treating that field separately. The real HAR now reports 8 server addresses (one distinct: 104.21.51.133, the same address `dig` returned in E-042) and 0 other IPs.
 Limits: not yet run by the author on his Mac in this v2 form (v1 ran there, E-106); the masked copy of a real HAR with cookies has only been tested with the synthetic file; masking patterns do not catch every possible secret, so always read the result before sharing.
 
-## E-108 — Dashboard Observability exports (chart + logs JSON/CSV) analyzed and cross-checked with the HAR (21:03 CST)
+## <a id="e-108"></a>E-108 — Dashboard Observability exports (chart + logs JSON/CSV) analyzed and cross-checked with the HAR (21:03 CST)
 Source: Cloudflare dashboard > Observability ("New") > Request outcomes over time (window 19:39-20:39 CST; chart legend: Mitigated 0, Served by Cloudflare 39, Served by Origin 42) and Logs (exports taken 20:42-20:43 CST). the author asked whether this resembles a HAR and whether har_summary.py extracts it.
 Files (masked copies in `evidence/`): `cf-observability-logs_2026-11-09_1940-2015CST_masked.json` and `.csv`; `cf-request-outcomes_2026-11-09_1939-2039CST.json` and `.csv` (chart data, no personal data). Masking: client IP replaced by x.x.x.x (81 rows) and the 32-hex hash in one `/avatar/<hash>` path (Grafana avatar; it looks like a hash of the e-mail, not verified). The originals stay only where the author downloaded them.
 Fields in the logs export (9): datetime, clientRequestHTTPMethodName, clientRequestHTTPHost, clientRequestPath, edgeResponseStatus, cacheStatus, clientIP, clientCountryName, originResponseStatus. No headers, no timings, no sizes, and NO Ray ID column in this export.
@@ -1365,7 +1365,7 @@ Tool tests of cf_logs_summary.py: default view and `--timeline` on the masked CS
 Beacon clarification (21:10 CST, the author asked whether the injected `beacon.min.js` produces this data): No. The Web Analytics beacon runs in the visitor's browser (navigation timings, Core Web Vitals) and posts them to `/cdn-cgi/rum` (204); that feeds Web Analytics, not Observability. Observability logs are produced by Cloudflare's edge for every request with no script on the page: the export contains Cloudflare-generated 502/530 error pages and non-HTML files, and fields only the edge knows (cacheStatus, originResponseStatus, country). The beacon only leaves its footprint as 8 rows `POST /cdn-cgi/rum` 204, cache none, origin 0 (4 on lab, 4 on grafana in the masked CSV; answered by Cloudflare itself). Three views of one request: HAR = browser, Observability = edge, Web Analytics = visitor-side beacon. Consistent with E-096 (beacon injected at line 11 of the HTML, two `rum` calls per visit).
 
 
-## E-109 — The 302 on grafana_mask_icon.svg is the Cloudflare Access redirect (VERIFIED, 21:13 CST)
+## <a id="e-109"></a>E-109 — The 302 on grafana_mask_icon.svg is the Cloudflare Access redirect (VERIFIED, 21:13 CST)
 Closes the open hypothesis of E-108 check 8. the author ran `curl -sI https://grafana.jdjagustin-lab.dev/public/img/grafana_mask_icon.svg` from his Mac (no session cookie). Masked copy: `evidence/curl-302-grafana-mask-icon_2026-11-09_2113CST_masked.txt` (kid, JWT, session cookie and NEL endpoint masked).
 Facts from the response: HTTP/2 302; `location:` points to `<team-name>.cloudflareaccess.com/cdn-cgi/access/login/grafana.jdjagustin-lab.dev` with `redirect_url=/public/img/grafana_mask_icon.svg`; `www-authenticate: Cloudflare-Access ...`; `set-cookie: CF_AppSession` (HttpOnly, Secure); `cache-control: private, no-store`; `server: cloudflare`; `cf-ray` present (ends in -DFW, the edge data center).
 Decoded `meta` token: hostname grafana.jdjagustin-lab.dev, `auth_status: NONE`, `mtls_auth.cert_presented: false`, `real_country: MX`, `service_token_status: false`.
@@ -1374,7 +1374,7 @@ Side lessons: (1) a cf-ray header gives the Ray ID that the Observability export
 Still open: the Ray ID column in the Observability export; the Access authentication log was not consulted (not needed, the header evidence is direct).
 
 
-## E-110 — The panel's log detail has 11 fields; the export had 9 (rayName and securityAction missing) (21:23 CST)
+## <a id="e-110"></a>E-110 — The panel's log detail has 11 fields; the export had 9 (rayName and securityAction missing) (21:23 CST)
 Source: two screenshots from the author of the expanded log rows in Dashboard > Observability (rows: 20:15:21 POST grafana `/cdn-cgi/rum` 204 cache none origin 0; 20:09:23 GET grafana `/api/search` 200 cache dynamic origin 200). Screenshots NOT stored: they show the real client IP unmasked. Facts below were copied from them (Ray IDs are not personal data).
 Fields shown in the panel (11): securityAction, rayName, originResponseStatus, edgeResponseStatus, datetime, clientRequestPath, clientRequestHTTPMethodName, clientRequestHTTPHost, clientIP, clientCountryName, cacheStatus. The earlier export had 9: the same list without securityAction and rayName. Inference (not yet tested): the export contains the columns selected under the panel's "Fields" button, so adding rayName and securityAction there before exporting should include them.
 Ray IDs seen: `a5818c88c8f29d60` (the 20:15:21 rum row, present in the masked CSV at 02:15:21Z) and `a58183ccb8196b47` (the 20:09:23 `/api/search` row). `rayName` is the same value as the `cf-ray` response header without the data-center suffix (curl in E-109 showed `a581e1f6d8c1e98b-DFW`; `rayName` holds the 16 hex characters only), so a Ray ID from a HAR or curl can be matched to a log row exactly, instead of by time + path as in E-108.
@@ -1382,7 +1382,7 @@ Ray IDs seen: `a5818c88c8f29d60` (the 20:15:21 rum row, present in the masked CS
 Open: add the two columns, export again and check; then cf_logs_summary.py needs optional rayName/securityAction support (today it reads only the 9 fields).
 
 
-## E-111 — First real Cloudflare API calls with a scoped read-only token (22:20 CST)
+## <a id="e-111"></a>E-111 — First real Cloudflare API calls with a scoped read-only token (22:20 CST)
 What ran: the author created a custom API token `lab-readonly` (all permissions Read: DNS, Zone, Zone Settings, Zone Observability, Analytics, Logs; scope only the zone jdjagustin-lab.dev; expiry 7 days, until 2026-11-16 23:59 CST; no IP filter). While building it, the first draft had DNS **Edit** (write) ticked; Claude spotted it in the screenshot and the author corrected it to Read before creating the token. The summary screen was reviewed: only Read permissions.
 Calls (from the author's Mac, token kept in a shell variable with `read -s`, never pasted in chat): (1) `GET /user/tokens/verify` -> success true, status active. (2) `GET /zones?name=jdjagustin-lab.dev` -> zone id. (3) `GET /zones/<id>/dns_records` -> two CNAME records, `grafana` and `lab`, both proxied=True, ttl=1 (Automatic), both pointing to the same tunnel `<uuid>.cfargotunnel.com`. Masked copy: `evidence/api-call-1-dns-records_2026-11-09_2220CST_masked.txt`.
 Honest scope: these are read calls only (no change made through the API yet). The token string and zone id were not saved anywhere. Cloudflare's own suggested `curl` puts the token in the command line (shell history), so the author used a variable instead.
@@ -1390,7 +1390,7 @@ Cleanup (added to the plan): revoke the token in Dashboard > My Profile > API To
 Next: second call (read SSL/TLS mode via `/zones/<id>/settings/ssl`), then decide Terraform.
 
 
-## E-112 — Second API call: the zone's SSL/TLS mode read through the API (22:22 CST)
+## <a id="e-112"></a>E-112 — Second API call: the zone's SSL/TLS mode read through the API (22:22 CST)
 Call: `GET /zones/<id>/settings/ssl` with the read-only token. Copy: `evidence/api-call-2-ssl-setting_2026-11-09_2222CST.txt`.
 Result: `value: full`, `certificate_status: active`, `validation_errors: []`, `editable: true`, `modified_on: null`, `success: true`.
 Cross-check: matches E-049, where the dashboard showed "Current encryption mode: Full" under Automatic SSL/TLS. `modified_on: null` fits that: nobody changed the setting by hand; Cloudflare's automatic mode chose it. Correction of a statement made in chat at 22:21 ("lo que configuramos en el dashboard"): the value was not set by us, it came from Automatic mode.
@@ -1398,7 +1398,7 @@ Meaning of the values: Full = Cloudflare connects to the origin over HTTPS witho
 Scope: two read-only list/get calls so far (DNS records, SSL setting) plus the token verify. Still no change made through the API.
 
 
-## E-113 — API write cycle: create, read and delete a DNS record through the Cloudflare API (22:36-22:50 CST)
+## <a id="e-113"></a>E-113 — API write cycle: create, read and delete a DNS record through the Cloudflare API (22:36-22:50 CST)
 What ran (the author, own Mac, second terminal window, second token): token `lab-dns-edit` (permission DNS: Edit, only the zone jdjagustin-lab.dev, expiry 2026-11-10 23:59 CST; verified active). Cycle on a throwaway TXT record `api-test.jdjagustin-lab.dev`:
 1. POST create (22:46): success true, TXT with ttl 120. A first attempt at 22:36 failed with error 7003 because the variable ZONE_ID was empty in the new window (URL `/zones/dns_records`); nothing was created. Fixed by copying the Zone ID from Overview > API (32 characters, checked with `echo ${#ZONE_ID}`); a typo with a space after `export ZONE_ID=` was also corrected.
 2. GET by id (22:47): same record; `dig +short TXT` returned the content about 80 seconds after creation (the zone uses Cloudflare DNS).
@@ -1410,13 +1410,13 @@ Honest limits: done by hand with curl, not a script or pipeline; only DNS record
 Cleanup still pending: revoke `lab-dns-edit` now (no longer needed) and `lab-readonly` at the end; `unset CF_API_TOKEN CF_API_TOKEN_EDIT ZONE_ID RECORD_ID` in both windows.
 
 
-## E-114 — Terraform installed on the Mac (00:10 CST, 2026-11-10)
+## <a id="e-114"></a>E-114 — Terraform installed on the Mac (00:10 CST, 2026-11-10)
 the author chose to keep Terraform installed permanently (he will use it in other projects). Checks before: Homebrew present (`/opt/homebrew/bin/brew`), `uname -m` = arm64, Terraform not installed. Install: `brew tap hashicorp/tap`, `brew install hashicorp/tap/terraform` (official HashiCorp tap; the core Homebrew formula is frozen on an old version). Result: `Terraform v1.17.1 on darwin_arm64`. File: `evidence/terraform-install_2026-11-10_0010CST.txt`.
 Side effects noted: Homebrew updated its own index; no other package was upgraded; an unrelated tap (romkatv/powerlevel10k) shows a "not trusted" warning that was already there. Removal commands are in the file and in the private cleanup checklist (only if the author decides to remove it).
 Scope: this proves the tool is installed, not yet that any infrastructure was managed with it. Next: exercise folder, provider, init/plan/apply/destroy on one throwaway TXT record with a short-lived DNS Edit token.
 
 
-## E-115 — First Terraform run: init, plan, apply, verify, destroy on one throwaway DNS record (00:18-00:34 CST, 2026-11-10)
+## <a id="e-115"></a>E-115 — First Terraform run: init, plan, apply, verify, destroy on one throwaway DNS record (00:18-00:34 CST, 2026-11-10)
 What ran (the author, own Mac, Terraform v1.17.1, provider cloudflare/cloudflare v5.28.1): folder `terraform-exercise/` with a `main.tf` (copy in `evidence/terraform-main.tf.txt`) that declares ONE resource `cloudflare_dns_record.tf_test` (TXT `tf-test.jdjagustin-lab.dev`, ttl 120). Token `lab-terraform` (DNS Edit, only this zone, 7 days) passed through the environment variable CLOUDFLARE_API_TOKEN (never in a file); zone id through TF_VAR_zone_id.
 Timeline: 00:18 `terraform init` OK (provider downloaded, lock file) | 00:24 `terraform plan`: 1 to add, 0 to change, 0 to destroy | 00:30 `terraform apply` (typed yes): 1 added, created in 1 s | 00:32 `dig +short TXT` returned the text exactly as written, `terraform state list` showed only the one resource | 00:34 `terraform destroy` (typed yes): plan showed 0 to add, 0 to change, 1 to destroy, destroy complete in 1 s; `created_on` 06:30:22Z matches the apply.
 Files in `evidence/`: terraform-install, terraform-1-init, terraform-2-plan, terraform-3-apply, terraform-4-verify, terraform-5-destroy, terraform-main.tf.txt (ids masked).
@@ -1425,14 +1425,14 @@ Limits (do not overclaim): one resource only, local state (no remote backend, no
 Verified clean at 00:37 CST (`evidence/terraform-6-verify-clean_2026-11-10_0037CST.txt`): `dig` empty and the zone lists only the grafana and lab CNAMEs (proxied). Exercise CLOSED at 00:40 CST: token lab-terraform deleted in the dashboard, variables unset (env check = 0), `.terraform/` and `terraform.tfstate*` deleted (`evidence/terraform-7-local-cleanup_2026-11-10_0040CST.txt`). Terraform itself stays installed by the author's choice.
 
 
-## E-116 — Cache Rule exercise, step 1: the "before" (01:25 CST, 2026-11-10)
+## <a id="e-116"></a>E-116 — Cache Rule exercise, step 1: the "before" (01:25 CST, 2026-11-10)
 What ran (the author, Mac terminal): `curl -sI "https://lab.jdjagustin-lab.dev/" | grep -i -E "^(HTTP|cf-cache-status|age|cache-control|cf-ray)"` twice in a row. File: `evidence/cache-rule-1-before_2026-11-10_0125CST.txt`.
 Result: both `HTTP/2 200`, both `cf-cache-status: DYNAMIC`, no `age`, no `cache-control`; Ray IDs `...067b-DFW` and `...3aa6-DFW` (different per request; suffix = Dallas data center).
 Meaning: DYNAMIC = Cloudflare decided this response is not eligible for cache (HTML is not in the default cached extensions), so it forwards the request to the origin every time. It does NOT prove the content is generated dynamically (it is a static file served by Python http.server). Cache is stored per data center (colo), the one that received the request.
 Next: create a Cache Rule only for hostname `lab.jdjagustin-lab.dev` (eligible for cache), repeat the curl twice (expect MISS then HIT), then delete the rule and add it to the private cleanup checklist.
 
 
-## E-117 — Cache Rule exercise, step 2: custom Cache Rule makes the HTML cacheable (01:49 CST, 2026-11-10)
+## <a id="e-117"></a>E-117 — Cache Rule exercise, step 2: custom Cache Rule makes the HTML cacheable (01:49 CST, 2026-11-10)
 What was done: in Dashboard > Caching > Cache Rules, rule `lab-cache-html`: filter Hostname equals `lab.jdjagustin-lab.dev` (first attempt used the field "URI Full", which would never have matched; caught before Deploy), Cache eligibility = Eligible for cache, Edge TTL = ignore cache-control and use 2 hours (Free plan minimum), Browser TTL untouched. Deployed about 01:48 CST.
 Test (the author, Mac terminal): the same curl as E-116, twice. File: `evidence/cache-rule-2-after_2026-11-10_0149CST.txt`.
 Result: 1st request `MISS`, 2nd request `HIT` with `age: 0`, both from DFW. Before the rule (E-116) both were `DYNAMIC`.
@@ -1441,7 +1441,7 @@ What it supports: "created a Cache Rule scoped to one hostname, saw the HTML go 
 Exercise CLOSED at 01:54 CST: rule deleted, Purge Everything run (both by the author's report), and the same curl twice returned `DYNAMIC` both times with no cache-control header (`evidence/cache-rule-3-after-cleanup_2026-11-10_0154CST.txt`). Note: the `cache-control: max-age=14400` header disappeared with the rule, so it is more likely tied to the rule's cache settings than to the zone Browser Cache TTL default; I wrote the zone-default explanation above as an inference and it is not confirmed.
 
 
-## E-118 — Observability export of the Cache Rule test, and the Fields dialog (02:02-02:04 CST, 2026-11-10)
+## <a id="e-118"></a>E-118 — Observability export of the Cache Rule test, and the Fields dialog (02:02-02:04 CST, 2026-11-10)
 What the author did: opened Observability > Logs (HTTP requests, All domains, Last 1 hour), exported the 6 rows as CSV at 02:02 CST, and opened the Fields dialog. Files: `evidence/observability-cache-rule_2026-11-10_0202CST_masked.csv` (client IP replaced by `<client-ip>`; the original export stays in his Downloads folder with the real IP). Screenshots not saved (they show part of his account name).
 Edge-side view of E-116/E-117 (times in UTC, CST = UTC-6): 07:25:13 and 07:25:14Z two `dynamic` (originResponseStatus 200) = the "before"; 07:49:11Z `miss` (origin 200) then `hit` (origin 0) = the rule working; 07:54:11Z two `dynamic` (origin 200) = after deleting the rule and purging. The `hit` shows originResponseStatus 0: that request never reached the origin. This matches the terminal outputs, from an independent source (Cloudflare's own logs).
 Fields dialog: 33 fields available; 8 were selected (HTTP method, Host, Path, Edge status code, Cache status, Source IP, Country, Origin status code), which is exactly the set of columns in the export (plus datetime). So the export follows the selected columns. `Ray ID` (rayName) and `Security Action` (securityAction) exist in the list but were NOT yet selected. Other fields seen in the list: Security Source, Origin response duration (ms), Source user agent, SSL Protocol, Content type, Session ID hash, among others (not all read).
@@ -1449,16 +1449,16 @@ Limits: HEAD requests only (curl -I), 6 rows, one hostname; the purge itself doe
 Next: add Ray ID and Security Action with the + button, export again, check the CSV has the two new columns, then update `scripts/cf_logs_summary.py`.
 
 
-## E-119 — Ray ID and Security Action columns work; curl cf-ray values match the logs' rayName (02:10 CST, 2026-11-10)
+## <a id="e-119"></a>E-119 — Ray ID and Security Action columns work; curl cf-ray values match the logs' rayName (02:10 CST, 2026-11-10)
 What the author did: in Observability > Logs > Fields he selected `Ray ID` (rayName) and `Security Action` (securityAction) (10 fields selected; the list then shows 31 more), and exported the CSV again. File: `evidence/observability-cache-rule-with-rayname_2026-11-10_0210CST_masked.csv` (client IP masked; the original stays in his Downloads folder). Screenshot not saved (shows part of his account name).
 Result: the export now has 11 columns, the two new ones right after datetime. `rayName` is the cf-ray header without the data-center suffix; all 6 `cf-ray` values copied from the curl outputs of E-116/E-117 (`...-DFW`) match the 6 `rayName` values in the logs exactly (checked with a script: 6 of 6 matched, none left over on either side). So one request can be followed from the terminal to Cloudflare's own log by its Ray ID. `securityAction` is `unknown` on all 6 rows; these requests triggered no security rule, but I have not confirmed what the label means beyond that (a blocked request, like the WAF test of E-049, should show a different value; not tested here).
 Script: `scripts/cf_logs_summary.py` now reads the two optional columns and has a new `--rays` option (one line per request with its Ray ID); an export without those columns still works (checked with the previous export). The previous version of the script was archived in an archive folder
 Limits: 6 HEAD requests, one hostname, the 1-hour window; securityAction values other than `unknown` not seen in this export.
 
-## E-121 — RUNBOOK.md extended with 3 sections that did run (2026-11-10, ~03:58 CST)
+## <a id="e-121"></a>E-121 — RUNBOOK.md extended with 3 sections that did run (2026-11-10, ~03:58 CST)
 Text work only, nothing executed. New sections in `docs/RUNBOOK.md`: 8 DNS check with dig (from E-042), 9 cloudflared upgrade via dpkg (from E-010, E-011, E-012), 10 Observability logs and HAR (from E-093, E-105 to E-108, E-118, E-119 and the HOWTO). Old sections 8 and 9 became 11 and 12; triage table got 3 rows. Limits: in section 8 only the "resolves to Cloudflare addresses" case was observed; NXDOMAIN and DNS-only cases are marked as general knowledge. Section 9 rests on documentation read through snippets. Runbook now 124 lines, 12 sections; none of it used in production.
 
-## E-122 — Piece 2, step 1: official docs read for errors 1016, 520-526 and SSL/TLS modes (web fetch, 2026-11-10 ~04:15 CST)
+## <a id="e-122"></a>E-122 — Piece 2, step 1: official docs read for errors 1016, 520-526 and SSL/TLS modes (web fetch, 2026-11-10 ~04:15 CST)
 Source: Cloudflare docs pages fetched one by one (summaries by the fetch tool, not the full raw text): developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1016/ ; .../cloudflare-5xx-errors/error-520/ to error-526/ ; developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full/ and /full-strict. The 5xx index page lists titles only. Nothing was executed or changed in the lab.
 Facts (what the docs say):
 - 1016 "Origin DNS error": Cloudflare cannot resolve the origin's IP address. Listed causes: the origin A record is missing; a CNAME in Cloudflare DNS points to an external domain that does not resolve; unresolvable hostnames in Load Balancer pools; Spectrum CNAME origin without its record; Workers fetch to a hostname without a record in a Partial (CNAME) zone; SSL for SaaS custom hostname problems. Fix: confirm the record points to a valid IP / that the CNAME target resolves. The page I read does NOT mention Cloudflare Tunnel or a deleted tunnel; the tunnel DNS-records page I fetched was truncated and did not show it either. So "1016 appears when the tunnel was deleted" is NOT confirmed by documentation (my earlier runbook text says "documented"; check wording).
@@ -1473,7 +1473,7 @@ Facts (what the docs say):
 Limits: summaries via the fetch tool; Flexible and Off were not described by the pages read; nothing here was reproduced.
 Reproducibility in THIS lab (my assessment, not tested): origins sit behind a Tunnel, so origin failures show as 502/530 (E-091, E-097), not 520-524. 525/526 and 520-524 need a proxied A/AAAA record to a public origin IP, which the lab does not have. 1016 can be tried with a proxied CNAME to a name that does not resolve.
 
-## E-123 — Piece 2: CGNAT check for using CloudSpartan as a public origin (terminal + router screenshot, 04:13-04:23 CST)
+## <a id="e-123"></a>E-123 — Piece 2: CGNAT check for using CloudSpartan as a public origin (terminal + router screenshot, 04:13-04:23 CST)
 Source: the author's terminal output pasted as text and a screenshot of his home router (Arris, WAN Setup > Dynamic, "Dynamic Configuration Settings"). Read-only; nothing was changed.
 Facts:
 - On CloudSpartan, `curl -s https://ifconfig.me` returned a public IPv4 address <public-ip> (the value stays only in his terminal; not written to files).
@@ -1483,7 +1483,7 @@ Facts:
 Files: screenshot saved PRIVATE (router admin page): `evidence/screenshots_PRIVATE_originals/E-123_router_wan_setup_2026-11-10_0423CST.png`. Not for the repo (shows ISP internal addressing).
 Consequence: the "port-forward to CloudSpartan" route is closed for IPv4. Options not yet decided: (A) check IPv6 reachability, (B) a temporary small cloud VM with a public IP, (C) keep 520-526 as documentation study only.
 
-## E-124 — Piece 2: IPv6 check for CloudSpartan as a public origin (terminal + router screenshot, 04:26 CST)
+## <a id="e-124"></a>E-124 — Piece 2: IPv6 check for CloudSpartan as a public origin (terminal + router screenshot, 04:26 CST)
 Source: the author's terminal output and a screenshot of the router's "Dynamic Configuration Settings (IPV6)" page. Read-only; nothing changed.
 Facts:
 - On CloudSpartan, `curl -6 -s --max-time 8 https://ifconfig.me` printed nothing (no output within 8 s). With `-s` the tool is silent on failure, so the exact failure reason was not seen; it means no IPv6 answer was obtained.
@@ -1492,7 +1492,7 @@ Facts:
 Files: screenshot saved PRIVATE `evidence/screenshots_PRIVATE_originals/E-124_router_wan_ipv6_2026-11-10_0426CST.png` (router admin page, not for the repo).
 Consequence: options A (home origin via IPv4 port-forward) and IPv6 are closed. Remaining: B) temporary cloud VM with public IP, C) study only.
 
-## E-125 — Piece 2: 1016 experiment, first try returned 1014 instead (terminal + form screenshot, 07:52-07:56 CST, 2026-11-10)
+## <a id="e-125"></a>E-125 — Piece 2: 1016 experiment, first try returned 1014 instead (terminal + form screenshot, 07:52-07:56 CST, 2026-11-10)
 Source: the author's Mac terminal output pasted as text and a screenshot of the Add record form (private: `evidence/screenshots_PRIVATE_originals/E-125_add-record-err1016-a_form_2026-11-10_0752CST.png`).
 What was done: DNS record created in the zone: CNAME `err1016-a` -> `no-such-host-lab-test.example.com`, Proxied. PREDICTION written before testing (the initial plan 07:45): error 1016. The prediction was WRONG.
 Commands run (Mac): `dig +short err1016-a.<lab-domain>`; `curl -sI https://err1016-a.<lab-domain>/ | grep -i -E "^HTTP|cf-ray|server"`; `curl -s https://err1016-a.<lab-domain>/ | grep -i -E "<title>|error code"`.
@@ -1506,7 +1506,7 @@ Lesson: a CNAME target that "does not exist" is a bad test if its parent domain 
 Verification (07:58 CST): the author ran `dig +short NS example.com`; it returned two Cloudflare name servers (elliott.ns.cloudflare.com and hera.ns.cloudflare.com). So example.com IS hosted on Cloudflare. That it belongs to a DIFFERENT account than the lab's is not visible from here; it is the reading that fits the 1014 documentation (the lab zone cannot be the same account as example.com).
 Next step (not done): change the target of `err1016-a` to a nonexistent name INSIDE the lab's own zone (same account) and repeat the three commands; expectation from the 1016 docs: 1016. Cleanup unchanged (records err1016-a and err1016-b in the private cleanup checklist).
 
-## E-126 — Piece 2: 1016 reproduced after changing only the CNAME target (terminal + screenshot, 08:07-08:10 CST, 2026-11-10)
+## <a id="e-126"></a>E-126 — Piece 2: 1016 reproduced after changing only the CNAME target (terminal + screenshot, 08:07-08:10 CST, 2026-11-10)
 Source: the author's Mac terminal output (text) and a screenshot of the edit panel before Save (private: `evidence/screenshots_PRIVATE_originals/E-126_edit-err1016-a_target-own-zone_2026-11-10_0807CST.png`).
 What was changed (one variable): record `err1016-a` stays CNAME + Proxied; target changed from `no-such-host-lab-test.example.com` (E-125, gave 1014) to `no-such-origin.<lab-domain>` (a name that does not exist, inside the lab's own zone). PREDICTION written before the test (the initial plan 08:07): 1016. Confirmed.
 Commands run: the same three as in E-125 (dig +short; curl -sI | grep -i -E "^HTTP|cf-ray|server"; curl -s | grep -i -E "title|error code").
@@ -1518,7 +1518,7 @@ Interpretation: with the target inside the same account and not resolvable, Clou
 Addendum (08:18 CST): the author ran `curl -s https://err1016-a.<lab-domain>/` with no filter. The whole body is one line: `error code: 1016`. So for this error, curl receives a plain-text body, not an HTML page; that is why the grep for `title` found nothing in E-125 and E-126. This closes the open question (hypothesis from 08:17 confirmed). Observed for curl only; a browser may be shown a different page (not tested).
 Limit: one record, one run each; 1016 with a tunnel target not tested yet (err1016-b next). Record `err1016-a` still exists (cleanup pending).
 
-## E-127 — Piece 2: CNAME to a tunnel that does not exist gives 530 + 1033 (terminal + zone export, 08:22 CST, 2026-11-10)
+## <a id="e-127"></a>E-127 — Piece 2: CNAME to a tunnel that does not exist gives 530 + 1033 (terminal + zone export, 08:22 CST, 2026-11-10)
 Source: the author's Mac terminal output (text) and the zone export `jdjagustin-lab.dev-2.txt` (exported 2026-11-10 14:21:27 UTC = 08:21 CST), saved masked as `evidence/jdjagustin-lab.dev_zone_export_WITH-err1016-records_2026-11-10_1421UTC_masked.txt` (the real tunnel id replaced by <tunnel-uuid>; the fake all-zero id kept).
 What was created: record `err1016-b`, CNAME to `<uuid>.cfargotunnel.com` (a tunnel id that does not exist), Proxied. The export confirms both test records: `err1016-a` -> `no-such-origin.<lab-domain>` and `err1016-b` -> the fake tunnel id, both `cf-proxied:true`, next to `grafana` and `lab`.
 PREDICTION (before testing): "1033 or 1016, docs silent". Half-open prediction; the answer is 1033.
@@ -1530,7 +1530,7 @@ Interpretation: a proxied CNAME to a tunnel id that does not exist produces the 
 Summary of the three codes seen in piece 2 (all with the plain-text body for curl): 1014 (E-125, target in another Cloudflare account), 1016 (E-126, target name that does not resolve), 1033 (this entry, tunnel not found / not connected).
 Limits: one run each; a deleted-then-gone real tunnel not tested; browser view not tested. Both test records still exist (cleanup pending).
 
-## E-128 — Where the docs explain the HTTP statuses and error codes seen in piece 2 (web fetch, 08:35 CST, 2026-11-10)
+## <a id="e-128"></a>E-128 — Where the docs explain the HTTP statuses and error codes seen in piece 2 (web fetch, 08:35 CST, 2026-11-10)
 Source: Cloudflare docs pages (fetched one by one; summaries by the fetch tool): Support > Troubleshooting > HTTP status codes: `.../http-status-codes/cloudflare-1xxx-errors/` (index), `.../cloudflare-1xxx-errors/error-1014/`, `error-1016/`, `error-1033/`; `.../http-status-codes/cloudflare-5xx-errors/` (index) and `.../cloudflare-5xx-errors/error-530/`.
 Facts (what the pages say):
 - 1xxx index: 1xxx errors appear in the HTML body; each one "is returned with the HTTP status code below"; its table maps 1016 (Origin DNS error) and 1033 (Argo Tunnel error) to HTTP 530.
@@ -1540,7 +1540,7 @@ Facts (what the pages say):
 - 1014: observed 403 (E-125); the status for 1014 was not read from the docs table in this fetch.
 This closes the earlier open point: the link between 530 and the 1xxx codes IS documented.
 
-## E-129 — Piece 2: cleanup of the two test records verified (screenshot + terminal, 08:29 CST, 2026-11-10)
+## <a id="e-129"></a>E-129 — Piece 2: cleanup of the two test records verified (screenshot + terminal, 08:29 CST, 2026-11-10)
 Source: the author's screenshot of the DNS Records list (private copy: `evidence/screenshots_PRIVATE_originals/E-129_dns-records-after-cleanup_2026-11-10_0829CST.png`) and terminal output.
 What was done: the author deleted `err1016-a` and `err1016-b` in the dashboard.
 Facts:
@@ -1549,7 +1549,7 @@ Facts:
 Addendum (08:31 CST): a second screenshot after refreshing (private: `E-129b_dns-records-refreshed_2026-11-10_0831CST.png`) shows the footer now reads "Showing 1-2 of 2", matching the two rows and the banner; so the earlier "1-3 of 3" was a stale label.
 Result: piece 2 temporary records are gone; the zone is back to `grafana` and `lab` only (`lab` is the lab's own temporary record, removed at the final cleanup).
 
-## E-130 — Piece 3, prep step 1: Access policy `allow-owner-email` checked (screenshot, 09:50 CST, 2026-11-10)
+## <a id="e-130"></a>E-130 — Piece 3, prep step 1: Access policy `allow-owner-email` checked (screenshot, 09:50 CST, 2026-11-10)
 Source: the author's screenshot of the policy page opened from Zero Trust > Access controls > Applications > `lab-private` > Policies (private original with his email and policy id visible: `evidence/screenshots_PRIVATE_originals/E-130_access-policy-allow-owner-email_2026-11-10_0950CST.png`; a masked copy is made in the curation pass).
 Read-only; nothing was changed.
 Facts (what the screenshot shows):
@@ -1560,7 +1560,7 @@ Facts (what the screenshot shows):
 Interpretation: only the author's email is allowed on `/private`. Cloudflare Access normally denies a user who matches no Allow policy (general knowledge; this is what the negative test will check, it is not yet proven here).
 Next prep step: Google Auth Platform > Audience of project `lab-cloudflare-access` (publishing status Testing and the test users list) before asking the second account to try.
 
-## E-131 — Piece 3, prep step 2 (partial): Google Auth Platform > Audience of project `lab-cloudflare-access` (screenshot, 09:54 CST, 2026-11-10)
+## <a id="e-131"></a>E-131 — Piece 3, prep step 2 (partial): Google Auth Platform > Audience of project `lab-cloudflare-access` (screenshot, 09:54 CST, 2026-11-10)
 Source: the author's screenshot (private original: `evidence/screenshots_PRIVATE_originals/E-131_google-audience_testing_2026-11-10_0954CST.png`; shows the Google account avatar and a free-trial banner; the Test users list is cut off at the bottom). Read-only.
 Facts (what the screenshot shows):
 - Project `lab-cloudflare-access`; page Google Auth Platform > Audience.
@@ -1571,7 +1571,7 @@ Not yet seen: the Test users list itself (below the visible area). The counter "
 Addendum (09:56 CST): the author reported by text, after scrolling, that the Test users list shows zero test users (no screenshot of that section). So his own login earlier worked with an empty list; the reason is not verified (possibly because he is the owner of the Google Cloud project; not checked in Google's documentation). Consequence for the test: the second account must be added as a test user first, otherwise Google may block it before Cloudflare (to be seen in the test; if Google blocks, that is not an Access result).
 Next: scroll down to the "Test users" section and capture it.
 
-## E-132 — Piece 3: Test users section of the Google app now shows one test user (screenshot, 09:59 CST, 2026-11-10) - CORRECTS the E-131 addendum
+## <a id="e-132"></a>E-132 — Piece 3: Test users section of the Google app now shows one test user (screenshot, 09:59 CST, 2026-11-10) - CORRECTS the E-131 addendum
 Source: the author's screenshot (private original: `evidence/screenshots_PRIVATE_originals/E-132_google-audience_test-users_2026-11-10_0959CST.png`; it shows a third-party email address, so it is NEVER for the repo and is not transcribed anywhere).
 Facts (what the screenshot shows):
 - Test users section: one entry, a Gmail address <test-account> that is NOT the author's own address; buttons Add users, a delete icon per row, a Filter box.
@@ -1585,12 +1585,12 @@ Consequence: a test user exists in the Google app now. It must be removed in the
 ## Note N-001 (12:05) — wrong host assumed for E-004/E-005
 E-004 and E-005 were run on CloudSpartan because the initial plan (from the earlier planning) said the tunnel ran there. the author recalls Grafana (and its tunnel) are on CloudLab. earlier project notes says cloudflared was installed as a systemd service and Grafana runs in the lab k3s cluster. The results of E-004/E-005 remain valid only for CloudSpartan. The check must be repeated on CloudLab-1 (see the initial plan, Deviation 3).
 
-## E-120 — Piece 1 (documents), step 1: runbook written from the lab evidence (2026-11-10, ~04:30 CST)
+## <a id="e-120"></a>E-120 — Piece 1 (documents), step 1: runbook written from the lab evidence (2026-11-10, ~04:30 CST)
 What: `docs/RUNBOOK.md` (English, 9 sections): Ray ID workflow, triage table, procedures for 502, 530/1033, 403 block page, 429, Access/IdP error, cache, escalation checklist, honest gaps.
 Facts: every procedure cites the E-xxx where it was reproduced (E-046/047, E-053 to E-059, E-063/064, E-071 to E-080, E-086, E-089/090, E-091/092, E-094/095, E-097 to E-099, E-116/117, E-119). The 502 commands are the exact ones run in E-092.
 Limits: written, not used in production; error 1016 and 520-526 not reproduced; TLS Full vs Full (strict), SAML, MFA and managed rules not exercised. Remaining documents of piece 1 (onboarding plan, call summary + escalation templates, 20-minute workshop outline) are NOT written yet.
 
-## E-133 — Two study guides written: DNS deep dive and 520 to 526 errors with SSL/TLS modes (2026-11-10, ~17:25 CST)
+## <a id="e-133"></a>E-133 — Two study guides written: DNS deep dive and 520 to 526 errors with SSL/TLS modes (2026-11-10, ~17:25 CST)
 Text work only; nothing was executed in the lab or changed in the zone. Files: `docs/DNS_DEEP_DIVE.md`, `docs/STUDY_5xx_errors_and_TLS_modes.md` and five animated diagrams (`dns-proxied-lookup`, `dns-two-clocks`, `dns-cname-target-errors`, `origin-errors-map`, `ssl-modes`).
 Documentation read for them, through a fetch tool that summarizes pages (not raw text): Cloudflare pages on proxy status, DNS record types, TTL, CNAME flattening (the `index.md` versions), SSL/TLS encryption modes, Flexible, Full (strict), the 5xx index and errors 520, 521, 522, 523, 524, 525 and 526. Earlier reads: E-037, E-122, E-128.
 Method: every statement carries a tag, lab-observed (with its E-xxx), from the documentation, or general knowledge. Facts about the lab come from E-036 to E-045, E-049, E-091, E-097, E-108, E-112, E-113, E-115 to E-117, E-123 to E-129.

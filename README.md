@@ -10,7 +10,7 @@
 
 A one-person, hands-on lab that puts a small origin behind Cloudflare and exercises the edge the way an operator would: DNS and proxy, TLS mode, cache, WAF and rate limiting, Access with an identity provider, Tunnel failures and how to diagnose them, the API, Terraform and Observability logs.
 
-> **Status: work in progress.** Everything under "Done" actually ran and was observed by the author. Everything under "To be completed" has **not** been done yet and is listed so the gaps are visible. Entries like `E-042` point to the evidence log [`docs/EVIDENCE.md`](docs/EVIDENCE.md): what ran, the output, and the limits of each claim. Masked screenshots are in [`evidence/screenshots/`](evidence/screenshots/README.md); the log refers to some private originals that are not published.
+> **Status: work in progress.** Everything under "Done" actually ran and was observed by the author. Everything under "To be completed" has **not** been done yet and is listed so the gaps are visible. Entries like [E-042](docs/EVIDENCE.md#e-042) link to the evidence log [`docs/EVIDENCE.md`](docs/EVIDENCE.md): what ran, the output, and the limits of each claim. Masked screenshots are in [`evidence/screenshots/`](evidence/screenshots/README.md); the log refers to some private originals that are not published.
 
 ## Architecture
 
@@ -51,7 +51,7 @@ A browser or `curl` reaches proxied hostnames on Cloudflare's edge. Requests pas
 
 ## Flow diagrams
 
-Animated SVGs, each drawn only from cases that ran, plus the architecture diagram above. Four of them also sit next to the text they support in the runbook; the Terraform one lives only here. Open each one below, or use the links in the table.
+Animated SVGs, each drawn only from cases that ran, plus the architecture diagram above. Four of them also sit next to the text they support in the runbook; the Terraform one lives only here. Open each one below, or use the links in the table. The `E-xxx` labels drawn inside the diagrams are not clickable on GitHub; look them up in the [evidence log](docs/EVIDENCE.md).
 
 | Diagram | What it shows | Where |
 |---|---|---|
@@ -113,18 +113,18 @@ Written guides. Each statement in them is tagged as lab-observed, from the docum
 
 | Area | What ran | Evidence |
 |---|---|---|
-| DNS and proxy | Proxied CNAMEs to a tunnel; `dig` returns Cloudflare anycast IPs, not the origin | E-036, E-041, E-042 |
-| TLS | SSL/TLS mode read in the dashboard and through the API (`full`); read only, not changed | E-049, E-112 |
-| Cache | Default cache by file extension; HTML is `DYNAMIC`; a Cache Rule by hostname gives `MISS` then `HIT`; rule deleted and cache purged returns to `DYNAMIC` | E-046, E-047, E-116, E-117 |
-| WAF custom rule | Block `/blocked` at the edge; the origin log shows the request never arrived | E-052 to E-058 |
-| Rate limit | 5 requests per 10 s on one path: `404` x5 then `429` x5 | E-060 to E-064 |
-| Access (positive test) | Google as identity provider, application on `/private`, policy allowing one email; the allowed account got in | E-065 to E-090, E-130 |
-| Failures | Origin stopped: `502`. Tunnel stopped: `530` with Cloudflare error `1033` | E-091 to E-099 |
-| Failures (DNS-level) | Temporary proxied records reproduced `1014` (CNAME to a hostname in another Cloudflare account), `1016` (origin name that does not resolve) and `1033` (tunnel id that does not exist); all removed and verified | E-125 to E-129 |
-| Observability | Edge logs export; `cf-ray` from `curl` matches `rayName` in the logs (6 of 6) | E-108, E-118, E-119 |
-| API | Scoped read-only token; create, read and delete a throwaway TXT record | E-111 to E-113 |
-| Terraform | `init`, `plan`, `apply`, verify with `dig`, `destroy` on one throwaway TXT record | E-114, E-115 |
-| Connector maintenance | `cloudflared` upgraded from a local `.deb` after a security advisory; version and tunnel health checked | E-009 to E-012 |
+| DNS and proxy | Proxied CNAMEs to a tunnel; `dig` returns Cloudflare anycast IPs, not the origin | [E-036](docs/EVIDENCE.md#e-036), [E-041](docs/EVIDENCE.md#e-041), [E-042](docs/EVIDENCE.md#e-042) |
+| TLS | SSL/TLS mode read in the dashboard and through the API (`full`); read only, not changed | [E-049](docs/EVIDENCE.md#e-049), [E-112](docs/EVIDENCE.md#e-112) |
+| Cache | Default cache by file extension; HTML is `DYNAMIC`; a Cache Rule by hostname gives `MISS` then `HIT`; rule deleted and cache purged returns to `DYNAMIC` | [E-046](docs/EVIDENCE.md#e-046), [E-047](docs/EVIDENCE.md#e-047), [E-116](docs/EVIDENCE.md#e-116), [E-117](docs/EVIDENCE.md#e-117) |
+| WAF custom rule | Block `/blocked` at the edge; the origin log shows the request never arrived | [E-052](docs/EVIDENCE.md#e-052) to [E-058](docs/EVIDENCE.md#e-058) |
+| Rate limit | 5 requests per 10 s on one path: `404` x5 then `429` x5 | [E-060](docs/EVIDENCE.md#e-060) to [E-064](docs/EVIDENCE.md#e-064) |
+| Access (positive test) | Google as identity provider, application on `/private`, policy allowing one email; the allowed account got in | [E-065](docs/EVIDENCE.md#e-065) to [E-090](docs/EVIDENCE.md#e-090), [E-130](docs/EVIDENCE.md#e-130) |
+| Failures | Origin stopped: `502`. Tunnel stopped: `530` with Cloudflare error `1033` | [E-091](docs/EVIDENCE.md#e-091) to [E-099](docs/EVIDENCE.md#e-099) |
+| Failures (DNS-level) | Temporary proxied records reproduced `1014` (CNAME to a hostname in another Cloudflare account), `1016` (origin name that does not resolve) and `1033` (tunnel id that does not exist); all removed and verified | [E-125](docs/EVIDENCE.md#e-125) to [E-129](docs/EVIDENCE.md#e-129) |
+| Observability | Edge logs export; `cf-ray` from `curl` matches `rayName` in the logs (6 of 6) | [E-108](docs/EVIDENCE.md#e-108), [E-118](docs/EVIDENCE.md#e-118), [E-119](docs/EVIDENCE.md#e-119) |
+| API | Scoped read-only token; create, read and delete a throwaway TXT record | [E-111](docs/EVIDENCE.md#e-111) to [E-113](docs/EVIDENCE.md#e-113) |
+| Terraform | `init`, `plan`, `apply`, verify with `dig`, `destroy` on one throwaway TXT record | [E-114](docs/EVIDENCE.md#e-114), [E-115](docs/EVIDENCE.md#e-115) |
+| Connector maintenance | `cloudflared` upgraded from a local `.deb` after a security advisory; version and tunnel health checked | [E-009](docs/EVIDENCE.md#e-009) to [E-012](docs/EVIDENCE.md#e-012) |
 | Runbook | Diagnosis guide written only from the cases above | [`docs/RUNBOOK.md`](docs/RUNBOOK.md) |
 | Evidence log | 133 entries with commands, outputs, corrections and limits; personal values replaced by placeholders | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
 | Masked screenshots | 61 dashboard, browser and terminal captures, each named after the log entry it supports; sensitive values masked or covered | [`evidence/screenshots/`](evidence/screenshots/README.md) |
@@ -134,7 +134,7 @@ Written guides. Each statement in them is tagged as lab-observed, from the docum
 | Topic | Status |
 |---|---|
 | Access, negative test | Prepared (policy allows one email; a second Google account is registered as a test user). Not run yet: no denial has been captured, so no claim is made |
-| Errors `520`-`526` | **Not reproduced.** Read in the documentation only. The home connection is behind carrier NAT and has no global IPv6, so no public origin was available (E-122 to E-124). Option kept open: a temporary cloud VM |
+| Errors `520`-`526` | **Not reproduced.** Read in the documentation only. The home connection is behind carrier NAT and has no global IPv6, so no public origin was available ([E-122](docs/EVIDENCE.md#e-122) to [E-124](docs/EVIDENCE.md#e-124)). Option kept open: a temporary cloud VM |
 | TLS modes Full vs Full (strict) | Read only; not exercised. Study guide written from the documentation: [`docs/STUDY_5xx_errors_and_TLS_modes.md`](docs/STUDY_5xx_errors_and_TLS_modes.md) |
 | SAML vs OIDC identity providers, enforced MFA | Not started |
 | WAF managed rules / OWASP | Not started (only a custom rule was used) |
@@ -151,11 +151,11 @@ Both use only the Python standard library and run locally.
 
 ## Lessons learned
 
-- Access identity provider: an autofilled *Email claim* field caused "User email was not returned"; the field must stay empty (E-071 to E-080).
-- Cache Rule: matching on *URI Full* would not have matched a hostname-only rule; use *Hostname* (E-117).
-- A token form meant to be read-only had *DNS Edit* ticked in one capture; it was corrected and the final token was read-only (E-111).
-- A prediction was wrong: a CNAME to an `example.com` name gave `1014`, not `1016`, because that name is hosted on Cloudflare. Changing one variable (target inside the same zone) produced `1016` (E-125, E-126).
-- A CNAME to a tunnel id that does not exist also gives `530` + `1033`, so the code alone does not tell "tunnel down" from "tunnel does not exist"; check the tunnel list (E-127).
+- Access identity provider: an autofilled *Email claim* field caused "User email was not returned"; the field must stay empty ([E-071](docs/EVIDENCE.md#e-071) to [E-080](docs/EVIDENCE.md#e-080)).
+- Cache Rule: matching on *URI Full* would not have matched a hostname-only rule; use *Hostname* ([E-117](docs/EVIDENCE.md#e-117)).
+- A token form meant to be read-only had *DNS Edit* ticked in one capture; it was corrected and the final token was read-only ([E-111](docs/EVIDENCE.md#e-111)).
+- A prediction was wrong: a CNAME to an `example.com` name gave `1014`, not `1016`, because that name is hosted on Cloudflare. Changing one variable (target inside the same zone) produced `1016` ([E-125](docs/EVIDENCE.md#e-125), [E-126](docs/EVIDENCE.md#e-126)).
+- A CNAME to a tunnel id that does not exist also gives `530` + `1033`, so the code alone does not tell "tunnel down" from "tunnel does not exist"; check the tunnel list ([E-127](docs/EVIDENCE.md#e-127)).
 
 ## Known limits
 

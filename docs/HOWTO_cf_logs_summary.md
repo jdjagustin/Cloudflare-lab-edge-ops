@@ -38,7 +38,7 @@ Without a file name it picks the first `*observability-logs*masked*` file next t
 
 1. Make the request with curl and read the header: `curl -sI https://lab.<lab-domain>/ | grep -i cf-ray` gives for example `cf-ray: a5837cdb9b578b33-DFW`.
 2. Ignore the suffix after the dash (`-DFW` is the data center). The 16 hex characters are the Ray ID.
-3. Wait about a minute for the log to appear, export again with `rayName` selected, run `--rays` and find the same 16 characters. In the Cache Rule test, 6 of 6 curl `cf-ray` values matched the log rows (E-119).
+3. Wait about a minute for the log to appear, export again with `rayName` selected, run `--rays` and find the same 16 characters. In the Cache Rule test, 6 of 6 curl `cf-ray` values matched the log rows ([E-119](EVIDENCE.md#e-119)).
 
 ## 5. Before saving or sharing an export
 1. Run the script on the original and read the sensitive-data check (it counts real client IPs).
@@ -49,7 +49,7 @@ Without a file name it picks the first `*observability-logs*masked*` file next t
 - `cacheStatus`: `dynamic` = not eligible for cache by default (HTML), goes to the origin; `miss` = cacheable, fetched from the origin; `hit` = served from the edge copy; `stale` / `revalidated` = expired copy handled by the edge; `none` = answered without the cache path (for example Cloudflare's own `/cdn-cgi/` paths or a redirect).
 - `originResponseStatus 0` = the edge got no answer from the origin (served from cache, answered by Cloudflare itself, or the tunnel was down).
 - `securityAction unknown` = appeared on requests with no security rule involved; anything more specific was not confirmed in this lab.
-- Chart rule (E-108, inferred from our data, not from documentation): "Served by Origin" = rows with `dynamic`.
+- Chart rule ([E-108](EVIDENCE.md#e-108), inferred from our data, not from documentation): "Served by Origin" = rows with `dynamic`.
 
 ## 7. Limits
 One client, small windows, no headers, no timings, no body sizes. For per-request headers and timings use a HAR with `har_summary.py`.
