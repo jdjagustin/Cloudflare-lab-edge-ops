@@ -1,0 +1,7 @@
+Call 6 (run by the author on a Mac, 2026-11-09 22:50 CST):
+  $ dig +short TXT api-test.jdjagustin-lab.dev
+  (empty output)
+  GET https://api.cloudflare.com/client/v4/zones/<zone id>/dns_records  (printed type, name, proxied)
+CNAME grafana.jdjagustin-lab.dev proxied=True
+CNAME lab.jdjagustin-lab.dev proxied=True
+Result: the temporary TXT is gone from public DNS and from the API list; the zone is back to its two CNAMEs.

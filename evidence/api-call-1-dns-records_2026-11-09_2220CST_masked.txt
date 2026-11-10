@@ -1,0 +1,9 @@
+Call 1 (read-only API token "lab-readonly", run by the author on a Mac, 2026-11-09 22:20 CST):
+  GET https://api.cloudflare.com/client/v4/zones?name=jdjagustin-lab.dev        -> zone id (kept in a shell variable, not saved)
+  GET https://api.cloudflare.com/client/v4/zones/<zone id>/dns_records          -> list below (printed with a python3 one-liner)
+Result (tunnel UUID masked):
+CNAME grafana.jdjagustin-lab.dev <tunnel-uuid>.cfargotunnel.com proxied=True ttl=1
+CNAME lab.jdjagustin-lab.dev <tunnel-uuid>.cfargotunnel.com proxied=True ttl=1
+Notes: ttl=1 means "Automatic" in Cloudflare; both records point to the same tunnel; no other DNS records exist in the zone.
+Token check before the calls: GET /user/tokens/verify -> success true, status active, expires 2026-11-17T05:59:59Z (2026-11-16 23:59 CST).
+Token permissions (all Read): DNS, Zone, Zone Settings, Zone Observability, Analytics, Logs; scope = zone jdjagustin-lab.dev only; expiry 7 days; no IP filter.

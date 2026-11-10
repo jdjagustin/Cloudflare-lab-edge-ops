@@ -1,0 +1,40 @@
+$ curl -sI https://grafana.jdjagustin-lab.dev/public/img/grafana_mask_icon.svg   (run by the author, no session cookie, 2026-11-09 21:13:40 CST = 03:13:40Z)
+HTTP/2 302
+date: Tue, 10 Nov 2026 03:13:40 GMT
+content-type: text/html; charset=UTF-8
+location: https://shy-recipe-b7e3.cloudflareaccess.com/cdn-cgi/access/login/grafana.jdjagustin-lab.dev?kid=<masked>&meta=<masked JWT, payload decoded below>&redirect_url=%2Fpublic%2Fimg%2Fgrafana_mask_icon.svg
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+access-control-allow-credentials: true
+www-authenticate: Cloudflare-Access resource_metadata="https://grafana.jdjagustin-lab.dev/.well-known/cloudflare-access-protected-resource/public/img/grafana_mask_icon.svg"
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+set-cookie: CF_AppSession=<masked>; Expires=Wed, 11 Nov 2026 03:13:40 GMT; Path=/; Secure; HttpOnly
+report-to: <masked NEL endpoint>
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+server: cloudflare
+cf-ray: a581e1f6d8c1e98b-DFW
+alt-svc: h3=":443"; ma=86400
+
+Decoded payload of the `meta` JWT (signature not kept; aud and app_session_hash masked):
+{
+ "type": "meta",
+ "aud": "<masked>",
+ "hostname": "grafana.jdjagustin-lab.dev",
+ "redirect_url": "/public/img/grafana_mask_icon.svg",
+ "service_token_status": false,
+ "is_warp": false,
+ "is_gateway": false,
+ "exp": 1794280720,
+ "nbf": 1794280420,
+ "iat": 1794280420,
+ "auth_status": "NONE",
+ "mtls_auth": {
+  "cert_issuer_dn": "",
+  "cert_serial": "",
+  "cert_issuer_ski": "",
+  "cert_presented": false,
+  "common_name": "",
+  "auth_status": "NONE"
+ },
+ "real_country": "MX",
+ "app_session_hash": "<masked>"
+}

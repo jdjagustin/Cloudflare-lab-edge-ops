@@ -1,0 +1,15 @@
+;;
+;; Domain:     jdjagustin-lab.dev.
+;; Exported:   2026-11-09 19:22:54
+;;
+;; (Header comments of the Cloudflare export trimmed here; original file name: jdjagustin-lab.dev.txt.
+;;  Transcribed from the file the author attached. It is a BIND-format export; do not use it on a production DNS server.)
+;; SOA Record
+jdjagustin-lab.dev	3600	IN	SOA	donald.ns.cloudflare.com. dns.cloudflare.com. 2054591877 10000 2400 604800 3600
+
+;; NS Records
+jdjagustin-lab.dev.	86400	IN	NS	donald.ns.cloudflare.com.
+jdjagustin-lab.dev.	86400	IN	NS	georgia.ns.cloudflare.com.
+
+;; CNAME Records
+grafana.jdjagustin-lab.dev.	1	IN	CNAME	<tunnel-uuid>.cfargotunnel.com. ; cf_tags=cf-proxied:true

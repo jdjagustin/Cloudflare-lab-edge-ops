@@ -1,0 +1,16 @@
+Call 2 (same read-only token, run by the author on a Mac, 2026-11-09 22:22 CST):
+  GET https://api.cloudflare.com/client/v4/zones/<zone id>/settings/ssl   (output through python3 -m json.tool)
+{
+    "result": {
+        "id": "ssl",
+        "value": "full",
+        "modified_on": null,
+        "certificate_status": "active",
+        "validation_errors": [],
+        "editable": true
+    },
+    "success": true,
+    "errors": [],
+    "messages": []
+}
+No personal data in this output.

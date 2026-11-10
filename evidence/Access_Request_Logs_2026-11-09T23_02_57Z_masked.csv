@@ -1,0 +1,3 @@
+App Name,User Email,User ID,IP Address,App UID,App Domain,App Type,Action,Connection,Allowed,Created At,RayID,Country
+lab-private,"<email>",<id>,<public-ip>,<id>,lab.jdjagustin-lab.dev,self_hosted,login,google,true,2026-11-09T22:52:03,a58062bd3de9f8b8,mx
+grafana,"<email>",<id>,<public-ip>,<id>,grafana.jdjagustin-lab.dev,self_hosted,login,cloudflare,true,2026-11-09T18:27:46,a57edf973d288de5,mx

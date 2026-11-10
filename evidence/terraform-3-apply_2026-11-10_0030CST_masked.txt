@@ -1,0 +1,12 @@
+Terraform step 3 (run by the author on a Mac, 2026-11-10 00:30 CST), zone id and record id masked:
+$ terraform apply
+(plan shown again, identical to step 2: Plan: 1 to add, 0 to change, 0 to destroy.)
+Do you want to perform these actions?
+  Only 'yes' will be accepted to approve.
+  Enter a value: yes
+
+cloudflare_dns_record.tf_test: Creating...
+cloudflare_dns_record.tf_test: Creation complete after 1s [id=<record id masked>]
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+Reading: the first change made with Terraform. TXT record tf-test.jdjagustin-lab.dev created in 1 second after the author typed yes. Pending: verify with dig, then destroy.

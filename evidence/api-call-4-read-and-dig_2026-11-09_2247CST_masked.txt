@@ -1,0 +1,6 @@
+Call 4 (write token, run by the author on a Mac, 2026-11-09 22:47 CST):
+  GET https://api.cloudflare.com/client/v4/zones/<zone id>/dns_records/<record id>
+  -> success true; same record as created (id masked): name api-test.jdjagustin-lab.dev, type TXT, content "created via Cloudflare API during lab 2026-11-09", ttl 120, proxied false, created_on = modified_on = 2026-11-10T04:46:44.129316Z.
+  $ dig +short TXT api-test.jdjagustin-lab.dev
+  "created via Cloudflare API during lab 2026-11-09"
+Result: the record created by API resolves in public DNS about one minute after creation (the zone is on Cloudflare's own DNS, so no long propagation).

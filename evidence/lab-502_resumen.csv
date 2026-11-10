@@ -1,0 +1,9 @@
+n,status,method,url,total_ms,size,wire,enc,type,cache,age,server_timing,cfEdge,cfOrigin,blocked,dns,connect,ssl,send,wait,receive,outside_cf
+1,502,GET,https://lab.jdjagustin-lab.dev/,577.9,6448,6457,-,text/html,-,-,"cfEdge;dur=32,cfOrigin;dur=62",32.0,62.0,14.6,-1,-1,-1,0,562.7,0.7,468.7
+2,200,GET,https://lab.jdjagustin-lab.dev/cdn-cgi/styles/main.css,338.9,8013,2347,zstd,text/css,-,-,-,,,2.1,-1,-1,-1,0,226.9,109.9,
+3,200,GET,https://lab.jdjagustin-lab.dev/cdn-cgi/images/cf-icon-browser.png,129.5,484,493,-,image/png,-,-,-,,,2.5,-1,-1,-1,0,127.0,0.1,
+4,200,GET,https://lab.jdjagustin-lab.dev/cdn-cgi/images/cf-icon-ok.png,311.9,946,955,-,image/png,-,-,-,,,3.4,-1,-1,-1,0,308.4,0.1,
+5,200,GET,https://lab.jdjagustin-lab.dev/cdn-cgi/images/cf-icon-cloud.png,310.2,1484,1493,-,image/png,-,-,-,,,7.5,-1,-1,-1,0,302.7,0.0,
+6,200,GET,https://lab.jdjagustin-lab.dev/cdn-cgi/images/cf-icon-server.png,310.0,1384,1393,-,image/png,-,-,-,,,7.9,-1,-1,-1,0,302.0,0.1,
+7,200,GET,https://lab.jdjagustin-lab.dev/cdn-cgi/images/cf-icon-error.png,416.4,854,863,-,image/png,-,-,-,,,315.9,-1,-1,-1,0,100.3,0.1,
+8,404,GET,https://lab.jdjagustin-lab.dev/favicon.ico,154.8,460,276,zstd,text/html,STALE,15247,-,,,1.9,-1,-1,-1,0,140.0,12.9,

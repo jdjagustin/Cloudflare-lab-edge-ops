@@ -1,0 +1,27 @@
+Terraform step 2 (run by the author on a Mac, 2026-11-10 00:24 CST), zone id masked:
+$ terraform plan
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+
+  # cloudflare_dns_record.tf_test will be created
+  + resource "cloudflare_dns_record" "tf_test" {
+      + content                 = "created by Terraform during lab 2026-11-10"
+      + created_on              = (known after apply)
+      + id                      = (known after apply)
+      + include_shadow_metadata = false
+      + meta                    = (known after apply)
+      + modified_on             = (known after apply)
+      + name                    = "tf-test.jdjagustin-lab.dev"
+      + proxiable               = (known after apply)
+      + proxied                 = false
+      + settings                = (known after apply)
+      + tags                    = (known after apply)
+      + tags_modified_on        = (known after apply)
+      + ttl                     = 120
+      + type                    = "TXT"
+      + zone_id                 = "<zone id masked>"
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+Note: no -out option was used, so Terraform warns it cannot guarantee that a later apply does exactly this plan.
+Reading: the provider authenticated with the token from CLOUDFLARE_API_TOKEN (the plan needed to reach the zone), only one resource would be created, and the existing grafana and lab records are not part of the plan (not imported on purpose).

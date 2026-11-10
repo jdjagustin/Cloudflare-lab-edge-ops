@@ -1,0 +1,5 @@
+Cache Rule exercise, step 1 "before" (run by the author on a Mac, 2026-11-10 01:25 CST). No custom cache rule exists yet.
+$ curl -sI "https://lab.jdjagustin-lab.dev/" | grep -i -E "^(HTTP|cf-cache-status|age|cache-control|cf-ray)"   (run twice in a row)
+1st: HTTP/2 200 | cf-cache-status: DYNAMIC | cf-ray: a58352711834067b-DFW
+2nd: HTTP/2 200 | cf-cache-status: DYNAMIC | cf-ray: a5835272ce9e3aa6-DFW
+Reading: both requests were served by the Dallas (DFW) data center; the HTML is DYNAMIC both times (not eligible for cache by default, so each request goes to the origin); no age and no cache-control header from the origin; the two cf-ray values differ (one per request).

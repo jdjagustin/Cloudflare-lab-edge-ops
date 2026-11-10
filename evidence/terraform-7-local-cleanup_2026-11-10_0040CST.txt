@@ -1,0 +1,5 @@
+Terraform step 7 (run by the author on a Mac, 2026-11-10 00:40 CST), from terraform-exercise/:
+$ rm -rf .terraform terraform.tfstate terraform.tfstate.backup
+$ ls -a
+.  ..  .gitignore  .terraform.lock.hcl  main.tf
+Reading: local state (zone id, record id) and the downloaded provider are gone; only the code, .gitignore and the lock file remain.

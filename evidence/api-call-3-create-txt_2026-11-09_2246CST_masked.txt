@@ -1,0 +1,18 @@
+Call 3 (write token "lab-dns-edit": DNS Edit, this zone only, expires 2026-11-10 23:59 CST; run by the author on a Mac, 2026-11-09 22:46 CST = 2026-11-10T04:46Z):
+  POST https://api.cloudflare.com/client/v4/zones/<zone id>/dns_records
+  body: {"type":"TXT","name":"api-test","content":"created via Cloudflare API during lab 2026-11-09","ttl":120}
+Note: a first attempt at 22:36 CST failed with error 7003 (URL without the zone id: the variable ZONE_ID was empty in the new terminal window); nothing was created then.
+Response (record id masked):
+{
+  "result": {
+    "id": "<record id masked>",
+    "name": "api-test.jdjagustin-lab.dev",
+    "type": "TXT",
+    "content": "created via Cloudflare API during lab 2026-11-09",
+    "proxiable": false, "proxied": false, "ttl": 120,
+    "settings": {}, "meta": {}, "comment": null, "tags": [],
+    "created_on": "2026-11-10T04:46:44.129316Z",
+    "modified_on": "2026-11-10T04:46:44.129316Z"
+  },
+  "success": true, "errors": [], "messages": []
+}

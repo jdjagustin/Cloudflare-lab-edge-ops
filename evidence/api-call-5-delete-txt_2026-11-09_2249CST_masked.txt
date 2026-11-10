@@ -1,0 +1,6 @@
+Call 5 (write token, run by the author on a Mac, 2026-11-09 22:49 CST):
+  DELETE https://api.cloudflare.com/client/v4/zones/<zone id>/dns_records/<record id>
+Response (record id masked):
+{ "result": { "id": "<record id masked>" }, "success": true, "errors": [], "messages": [] }
+The id returned is the one created in call 3 and read in call 4 (create -> read -> delete cycle completed through the API).
+Pending verification: list the zone (expect only the grafana and lab CNAMEs) and dig the TXT again (expect empty).

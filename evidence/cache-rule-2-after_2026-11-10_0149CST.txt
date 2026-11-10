@@ -1,0 +1,5 @@
+Cache Rule exercise, step 2 "after" (run by the author on a Mac, 2026-11-10 01:49 CST). Rule `lab-cache-html` deployed about 01:48 CST (Hostname equals lab.jdjagustin-lab.dev, Eligible for cache, Edge TTL ignore origin header = 2 hours, Browser TTL untouched).
+$ curl -sI "https://lab.jdjagustin-lab.dev/" | grep -i -E "^(HTTP|cf-cache-status|age|cache-control|cf-ray)"   (run twice in a row)
+1st: HTTP/2 200 | cache-control: max-age=14400 | cf-cache-status: MISS | cf-ray: a58375899bebc0fe-DFW
+2nd: HTTP/2 200 | age: 0 | cache-control: max-age=14400 | cf-cache-status: HIT | cf-ray: a583758bcddcf044-DFW
+Reading: before the rule both requests were DYNAMIC (cache-rule-1-before). Now MISS then HIT, same data center (DFW). The HTML is cached. A cache-control: max-age=14400 header now appears although the origin sent none: it is added by Cloudflare (most likely the zone's Browser Cache TTL default of 4 hours, 14400 s; this is an inference, not tested). It is separate from the 2-hour Edge TTL set in the rule.

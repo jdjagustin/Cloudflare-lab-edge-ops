@@ -1,0 +1,21 @@
+Terraform step 5 (run by the author on a Mac, 2026-11-10 00:34 CST), zone id and record id masked:
+$ terraform destroy
+cloudflare_dns_record.tf_test: Refreshing state... [id=<record id masked>]
+  # cloudflare_dns_record.tf_test will be destroyed
+  - resource "cloudflare_dns_record" "tf_test" {
+      - content    = "created by Terraform during lab 2026-11-10" -> null
+      - created_on = "2026-11-10T06:30:22Z" -> null
+      - modified_on = "2026-11-10T06:30:22Z" -> null
+      - name       = "tf-test.jdjagustin-lab.dev" -> null
+      - proxied    = false -> null
+      - ttl        = 120 -> null
+      - type       = "TXT" -> null
+      - zone_id    = "<zone id masked>" -> null
+      (other attributes omitted here: id, meta, proxiable, settings, tags, include_shadow_metadata)
+    }
+Plan: 0 to add, 0 to change, 1 to destroy.
+Do you really want to destroy all resources?  Enter a value: yes
+cloudflare_dns_record.tf_test: Destroying... [id=<record id masked>]
+cloudflare_dns_record.tf_test: Destruction complete after 1s
+Destroy complete! Resources: 1 destroyed.
+Reading: created_on 06:30:22Z = 00:30:22 CST, which matches the apply of step 3. Pending: dig empty and list of the zone records (expect only grafana and lab CNAMEs).
