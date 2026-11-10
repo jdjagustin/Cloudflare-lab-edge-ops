@@ -2,7 +2,7 @@ $ curl -sI https://grafana.jdjagustin-lab.dev/public/img/grafana_mask_icon.svg  
 HTTP/2 302
 date: Tue, 10 Nov 2026 03:13:40 GMT
 content-type: text/html; charset=UTF-8
-location: https://shy-recipe-b7e3.cloudflareaccess.com/cdn-cgi/access/login/grafana.jdjagustin-lab.dev?kid=<masked>&meta=<masked JWT, payload decoded below>&redirect_url=%2Fpublic%2Fimg%2Fgrafana_mask_icon.svg
+location: https://<team-name>.cloudflareaccess.com/cdn-cgi/access/login/grafana.jdjagustin-lab.dev?kid=<masked>&meta=<masked JWT, payload decoded below>&redirect_url=%2Fpublic%2Fimg%2Fgrafana_mask_icon.svg
 expires: Thu, 01 Jan 1970 00:00:01 GMT
 access-control-allow-credentials: true
 www-authenticate: Cloudflare-Access resource_metadata="https://grafana.jdjagustin-lab.dev/.well-known/cloudflare-access-protected-resource/public/img/grafana_mask_icon.svg"
