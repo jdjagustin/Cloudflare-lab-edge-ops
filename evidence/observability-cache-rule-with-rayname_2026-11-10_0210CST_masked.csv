@@ -1,0 +1,7 @@
+datetime,securityAction,rayName,clientRequestHTTPMethodName,clientRequestHTTPHost,clientRequestPath,edgeResponseStatus,cacheStatus,clientIP,clientCountryName,originResponseStatus
+2026-11-10T07:54:11Z,unknown,a5837cdd4c3a7ad8,HEAD,lab.jdjagustin-lab.dev,/,200,dynamic,<client-ip>,MX,200
+2026-11-10T07:54:11Z,unknown,a5837cdb9b578b33,HEAD,lab.jdjagustin-lab.dev,/,200,dynamic,<client-ip>,MX,200
+2026-11-10T07:49:11Z,unknown,a583758bcddcf044,HEAD,lab.jdjagustin-lab.dev,/,200,hit,<client-ip>,MX,0
+2026-11-10T07:49:11Z,unknown,a58375899bebc0fe,HEAD,lab.jdjagustin-lab.dev,/,200,miss,<client-ip>,MX,200
+2026-11-10T07:25:14Z,unknown,a5835272ce9e3aa6,HEAD,lab.jdjagustin-lab.dev,/,200,dynamic,<client-ip>,MX,200
+2026-11-10T07:25:13Z,unknown,a58352711834067b,HEAD,lab.jdjagustin-lab.dev,/,200,dynamic,<client-ip>,MX,200

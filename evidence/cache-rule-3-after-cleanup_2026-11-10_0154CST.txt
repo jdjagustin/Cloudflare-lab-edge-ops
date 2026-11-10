@@ -1,0 +1,5 @@
+Cache Rule exercise, step 3 "after cleanup" (run by the author on a Mac, 2026-11-10 01:54 CST). Rule `lab-cache-html` deleted (his report, about 01:52 CST) and Purge Everything run in the dashboard (his report; no screenshot of the purge).
+$ curl -sI "https://lab.jdjagustin-lab.dev/" | grep -i -E "^(HTTP|cf-cache-status|age|cache-control|cf-ray)"   (run twice in a row)
+1st: HTTP/2 200 | cf-cache-status: DYNAMIC | cf-ray: a5837cdb9b578b33-DFW
+2nd: HTTP/2 200 | cf-cache-status: DYNAMIC | cf-ray: a5837cdd4c3a7ad8-DFW
+Reading: same result as before the rule (cache-rule-1-before): the HTML is DYNAMIC twice. The cache-control: max-age=14400 header seen while the rule was active is gone too, which fits the idea that it came from the rule's cache settings being applied (not tested further).

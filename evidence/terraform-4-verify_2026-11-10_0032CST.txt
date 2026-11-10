@@ -1,0 +1,6 @@
+Terraform step 4 (run by the author on a Mac, 2026-11-10 00:32 CST):
+$ dig +short TXT tf-test.jdjagustin-lab.dev
+"created by Terraform during lab 2026-11-10"
+$ terraform state list
+cloudflare_dns_record.tf_test
+Reading: the record created by Terraform resolves in public DNS about two minutes after the apply; the text came back as written in main.tf (the provider did not add extra quotes; dig only shows the usual TXT quotes). Terraform manages exactly one resource, the throwaway TXT; grafana and lab are not in its state.

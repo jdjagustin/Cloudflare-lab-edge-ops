@@ -1,0 +1,7 @@
+Terraform step 6 (run by the author on a Mac, 2026-11-10 00:37 CST), from terraform-exercise/, after destroy:
+$ dig +short TXT tf-test.jdjagustin-lab.dev
+(no output: the record no longer resolves)
+$ curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" ".../zones/$TF_VAR_zone_id/dns_records" | python3 -c "...print type, name, proxied"
+CNAME grafana.jdjagustin-lab.dev proxied=True
+CNAME lab.jdjagustin-lab.dev proxied=True
+Reading: the zone is back to its 2 original CNAMEs; Terraform left nothing behind.

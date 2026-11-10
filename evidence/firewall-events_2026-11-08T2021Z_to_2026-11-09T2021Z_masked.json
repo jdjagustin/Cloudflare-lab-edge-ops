@@ -1,0 +1,41 @@
+[
+  {
+    "action": "block",
+    "clientASNDescription": "Cablevisión, S.A. de C.V.",
+    "clientAsn": "28548",
+    "clientCountryName": "MX",
+    "clientIP": "<public-ip>",
+    "clientRefererHost": "",
+    "clientRequestHTTPHost": "lab.jdjagustin-lab.dev",
+    "clientRequestHTTPMethodName": "HEAD",
+    "clientRequestHTTPProtocol": "HTTP/2",
+    "clientRequestPath": "/blocked",
+    "clientRequestQuery": "",
+    "contentScanObjTypes": [],
+    "datetime": "2026-11-09T20:14:15Z",
+    "description": "lab-block-blocked-path",
+    "matchIndex": 0,
+    "metadata": [
+      {
+        "key": "ruleset_version",
+        "value": "1"
+      },
+      {
+        "key": "version",
+        "value": "1"
+      },
+      {
+        "key": "configuration_id",
+        "value": "969726760"
+      }
+    ],
+    "rayName": "a57f7b92af30552a",
+    "ref": "",
+    "ruleId": "88bff9afb9284121a7b665378b212e98",
+    "rulesetId": "7c0cce70d47f45f5b1bc18a00c7961f3",
+    "sampleInterval": 1,
+    "source": "firewallCustom",
+    "userAgent": "curl/8.7.1",
+    "zoneVersion": 0
+  }
+]
