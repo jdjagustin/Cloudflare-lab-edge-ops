@@ -10,7 +10,7 @@
 
 A one-person, hands-on lab that puts a small origin behind Cloudflare and exercises the edge the way an operator would: DNS and proxy, TLS mode, cache, WAF and rate limiting, Access with an identity provider, Tunnel failures and how to diagnose them, the API, Terraform and Observability logs.
 
-> **Status: work in progress.** Everything under "Done" actually ran and was observed by the author. Everything under "To be completed" has **not** been done yet and is listed so the gaps are visible. Entries like `E-042` point to the evidence log [`docs/EVIDENCE.md`](docs/EVIDENCE.md): what ran, the output, and the limits of each claim. Screenshots follow in the next pull request; the log refers to some private originals that are not published.
+> **Status: work in progress.** Everything under "Done" actually ran and was observed by the author. Everything under "To be completed" has **not** been done yet and is listed so the gaps are visible. Entries like `E-042` point to the evidence log [`docs/EVIDENCE.md`](docs/EVIDENCE.md): what ran, the output, and the limits of each claim. Masked screenshots are in [`evidence/screenshots/`](evidence/screenshots/README.md); the log refers to some private originals that are not published.
 
 ## Architecture
 
@@ -67,6 +67,7 @@ A browser or `curl` reaches proxied hostnames on Cloudflare's edge. Requests pas
 | Connector maintenance | `cloudflared` upgraded from a local `.deb` after a security advisory; version and tunnel health checked | E-009 to E-012 |
 | Runbook | Diagnosis guide written only from the cases above | [`docs/RUNBOOK.md`](docs/RUNBOOK.md) |
 | Evidence log | 132 entries with commands, outputs, corrections and limits; personal values replaced by placeholders | [`docs/EVIDENCE.md`](docs/EVIDENCE.md) |
+| Masked screenshots | 61 dashboard, browser and terminal captures, each named after the log entry it supports; sensitive values masked or covered | [`evidence/screenshots/`](evidence/screenshots/README.md) |
 
 ## To be completed (not done yet)
 
@@ -81,7 +82,6 @@ A browser or `curl` reaches proxied hostnames on Cloudflare's edge. Requests pas
 | Network fundamentals notes (BGP, CIDR, NAT) and Network Services | Not started |
 | Onboarding plan, call summary template, escalation templates, 20-minute workshop outline | Not started |
 | DNS deep-dive guide | Not started |
-| Masked screenshots | Reviewed; next pull request |
 
 ## Tools in this repo
 
@@ -107,12 +107,11 @@ One client, small traffic windows, free plan, a single zone, local Terraform sta
 ```
 docs/            runbook, evidence log, how-to, diagrams (architecture.svg animated, architecture.mmd source)
 evidence/        masked exports and command outputs referenced by the log
+  screenshots/   61 masked captures and an index (evidence/screenshots/README.md)
 scripts/         the two local summary tools
 terraform/       the throwaway-record exercise (main.tf only; no state)
 LICENSE          MIT
 ```
-
-Planned in a later pull request: `evidence/screenshots/` (masked screenshots).
 
 ## Credits and references
 
