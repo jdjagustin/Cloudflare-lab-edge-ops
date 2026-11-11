@@ -103,7 +103,7 @@ Interpretation (limited to what is visible):
 - Still unknown: how cloudflared is installed on Cloudlab-1 (systemd service vs other) and the route's service URL (http vs https).
 
 ## <a id="e-008"></a>E-008 — Terminal: SSH from CloudSpartan to Cloudlab-1, then cloudflared checks (12:06)
-Source: two terminal screenshots pasted in chat (transcribed here; the images show the LAN address, user name and host key, so they are not published; a sanitized text excerpt of the cloudflared output is in [`evidence/TEXT_EXCERPT_cloudflared_status.md`](../evidence/TEXT_EXCERPT_cloudflared_status.md)).
+Source: two terminal screenshots pasted in chat (transcribed here; the images show the LAN address, user name, SSH host key and tunnel connection IDs, so they are not published; a sanitized text excerpt of the cloudflared output is in [`evidence/TEXT_EXCERPT_cloudflared_status.md`](../evidence/TEXT_EXCERPT_cloudflared_status.md)).
 
 ### E-008a — SSH session
 ```
